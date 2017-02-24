@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server.ServerTabController">
+   <children>
+      <ListView fx:id="chatWindow" prefHeight="300.0" prefWidth="400.0" />
+      <TextArea fx:id="userText" editable="false" onKeyPressed="#handleChatEnterKey" prefHeight="75.0" prefWidth="400.0" wrapText="true" />
+   </children>
+</VBox>
