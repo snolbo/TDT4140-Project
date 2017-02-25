@@ -1,4 +1,4 @@
-package server;
+package communication;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -13,20 +13,21 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
 
-// controls a tab witha a connection
-public class ServerTabController {
+// Controls the chat of one connection
+public class ChatController {
 
 	@FXML private TextArea userText;
 	@FXML private ListView<Label> chatWindow;
-	private ServerConnection serverConnection;
+	
+	private RecieveAndSend connection;
 	
 
 	@FXML // listens to keyevents in userText, if keyevent is enter, send CHAT protovol and the text
 	public void handleChatEnterKey(KeyEvent event) {
 		if(event.getCode() == KeyCode.ENTER ){
 			String message = userText.getText();
-//			Platform.runLater(() -> {serverConnection.sendChatMessage("CHAT-" + message);});
-			serverConnection.sendChatMessage("CHAT-" + message);
+			Platform.runLater(() -> {connection.sendChatMessage("CHAT-" + message);});
+//			connection.sendChatMessage("CHAT-" + message);
 			viewMessage(message, true);
 			event.consume();
 		}
@@ -35,8 +36,8 @@ public class ServerTabController {
 	
 	// used by tab creates in serverChatController on closeRequest of tab
 	public void onClosed() {
-		serverConnection.sendChatMessage("END-null");
-		serverConnection.closeConnection();
+		connection.sendChatMessage("END-null");
+		connection.closeConnection();
 	}
 	
 	// shows message in chatWIndow
@@ -56,16 +57,13 @@ public class ServerTabController {
 		this.userText.clear();
 	}
 
-	
-	
 	// sets a serverCOnnection to this chattab
-	public void setServerConnection(ServerConnection serverConnection){
-		this.serverConnection = serverConnection;
+	public void setRecieveAndSend(RecieveAndSend connection){
+		this.connection = connection;
 	}
 
 	public void ableToType(boolean tof) {
 		this.userText.setEditable(tof);
 	}
-	
 	
 }

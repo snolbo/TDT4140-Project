@@ -1,4 +1,4 @@
-package client;
+package communication;
 	
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -14,9 +14,10 @@ public class IMClientLauncher extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {			
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlResources/Client.fxml")); //don't neccesarily need this. Can load directly instead of creating loader
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatManager.fxml")); //don't neccesarily need this. Can load directly instead of creating loader
 			Parent root = loader.load(); // this loads the stuff into the root which is the root node displayed in the Stage
-			ClientController controller = loader.getController();
+			TabController controller = loader.getController();
+			controller.setClientMode();
 			Scene clientWindow = new Scene(root,400,475);
 			primaryStage.setTitle("Client IM Messenger");
 			primaryStage.setScene(clientWindow);
@@ -24,7 +25,6 @@ public class IMClientLauncher extends Application {
 				@Override
 				public void handle(WindowEvent event) {
 					if(event.getEventType() == WindowEvent.WINDOW_CLOSE_REQUEST){
-						controller.onClosed();
 						System.exit(0);
 						}
 				}

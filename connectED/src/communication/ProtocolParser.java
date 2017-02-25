@@ -1,25 +1,24 @@
-package client;
-
+package communication;
 
 // this class should handle incoming messages and execute functions based on the protocoll keyword in the start of the message
-public class ClientProtocolParser{
+public class ProtocolParser{
 	
 	
-	private ClientController chatTabController;
+	private ChatController chatController;
 
-	public ClientProtocolParser(ClientController chatTabController){
-		this.chatTabController = chatTabController;
+	public ProtocolParser(ChatController chatController){
+		this.chatController = chatController;
 	}
 
 	public void handleMessageProtocoll(String protocolMessage) {
-		String[] splittedString = protocolMessage.split("-");
-		String protocol = splittedString[0];
-		String message = splittedString[1];
+		int protocolIndexEnd = protocolMessage.indexOf("-");
+		String protocol = protocolMessage.substring(0,protocolIndexEnd);
+		String message = protocolMessage.substring(protocolIndexEnd);
 		
 		switch (protocol) {
 		case "CHAT":
 			// do stuff
-			this.chatTabController.viewMessage(message, false);
+			this.chatController.viewMessage(message, false);
 			break;
 		case "END":
 			// do stuff
