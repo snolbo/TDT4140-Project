@@ -7,7 +7,7 @@ import java.util.Queue;
 
 // Either connect to or sets up connection depending on mode
 public class Connector implements Runnable {
-	private ServerSocket welcomeSocket; // sockets at server
+	private ServerSocket welcomeSocket = null; // sockets at server
 	private Socket socket;
 	private Queue<ChatController> controllerQueue;
 
@@ -17,7 +17,7 @@ public class Connector implements Runnable {
 
 	public Connector() {
 		controllerQueue = new ArrayDeque<ChatController>();
-		this.hostPort = 7777; // this is to be recieves from other moduøe
+		this.hostPort = 8012; // this is to be recieves from other moduøe
 	}
 
 	public void setHost() {
@@ -66,6 +66,15 @@ public class Connector implements Runnable {
 
 	public void passChatTabController(ChatController controller) {
 		this.controllerQueue.add(controller);
+	}
+	
+	public void onCloseRequest(){
+		try {
+			if(this.welcomeSocket != null)
+				this.welcomeSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

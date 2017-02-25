@@ -2,11 +2,11 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<Pane style="-fx-background-color: #2c2c2c;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="communication.TabController">
+<VBox style="-fx-background-color: #7A7A7A;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="communication.ChatTabController">
    <children>
-      <TabPane fx:id="chatTab" layoutY="35.0" prefHeight="475.0" prefWidth="400.0" />
-      <Button layoutY="8.0" mnemonicParsing="false" onAction="#newChatTab" text="Take another connection" />
+      <Button mnemonicParsing="false" onAction="#newChatTab" text="Take another connection" />
+      <TabPane fx:id="chatTab" />
    </children>
-</Pane>
+</VBox>

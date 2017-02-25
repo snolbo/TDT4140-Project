@@ -13,7 +13,7 @@ public class ProtocolParser{
 	public void handleMessageProtocoll(String protocolMessage) {
 		int protocolIndexEnd = protocolMessage.indexOf("-");
 		String protocol = protocolMessage.substring(0,protocolIndexEnd);
-		String message = protocolMessage.substring(protocolIndexEnd);
+		String message = protocolMessage.substring(protocolIndexEnd+1);
 		
 		switch (protocol) {
 		case "CHAT":

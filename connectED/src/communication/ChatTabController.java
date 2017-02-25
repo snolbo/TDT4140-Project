@@ -11,14 +11,14 @@ import javafx.scene.control.TextArea;
 
 
 // handles GUI for making another connection creating a new tab
-public class TabController {
+public class ChatTabController {
 	@FXML private TextArea userText;
 	@FXML private TextArea chatWindow;
 	@FXML private TabPane chatTab;
 	private Connector connector;
 
 	// This creates a instans of the Server for which the GUI is set to display, through the Server's call to this controller
-	public TabController(){
+	public ChatTabController(){
 		// the program creating connections is set to work as a host, hosting connections
 		this.connector = new Connector();
 	}
@@ -49,7 +49,9 @@ public class TabController {
 		}
 	}
 	
-	
+	public void onCloseRequest(){
+		this.connector.onCloseRequest();
+	}
 	
 
 }

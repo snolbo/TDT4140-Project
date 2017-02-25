@@ -10,7 +10,7 @@ import javafx.stage.WindowEvent;
 
 
 public class IMServerLauncher extends Application{	
-	private TabController controller;
+	private ChatTabController controller;
 	// GUI is separated from the Server and ClientController. FXMLLoader loads the GUI and it's controller which is made and connected with Scenebuilder
 	public IMServerLauncher(){
 		
@@ -21,7 +21,7 @@ public class IMServerLauncher extends Application{
 		try {			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatManager.fxml"));
 			Parent root = loader.load();
-			TabController controller = loader.getController();
+			ChatTabController controller = loader.getController();
 			controller.setHostMode();	// Tells the Connector class that is should host connections
 			Scene serverConnectionWindow = new Scene(root,400,475);
 			primaryStage.setTitle("Host IM Messenger");
@@ -41,7 +41,7 @@ public class IMServerLauncher extends Application{
 		
 	}
 	
-	public TabController getController(){
+	public ChatTabController getController(){
 		return this.controller;
 	}
 	

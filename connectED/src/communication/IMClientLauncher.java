@@ -16,7 +16,7 @@ public class IMClientLauncher extends Application {
 		try {			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatManager.fxml")); //don't neccesarily need this. Can load directly instead of creating loader
 			Parent root = loader.load(); // this loads the stuff into the root which is the root node displayed in the Stage
-			TabController controller = loader.getController();
+			ChatTabController controller = loader.getController();
 			controller.setClientMode();
 			Scene clientWindow = new Scene(root,400,475);
 			primaryStage.setTitle("Client IM Messenger");
