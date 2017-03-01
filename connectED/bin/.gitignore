@@ -1,1 +1,10 @@
 /application/
+<<<<<<< HEAD
+=======
+/T1/
+/client/
+/fxmlResources/
+/server/
+/communication/
+/mainWindow/
+>>>>>>> T1
