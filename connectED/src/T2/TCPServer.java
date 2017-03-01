@@ -61,7 +61,6 @@ public class TCPServer {
 
 	
 	public void connectToClient(){
-		TCPServer server = new TCPServer();
 		String clientTag;
 		String returnIP; //helperIP
 		int returnPort;
@@ -97,16 +96,17 @@ public class TCPServer {
   
        
 				if (clientTag.equals("Student")){
-					server.addStudentQueue(connectionSocket);
+					addStudentQueue(connectionSocket);
 				}
        
 				else if (clientTag.equals("Helper")){
-					server.addHelperQueue(clientIP,returnPort);
+					addHelperQueue(clientIP,returnPort);
+					connectionSocket.close();
 				}
          
-				if (server.match()){
-					studentSocket = server.studentDequeue(); //connectionSocket
-					helperAddress = server.helperDequeue(); //helperIP + returnPort
+				if (match()){
+					studentSocket = studentDequeue(); //connectionSocket
+					helperAddress = helperDequeue(); //helperIP + returnPort
 					System.out.println("Hurra!");
 					
 				}
