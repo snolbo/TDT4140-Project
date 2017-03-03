@@ -8,10 +8,9 @@ import java.util.Queue;
 // Either connect to or sets up connection depending on mode
 public class Connector implements Runnable {
 	private ServerSocket welcomeSocket = null; // sockets at server
-	private Socket socket;
 	private Queue<ChatController> controllerQueue;
 
-	private boolean isHost;
+	private Boolean isHost;
 	private String serverIP;
 	private int hostPort;
 
@@ -20,12 +19,19 @@ public class Connector implements Runnable {
 		this.hostPort = 8012; // this is to be recieves from other moduøe
 	}
 
+	public Boolean isHost(){
+		return this.isHost;
+	}
+	
 	public void setHost() {
 		this.isHost = true;
-		try {
-			welcomeSocket = new ServerSocket(hostPort, 2);
-		} catch (IOException e) {
-			e.printStackTrace();
+		System.out.println("isHost is set to true?: " + Boolean.toString(this.isHost == true));
+		if(this.welcomeSocket == null){
+			try {
+				welcomeSocket = new ServerSocket(hostPort, 2);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -40,11 +46,12 @@ public class Connector implements Runnable {
 	public void run() {
 		RecieveAndSend connection;	// creates an object to hold a new connection
 		ChatController tempChatTabController = controllerQueue.poll();
+		Socket socket;
 		if (isHost) {		// I am host
 			try {
 				socket = welcomeSocket.accept();
 				// TODO -> client should only be able to make one connection at a time
-				connection = new RecieveAndSend(socket, tempChatTabController);
+				connection = new RecieveAndSend(socket, tempChatTabController); // create new thred operating on connection with controller
 				connection.run();		// connection implements Runnable
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -53,9 +60,8 @@ public class Connector implements Runnable {
 		// I am client
 		else {
 			try {
-				this.socket = new Socket(serverIP, hostPort); // connect to the
-																// server
-				connection = new RecieveAndSend(socket, tempChatTabController);
+				socket = new Socket(serverIP, hostPort); 
+				connection = new RecieveAndSend(socket, tempChatTabController);  // create new thred operating on connection with controller
 				connection.run();
 			} catch (IOException e) {
 				e.printStackTrace();
