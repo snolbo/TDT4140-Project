@@ -1,7 +1,2 @@
-/application/
-/T1/
-/client/
-/fxmlResources/
-/server/
-/communication/
 /mainWindow/
+/communication/

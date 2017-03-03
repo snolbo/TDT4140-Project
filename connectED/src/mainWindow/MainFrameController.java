@@ -26,18 +26,20 @@ public class MainFrameController {
 	
 	
 	
-	public void setHostMode(){
-		this.hostMode = true;
-	}
+//	public void setHostMode(){
+//		this.hostMode = true;
+//	}
+//	
+//	public void setClientMode(){
+//		this.hostMode = false;
+//	}
+//	
 	
-	public void setClientMode(){
-		this.hostMode = false;
-	}
 	@FXML
 	public void initialize(){
 		// load FXML for components into the different panes
 			this.rootNode = (GridPane) interactionPane.getParent();
-			this.hostMode = false;
+//			this.hostMode = true;
 			initializeChat();
 			InitializeInteractionTab();
 
@@ -48,10 +50,10 @@ public class MainFrameController {
 		try{
 		Node newChatPane  = chatLoader.load();
 		this.chatTabController = chatLoader.getController();
-		if(hostMode)
-			chatTabController.setHostMode();
-		else
-			chatTabController.setClientMode();
+//		if(hostMode)
+//			chatTabController.setHostMode();
+//		else
+//			chatTabController.setClientMode();
 		rootNode.getChildren().remove(chatPane);
 		rootNode.add(newChatPane, 1, 2);
 		}
