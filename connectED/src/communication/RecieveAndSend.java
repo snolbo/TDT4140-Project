@@ -18,13 +18,8 @@ public class RecieveAndSend implements Runnable{
 	
 	// socket for reading from and writing too
 	private Socket socket;
-	
-	// Handeling type of message sent according to protocol in it
 	private ProtocolParser protocolParser;
-	
-	// Controller for chatTab this connection is related to
 	private ChatController chatController;
-
 	
 	public RecieveAndSend(Socket clientSocket, ChatController chatController){
 		this.socket = clientSocket;
@@ -34,14 +29,11 @@ public class RecieveAndSend implements Runnable{
 		this.protocolParser = new ProtocolParser(chatController);
 	}
 	
-	
-	// this function runs as a thread
 	@Override
 	public void run() {
 		try{
 			setupStreams();
-			// read from inputstream while still chatting (loop)
-			whileRecieving();
+			whileReceiving();
 		}catch(EOFException e){
 			viewMessage("Server terminated the connection", true);
 		}
@@ -52,7 +44,7 @@ public class RecieveAndSend implements Runnable{
 		}
 	}
 	
-	// setting up output and input streams to read and write from using the connected socket
+
 	private void setupStreams() throws IOException{
 		input = socket.getInputStream();
 		buffread = new BufferedReader(new InputStreamReader(input));
@@ -60,16 +52,15 @@ public class RecieveAndSend implements Runnable{
 		output.flush();
 	}
 	
-	
-	// Reading from the socket, passing message to ProtocolParser
-	private void whileRecieving(){
+
+	private void whileReceiving(){
 		String message = "You are now connected!";
-		viewMessage(message, true);			// views message in chatTab handles by controller
-		ableToType(true); 					// tell controller that textfield should be editable
+		viewMessage(message, true);
+		ableToType(true); 					
 		do{
 			try{
 				message = buffread.readLine();
-				protocolParser.handleMessageProtocoll(message);		// pass message to ProtocolParser and let it handle request
+				protocolParser.handleMessageProtocoll(message);
 			}catch(IOException e){
 				e.printStackTrace();
 				break;
@@ -81,7 +72,7 @@ public class RecieveAndSend implements Runnable{
 	// closes the connection
 	public void closeConnection(){
 		viewMessage("Closing connection...", true);
-		ableToType(false);				// tell controller that we should no longer be able to type
+		ableToType(false);
 		try{
 			this.output.close();
 			this.input.close();
@@ -103,13 +94,13 @@ public class RecieveAndSend implements Runnable{
 	}
 	
 
-	// tells the controller to show the message on clients GUI
+
 	private void viewMessage(final String text, boolean madeByMe){
-		Platform.runLater(() -> {chatController.viewMessage(text, madeByMe);}); // not sure if need runlater
+		Platform.runLater(() -> {chatController.viewMessage(text, madeByMe);});
 	}
 	
 	private void ableToType(final boolean tof){
-		Platform.runLater(() -> { chatController.ableToType(tof);}); // not sure if need runlater
+		Platform.runLater(() -> { chatController.ableToType(tof);});
 	}
 	
 	

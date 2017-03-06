@@ -1,5 +1,6 @@
 package communication;
 
+import T2.ServerRequest;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -19,25 +20,42 @@ public class ChatController {
 	@FXML private TextArea userText;
 	@FXML private ListView<Label> chatWindow;
 	
-	private RecieveAndSend connection;
+	private RecieveAndSend receiveAndSend;
+	private boolean isHost= false;
 	
 
+	public boolean isHost() {
+		return isHost;
+	}
+
+	public void setHost(boolean isHost) {
+		this.isHost = isHost;
+	}
+	
 	@FXML // listens to keyevents in userText, if keyevent is enter, send CHAT protovol and the text
 	public void handleChatEnterKey(KeyEvent event) {
 		if(event.getCode() == KeyCode.ENTER ){
 			String message = userText.getText();
-			Platform.runLater(() -> {connection.sendChatMessage("CHAT-" + message);});
-//			connection.sendChatMessage("CHAT-" + message);
+			Platform.runLater(() -> {receiveAndSend.sendChatMessage("CHAT-" + message);});
 			viewMessage(message, true);
 			event.consume();
 		}
 	}
 	
-	
 	// used by tab creates in serverChatController on closeRequest of tab
 	public void onClosed() {
-		connection.sendChatMessage("END-null");
-		connection.closeConnection();
+		if(receiveAndSend != null){
+			receiveAndSend.sendChatMessage("END-null");
+			receiveAndSend.closeConnection();
+		}
+		if(isHost && receiveAndSend == null){
+			ServerRequest request = new ServerRequest("HelperDelete");
+			request.removeAdressFromQueue();
+		}
+		else if(receiveAndSend == null){
+			ServerRequest request = new ServerRequest("StudentDelete");
+			request.removeAdressFromQueue();
+		}
 	}
 	
 	// shows message in chatWIndow
@@ -59,7 +77,7 @@ public class ChatController {
 
 	// sets a serverCOnnection to this chattab
 	public void setRecieveAndSend(RecieveAndSend connection){
-		this.connection = connection;
+		this.receiveAndSend = connection;
 	}
 
 	public void ableToType(boolean tof) {

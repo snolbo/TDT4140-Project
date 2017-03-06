@@ -5,61 +5,68 @@ import java.net.*;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import T2.ServerRequest;
+
 // Either connect to or sets up connection depending on mode
 public class Connector implements Runnable {
 	private ServerSocket welcomeSocket = null; // sockets at server
-	private Socket socket;
 	private Queue<ChatController> controllerQueue;
 
-	private boolean isHost;
-	private String serverIP;
+	private Boolean isHost;
 	private int hostPort;
 
 	public Connector() {
 		controllerQueue = new ArrayDeque<ChatController>();
-		this.hostPort = 8012; // this is to be recieves from other moduøe
+		this.hostPort = 9001; // port to connect to if client, port to open at if host
 	}
 
+	public Boolean isHost(){
+		return this.isHost;
+	}
+	
 	public void setHost() {
 		this.isHost = true;
-		try {
-			welcomeSocket = new ServerSocket(hostPort, 2);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(this.welcomeSocket == null){
+			try {
+				welcomeSocket = new ServerSocket(hostPort, 2);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public void setClient() {
 		this.isHost = false;
-		this.serverIP = ""; // to be recieved from other module
-		// also recieve hostport
-//		this.hostPort= 
 	}
 
 	@Override
 	public void run() {
-		RecieveAndSend connection;	// creates an object to hold a new connection
-		ChatController tempChatTabController = controllerQueue.poll();
-		if (isHost) {		// I am host
+		RecieveAndSend connection;
+		ChatController tempChatController = controllerQueue.poll();
+		Socket socket;
+		if (isHost) {
+			tempChatController.setHost(true);
+			ServerRequest request = new ServerRequest("Helper");
+			request.helperRequest();
 			try {
 				socket = welcomeSocket.accept();
 				// TODO -> client should only be able to make one connection at a time
-				connection = new RecieveAndSend(socket, tempChatTabController);
-				connection.run();		// connection implements Runnable
+				connection = new RecieveAndSend(socket, tempChatController);
+				new Thread(connection).start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		// I am client
 		else {
+			tempChatController.setHost(false);
+			ServerRequest request = new ServerRequest("Student");
+			String helperIP = request.studentRequest();
 			try {
-				this.socket = new Socket(serverIP, hostPort); // connect to the
-																// server
-				connection = new RecieveAndSend(socket, tempChatTabController);
-				connection.run();
+				socket = new Socket(helperIP, this.hostPort ); 
+				connection = new RecieveAndSend(socket, tempChatController); 
+				new Thread(connection).start();
 			} catch (IOException e) {
 				e.printStackTrace();
-
 			}
 		}
 	}
