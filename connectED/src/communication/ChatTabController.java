@@ -30,7 +30,7 @@ public class ChatTabController {
 	}
 
 	public static void decrementWaitingToConnect() {
-		ChatTabController.waitingToConnect = waitingToConnect - 1;
+		ChatTabController.waitingToConnect--;
 	}
 	
 	
@@ -59,17 +59,18 @@ public class ChatTabController {
 		// host can serve 3, client can only queue once
 		else if(ChatTabController.getWaitingToConnect() < 3 && this.connector.isHost() || ChatTabController.getWaitingToConnect() < 1 && !this.connector.isHost()){
 		try {
+				ChatTabController.waitingToConnect++;
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatTab.fxml"));	// loads the content of the given FXML file		
 				Node node = (Node) loader.load();				// sets the loaded FXML content in a Node
 				Tab newTab = new Tab("New Student", node);	// creates new tab with the content in the Node and adds the tab to the current tabs in GUI
 				this.chatTab.getTabs().add(newTab);
 				ChatController chatController = loader.getController();
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
+					ChatTabController.decrementWaitingToConnect();
 					chatController.onClosed();
 				});
 				
 				this.connector.passChatTabController(chatController);	// passes the controller of the new tab to the controllerQueue in connector
-				ChatTabController.waitingToConnect++;
 				new Thread(connector).start();	// starts a thread for accepting from welcomeSocket
 				// think it would be smart to save thread to one can access and conttroll it. 
 			} catch (IOException e) {

@@ -27,7 +27,7 @@ public class ProtocolParser{
 			// do stuff
 			break;
 			
-			/// etc....
+			/// etc.... this is a framework for adding more utillities
 				
 		default:
 			// not recognized protocoll, 
@@ -35,7 +35,7 @@ public class ProtocolParser{
 			break;
 		}
 		
-		// TODO Auto-generated method stub
+	
 		
 	}
 	
