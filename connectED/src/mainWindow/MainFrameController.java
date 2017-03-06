@@ -20,28 +20,15 @@ public class MainFrameController {
 	
 	private InteractionTabManagerController interactionTabManagerController;
 	private ChatTabController chatTabController;
-//	private InfoController;
-//	private StuffController;
-	private boolean hostMode;
+
 	
 	
-	
-//	public void setHostMode(){
-//		this.hostMode = true;
-//	}
-//	
-//	public void setClientMode(){
-//		this.hostMode = false;
-//	}
-//	
 	
 	@FXML
 	public void initialize(){
-		// load FXML for components into the different panes
 			this.rootNode = (GridPane) interactionPane.getParent();
-//			this.hostMode = true;
 			initializeChat();
-			InitializeInteractionTab();
+			initializeInteractionTab();
 
 	}
 	
@@ -50,21 +37,16 @@ public class MainFrameController {
 		try{
 		Node newChatPane  = chatLoader.load();
 		this.chatTabController = chatLoader.getController();
-//		if(hostMode)
-//			chatTabController.setHostMode();
-//		else
-//			chatTabController.setClientMode();
 		rootNode.getChildren().remove(chatPane);
 		rootNode.add(newChatPane, 1, 2);
 		}
 		catch(IOException e){
 			e.printStackTrace();
 		}
-
 	}
 	
 	
-	private void InitializeInteractionTab(){
+	private void initializeInteractionTab(){
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("InteractionTabManager.fxml"));
 		try{
 		Node newTabManager  = loader.load();
