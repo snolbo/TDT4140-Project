@@ -1,10 +1,12 @@
 package communication;
 
 import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 
-import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
-import com.sun.javafx.scene.control.skin.TabPaneSkin;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -18,20 +20,29 @@ public class ChatTabController {
 	@FXML private TabPane chatTab;
 	@FXML private Button giveHelpBtn;
 	@FXML private Button getHelpBtn;
+	
 	private Connector connector;
-	static private int waitingToConnect = 0;
+	static private int PotentialConnections = 0;
+	private ArrayDeque<Thread> waitingThreads;
+	ArrayDeque<ChatController> chatControllerQueue;
+	private boolean isWaitingForConnection = false;
+
 	
 	public ChatTabController(){
-		this.connector = new Connector(); // connector sets up connections and passes them to ReceiveAndSend
+		connector = new Connector(this);
+		waitingThreads = new ArrayDeque<Thread>();
+		chatControllerQueue = new ArrayDeque<ChatController>();
 	}
 	
-	public static int getWaitingToConnect() {
-		return waitingToConnect;
+	public static int getPotentialConnections() {
+		return PotentialConnections;
 	}
 
-	public static void decrementWaitingToConnect() {
-		ChatTabController.waitingToConnect--;
+	public static void decrementPotentialConnections() {
+		ChatTabController.PotentialConnections--;
 	}
+	
+
 	
 	
 	public void setHostMode(){
@@ -52,27 +63,41 @@ public class ChatTabController {
 			System.out.println("Already clientMode");
 	}
 
+	
 	@FXML
 	public void newChatTab(){ // TODO should send message to server queuing its ip
-		if(this.connector.isHost() == null)
+		if(connector.isHost() == null)
 			System.out.println("Must choose get help or give help before opening connection");
 		// host can serve 3, client can only queue once
-		else if(ChatTabController.getWaitingToConnect() < 3 && this.connector.isHost() || ChatTabController.getWaitingToConnect() < 1 && !this.connector.isHost()){
+		else if(ChatTabController.getPotentialConnections() < 3 && connector.isHost() || ChatTabController.getPotentialConnections() < 1 && !connector.isHost()){
 		try {
-				ChatTabController.waitingToConnect++;
+				ChatTabController.PotentialConnections++;
+				// setting up the Chat GUI element
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatTab.fxml"));	// loads the content of the given FXML file		
 				Node node = (Node) loader.load();				// sets the loaded FXML content in a Node
-				Tab newTab = new Tab("New Student", node);	// creates new tab with the content in the Node and adds the tab to the current tabs in GUI
+				Tab newTab = new Tab("Chat session", node);	// creates new tab with the content in the Node and adds the tab to the current tabs in GUI
 				this.chatTab.getTabs().add(newTab);
 				ChatController chatController = loader.getController();
+
+				if(connector.isHost()){
+					connector.sendHelperRequest();
+					chatController.setHost(true);
+				}
+				else {chatController.setHost(false);}
+				chatControllerQueue.addLast(chatController);
+				
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
-					ChatTabController.decrementWaitingToConnect();
-					chatController.onClosed();
+					chatControllerQueue.remove(chatController);
+					ChatTabController.decrementPotentialConnections();
+					chatController.onClosed(); // dont know if this is correct!!!!!!
 				});
 				
-				this.connector.passChatTabController(chatController);	// passes the controller of the new tab to the controllerQueue in connector
-				new Thread(connector).start();	// starts a thread for accepting from welcomeSocket
-				// think it would be smart to save thread to one can access and conttroll it. 
+				if(this.waitingThreads.isEmpty() && !isWaitingForConnection){
+					isWaitingForConnection = true;
+					new Thread(connector).start();
+				}
+				else
+					this.waitingThreads.addLast(new Thread(connector));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -82,13 +107,26 @@ public class ChatTabController {
 		}
 	}
 	
+	
+	
+	public void startChatSession(Socket socket){ //, ChatController chatController){
+		isWaitingForConnection = false;
+		ChatController chatController = chatControllerQueue.poll();
+		RecieveAndSend connection = new RecieveAndSend(socket, chatController);	
+		new Thread(connection).start();
+		if(!this.waitingThreads.isEmpty()){
+			this.waitingThreads.poll().start(); // removes and starts the next thread in queue to retrive socket
+			isWaitingForConnection = true;
+		}
+	}
+	
 	public void onCloseRequest(){
+		this.connector.closeWelcomeSocket();
 		final EventType<Event> closeRequestEventType = Tab.TAB_CLOSE_REQUEST_EVENT;
 		final Event closeRequestEvent = new Event(closeRequestEventType);
 		for(Tab tab : chatTab.getTabs()){
 			Event.fireEvent(tab, closeRequestEvent);
 		}
-		this.connector.onCloseRequest();
 	}
 
 

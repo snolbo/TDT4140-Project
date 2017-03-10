@@ -24,8 +24,7 @@ public class RecieveAndSend implements Runnable{
 	public RecieveAndSend(Socket clientSocket, ChatController chatController){
 		this.socket = clientSocket;
 		this.chatController = chatController;
-		// tells the controller that it is handeling this thread
-		chatController.setRecieveAndSend(this);
+		chatController.setRecieveAndSendConnection(this);
 		this.protocolParser = new ProtocolParser(chatController);
 	}
 	
@@ -62,10 +61,10 @@ public class RecieveAndSend implements Runnable{
 				message = buffread.readLine();
 				protocolParser.handleMessageProtocoll(message);
 			}catch(IOException e){
-				e.printStackTrace();
+				e.printStackTrace(); //cathes the socket closed exception when tabing out
 				break;
 			}
-		} while(message != null && !message.substring(0, 3).equals("END"));
+		} while(message != null && !message.substring(0, 3).equals("END") && !socket.isClosed());
 	}
 	
 	
@@ -86,10 +85,10 @@ public class RecieveAndSend implements Runnable{
 	// sending message to the server, method is used from the controller
 	public void sendChatMessage(String message){
 			try{
-				this.output.writeBytes(message +"\r");
+				 this.output.writeBytes(message +"\r");
 				this.output.flush();
 			}catch(IOException e){
-				e.printStackTrace();
+				 e.printStackTrace();
 			}
 	}
 	

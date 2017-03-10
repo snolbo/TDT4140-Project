@@ -16,7 +16,7 @@ public class MainWindowLaunchHost extends Application {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainFrame.fxml")); //don't neccesarily need this. Can load directly instead of creating loader
 			Parent root = loader.load(); // this loads the stuff into the root which is the root node displayed in the Stage
 			controller = loader.getController();
-			Scene window = new Scene(root,1000,700);
+			Scene window = new Scene(root,700,400);
 			primaryStage.setOnCloseRequest((event) ->{
 				controller.onCloseRequest();
 				System.exit(0);

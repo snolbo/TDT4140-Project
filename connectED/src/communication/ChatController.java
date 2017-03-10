@@ -20,7 +20,7 @@ public class ChatController {
 	@FXML private TextArea userText;
 	@FXML private ListView<Label> chatWindow;
 	
-	private RecieveAndSend receiveAndSend;
+	private RecieveAndSend receiveAndSend = null;
 	private boolean isHost= false;
 	
 
@@ -76,7 +76,7 @@ public class ChatController {
 	}
 
 	// sets a serverCOnnection to this chattab
-	public void setRecieveAndSend(RecieveAndSend connection){
+	public void setRecieveAndSendConnection(RecieveAndSend connection){
 		this.receiveAndSend = connection;
 	}
 
