@@ -2,11 +2,14 @@
 
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.web.WebView?>
 
-
-<TabPane style="-fx-background-color: RED;" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane style="-fx-background-color: BLACK;" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainWindow.InteractionTabManagerController">
   <tabs>
-    <Tab text="Untitled Tab 1" />
+    <Tab text="Code">
+         <content>
+            <WebView fx:id="sharedCodeBrowser" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" />
+         </content></Tab>
     <Tab text="Untitled Tab 2" />
   </tabs>
 </TabPane>
