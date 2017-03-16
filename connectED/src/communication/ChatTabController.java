@@ -18,8 +18,9 @@ import javafx.scene.control.TabPane;
 
 public class ChatTabController {
 	@FXML private TabPane chatTab;
-	@FXML private Button giveHelpBtn;
-	@FXML private Button getHelpBtn;
+	@FXML private Button studentHelperBtn;
+	@FXML private Button studentAssistantBtn;
+	@FXML private Button studentBtn;
 	
 	private Connector connector;
 	static private int PotentialConnections = 0;
@@ -45,7 +46,7 @@ public class ChatTabController {
 
 	
 	
-	public void setHostMode(){
+	public void setStudentHelperMode(){
 		if(this.connector.isHost() == null)
 			connector.setHost();
 		else if (this.connector.isHost() == false)
@@ -54,13 +55,22 @@ public class ChatTabController {
 			System.out.println("Already hostMode");
 	}
 	
-	public void setClientMode(){
+	public void setStudentMode(){
 		if(this.connector.isHost() == null)
 			connector.setClient();
 		else if(this.connector.isHost() == true)
 			System.out.println("Already set to be host");
 		else
 			System.out.println("Already clientMode");
+	}
+	
+	public void setAssistantMode(){
+		if(this.connector.isHost() == null)
+			connector.setHost();
+		else if (this.connector.isHost() == false)
+			System.out.println("Already set to be client");
+		else
+			System.out.println("Already hostMode");
 	}
 
 	
