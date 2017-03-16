@@ -11,7 +11,8 @@ import T2.ServerRequest;
 public class Connector implements Runnable {
 	private ServerSocket welcomeSocket = null; // sockets at server
 
-	private Boolean isHost = null;
+	private Boolean isAssistantHost = null;
+	private Boolean isHelperHost = null;
 	private int hostPort;
 	private ChatTabController chatTabController;
 
@@ -20,12 +21,27 @@ public class Connector implements Runnable {
 		this.hostPort = 9001; // port to connect to if client, port to open at if host
 	}
 
-	public Boolean isHost(){
-		return this.isHost;
+	public Boolean isAssistantHost(){
+		return this.isAssistantHost;
 	}
 	
-	public void setHost() {
-		this.isHost = true;
+	public Boolean isHelperHost(){
+		return this.isHelperHost;
+	}
+	
+	public void setHelperHost() {
+		this.isHelperHost = true;
+		if(this.welcomeSocket == null){
+			try {
+				welcomeSocket = new ServerSocket(hostPort, 20);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void setAssistantHost() {
+		this.isHelperHost = true;
 		if(this.welcomeSocket == null){
 			try {
 				welcomeSocket = new ServerSocket(hostPort, 20);
@@ -36,18 +52,19 @@ public class Connector implements Runnable {
 	}
 
 	public void setClient() {
-		this.isHost = false;
+		this.isHelperHost = false;
+		this.isAssistantHost = false;
 	}
 	
-	public void sendHelperRequest(){
-		ServerRequest request = new ServerRequest("Helper");
+	public void sendHelperRequest(String tag){
+		ServerRequest request = new ServerRequest(tag);
 		request.helperRequest();
 	}
 	
 	@Override
 	public void run() {
 		Socket socket = null;
-		if (isHost) {
+		if (isHelperHost || isAssistantHost) {
 			try {
 				socket = welcomeSocket.accept();
 			} catch (IOException e) {

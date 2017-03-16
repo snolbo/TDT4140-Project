@@ -21,15 +21,24 @@ public class ChatController {
 	@FXML private ListView<Label> chatWindow;
 	
 	private RecieveAndSend receiveAndSend = null;
-	private boolean isHost= false;
+	private boolean isAssistantHost= false;
+	private boolean isHelperHost = false;
 	
 
-	public boolean isHost() {
-		return isHost;
+	public boolean isHelperHost() {
+		return isHelperHost;
+	}
+	
+	public boolean isAssistantHost() {
+		return isAssistantHost;
 	}
 
-	public void setHost(boolean isHost) {
-		this.isHost = isHost;
+	public void setHelperHost(boolean isHelperHost) {
+		this.isHelperHost = isHelperHost;
+	}
+	
+	public void setAssistantHost(boolean isAssistantHost) {
+		this.isAssistantHost = isAssistantHost;
 	}
 	
 	@FXML // listens to keyevents in userText, if keyevent is enter, send CHAT protovol and the text
@@ -48,8 +57,12 @@ public class ChatController {
 			receiveAndSend.sendChatMessage("END-null");
 			receiveAndSend.closeConnection();
 		}
-		if(isHost && receiveAndSend == null){
-			ServerRequest request = new ServerRequest("HelperDelete");
+		if(isHelperHost && receiveAndSend == null){
+			ServerRequest request = new ServerRequest("StudentHelperDelete");
+			request.removeAdressFromQueue();
+		}
+		else if(isAssistantHost && receiveAndSend == null){
+			ServerRequest request = new ServerRequest("StudentAssistantDelete");
 			request.removeAdressFromQueue();
 		}
 		else if(receiveAndSend == null){

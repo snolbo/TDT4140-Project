@@ -47,39 +47,39 @@ public class ChatTabController {
 	
 	
 	public void setStudentHelperMode(){
-		if(this.connector.isHost() == null)
-			connector.setHost();
-		else if (this.connector.isHost() == false)
+		if(this.connector.isHelperHost() == null)
+			connector.setHelperHost();
+		else if (this.connector.isHelperHost() == false)
 			System.out.println("Already set to be client");
 		else
-			System.out.println("Already hostMode");
+			System.out.println("Already helperHostMode");
 	}
 	
 	public void setStudentMode(){
-		if(this.connector.isHost() == null)
+		if(this.connector.isHelperHost() == null || this.connector.isAssistantHost() == null)
 			connector.setClient();
-		else if(this.connector.isHost() == true)
+		else if(this.connector.isHelperHost() == true || this.connector.isAssistantHost() == true)
 			System.out.println("Already set to be host");
 		else
 			System.out.println("Already clientMode");
 	}
 	
 	public void setAssistantMode(){
-		if(this.connector.isHost() == null)
-			connector.setHost();
-		else if (this.connector.isHost() == false)
+		if(this.connector.isAssistantHost() == null)
+			connector.setAssistantHost();
+		else if (this.connector.isAssistantHost() == false)
 			System.out.println("Already set to be client");
 		else
-			System.out.println("Already hostMode");
+			System.out.println("Already assistantHostMode");
 	}
 
 	
 	@FXML
 	public void newChatTab(){ // TODO should send message to server queuing its ip
-		if(connector.isHost() == null)
-			System.out.println("Must choose get help or give help before opening connection");
+		if(connector.isHelperHost() == null && connector.isAssistantHost() == null)
+			System.out.println("Must choose user type before opening connection");
 		// host can serve 3, client can only queue once
-		else if(ChatTabController.getPotentialConnections() < 3 && connector.isHost() || ChatTabController.getPotentialConnections() < 1 && !connector.isHost()){
+		else if(ChatTabController.getPotentialConnections() < 3 && (connector.isHelperHost() || connector.isAssistantHost()) || ChatTabController.getPotentialConnections() < 1 && (!connector.isHelperHost() && !connector.isAssistantHost())){
 		try {
 				ChatTabController.PotentialConnections++;
 				// setting up the Chat GUI element
@@ -89,11 +89,18 @@ public class ChatTabController {
 				this.chatTab.getTabs().add(newTab);
 				ChatController chatController = loader.getController();
 
-				if(connector.isHost()){
-					connector.sendHelperRequest();
-					chatController.setHost(true);
+				if(connector.isHelperHost()){
+					connector.sendHelperRequest("StudentHelper");
+					chatController.setHelperHost(true);
 				}
-				else {chatController.setHost(false);}
+				else if(connector.isAssistantHost()){
+					connector.sendHelperRequest("StudentAssistant");
+					chatController.setAssistantHost(true);
+				}
+				else {
+					chatController.setHelperHost(false);
+					chatController.setAssistantHost(false);
+				}
 				chatControllerQueue.addLast(chatController);
 				
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
