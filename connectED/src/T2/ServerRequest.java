@@ -51,6 +51,8 @@ public class ServerRequest {
 			e.printStackTrace();
 		}
 	}
+	
+	
 		
 	public void removeAdressFromQueue(){
 		try{
