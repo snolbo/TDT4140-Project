@@ -1,6 +1,7 @@
 package communication;
 
 import T2.ServerRequest;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
