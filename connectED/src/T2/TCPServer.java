@@ -62,7 +62,7 @@ public class TCPServer {
 				ServerSocket welcomeSocket; // welcomeSocket accepting connections
 				String IP; // hold IP of sender
 				try { // to receive connections and sort them into right queue by sent tag
-					welcomeSocket = new ServerSocket(6000, 1000);
+					welcomeSocket = new ServerSocket(9999, 1000);
 					while(true) { // receives one connection, and sorts it into the right queue
 						try{ // putting this try inside while will retry while-loop if something fucks up, and not crash entire server like if you sorround everything
 							Socket connectionSocket;
@@ -96,17 +96,17 @@ public class TCPServer {
 								studentHelperQueueITGK.addLast(IP);
 								connectionSocket.close();
 							}
-							else if(tag.equals("StudentDeleteJava"))
+							else if(tag.equals("StudentJavaDelete"))
 								deleteStudentFromQueue(IP, studentIPJava, studentQueueJava);
-							else if(tag.equals("StudentDeleteITGK"))
+							else if(tag.equals("StudentITGKDelete"))
 								deleteStudentFromQueue(IP, studentIPITGK, studentQueueITGK);
-							else if(tag.equals("StudentHelperDeleteJava"))
+							else if(tag.equals("StudentHelperJavaDelete"))
 								deleteStudentHelperFromQueue(IP, studentHelperQueueJava);
-							else if(tag.equals("StudentHelperDeleteITGK"))
+							else if(tag.equals("StudentHelperITGKDelete"))
 								deleteStudentHelperFromQueue(IP, studentHelperQueueITGK);
-							else if(tag.equals("StudentAssistantDeleteJava"))
+							else if(tag.equals("StudentAssistantJavaDelete"))
 								deleteStudentAssistantFromQueue(IP, studentAssistantQueueJava);
-							else if(tag.equals("StudentAssistantDeleteITGK"))
+							else if(tag.equals("StudentAssistantITGKDelete"))
 								deleteStudentAssistantFromQueue(IP, studentAssistantQueueITGK);
 							
 						} catch (IOException e) {

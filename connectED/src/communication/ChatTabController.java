@@ -1,6 +1,7 @@
 package communication;
 
 import java.io.IOException;
+
 import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -21,6 +22,11 @@ public class ChatTabController {
 	@FXML private Button studentHelperBtn;
 	@FXML private Button studentAssistantBtn;
 	@FXML private Button studentBtn;
+	@FXML private Button javaBtn;
+	@FXML private Button itgkBtn;
+	
+	
+	private String tag;
 	
 	private Connector connector;
 	static private int PotentialConnections = 0;
@@ -49,14 +55,14 @@ public class ChatTabController {
 	public void setStudentHelperMode(){
 		if(this.connector.isHelperHost() == null)
 			connector.setHelperHost();
-		else if (this.connector.isHelperHost() == false)
+		else if (this.connector.isHelperHost() == false && this.connector.isAssistantHost() == false)
 			System.out.println("Already set to be client");
 		else
 			System.out.println("Already helperHostMode");
 	}
 	
 	public void setStudentMode(){
-		if(this.connector.isHelperHost() == null || this.connector.isAssistantHost() == null)
+		if(this.connector.isHelperHost() == null && this.connector.isAssistantHost() == null)
 			connector.setClient();
 		else if(this.connector.isHelperHost() == true || this.connector.isAssistantHost() == true)
 			System.out.println("Already set to be host");
@@ -67,10 +73,34 @@ public class ChatTabController {
 	public void setAssistantMode(){
 		if(this.connector.isAssistantHost() == null)
 			connector.setAssistantHost();
-		else if (this.connector.isAssistantHost() == false)
+		else if (this.connector.isAssistantHost() == false && this.connector.isHelperHost() == false)
 			System.out.println("Already set to be client");
 		else
 			System.out.println("Already assistantHostMode");
+	}
+	
+	public void initializeJavaButton(){
+		mergeTags("Java");
+	}
+	
+	public void initializeITGKButton(){
+		mergeTags("ITGK");
+	}
+	
+	//merging user string with subject string to make a tag in purpose of identifying itself to server
+	//subject string has to begin with uppercase letter
+	public void mergeTags(String subject){
+		if (this.connector.isAssistantHost())
+			this.tag = "StudentAssistant" + subject;
+		else if (this.connector.isHelperHost())
+			this.tag = "StudentHelper" + subject;
+		else if (!this.connector.isHelperHost() && !this.connector.isAssistantHost())
+			this.tag= "Student" + subject;
+	}
+	
+	//method for returning tag in purpose of retreiving it in Connector - method run()
+	public String getTag(){
+		return this.tag;
 	}
 
 	
@@ -90,11 +120,11 @@ public class ChatTabController {
 				ChatController chatController = loader.getController();
 
 				if(connector.isHelperHost()){
-					connector.sendHelperRequest("StudentHelper");
+					connector.sendHelperRequest(this.tag);
 					chatController.setHelperHost(true);
 				}
 				else if(connector.isAssistantHost()){
-					connector.sendHelperRequest("StudentAssistant");
+					connector.sendHelperRequest(this.tag);
 					chatController.setAssistantHost(true);
 				}
 				else {
@@ -106,7 +136,7 @@ public class ChatTabController {
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
 					chatControllerQueue.remove(chatController);
 					ChatTabController.decrementPotentialConnections();
-					chatController.onClosed(); // dont know if this is correct!!!!!!
+					chatController.onClosed(this.tag); // dont know if this is correct!!!!!!
 				});
 				
 				if(this.waitingThreads.isEmpty() && !isWaitingForConnection){

@@ -13,7 +13,7 @@ public class ServerRequest {
 	
 	public ServerRequest(String tag){
 		this.tag = tag;
-		this.serverPort = 6000; //NTNU server Port
+		this.serverPort = 9999; //NTNU server Port
 		this.serverIP = ""; //Akkurat nå er Camilla server, ellers NTNU server IP - Christine
 	}
 	

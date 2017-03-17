@@ -53,21 +53,21 @@ public class ChatController {
 	}
 	
 	// used by tab creates in serverChatController on closeRequest of tab
-	public void onClosed() {
+	public void onClosed(String tag) {
 		if(receiveAndSend != null){
 			receiveAndSend.sendChatMessage("END-null");
 			receiveAndSend.closeConnection();
 		}
 		if(isHelperHost && receiveAndSend == null){
-			ServerRequest request = new ServerRequest("StudentHelperDelete");
+			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
 		else if(isAssistantHost && receiveAndSend == null){
-			ServerRequest request = new ServerRequest("StudentAssistantDelete");
+			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
 		else if(receiveAndSend == null){
-			ServerRequest request = new ServerRequest("StudentDelete");
+			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
 	}

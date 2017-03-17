@@ -31,6 +31,7 @@ public class Connector implements Runnable {
 	
 	public void setHelperHost() {
 		this.isHelperHost = true;
+		this.isAssistantHost = false;
 		if(this.welcomeSocket == null){
 			try {
 				welcomeSocket = new ServerSocket(hostPort, 20);
@@ -41,7 +42,8 @@ public class Connector implements Runnable {
 	}
 	
 	public void setAssistantHost() {
-		this.isHelperHost = true;
+		this.isAssistantHost = true;
+		this.isHelperHost = false;
 		if(this.welcomeSocket == null){
 			try {
 				welcomeSocket = new ServerSocket(hostPort, 20);
@@ -72,7 +74,7 @@ public class Connector implements Runnable {
 			}
 		}
 		else {
-			ServerRequest request = new ServerRequest("Student");
+			ServerRequest request = new ServerRequest(chatTabController.getTag());
 			String helperIP = request.studentRequest();
 			try {
 				socket = new Socket(helperIP,hostPort);
