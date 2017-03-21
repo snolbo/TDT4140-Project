@@ -17,7 +17,7 @@ public class Connector implements Runnable {
 
 	public Connector(ChatTabController chatTabController) {
 		this.chatTabController = chatTabController;
-		this.hostPort = 9001; // port to connect to if client, port to open at if host
+		this.hostPort = 9006; // port to connect to if client, port to open at if host
 	}
 
 	public Boolean isHost(){

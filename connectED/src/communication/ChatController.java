@@ -1,10 +1,17 @@
 package communication;
 
+import java.io.IOException;
+
+import org.w3c.dom.Document;
+
 import T2.ServerRequest;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -12,6 +19,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import mainWindow.InteractionTabManagerController;
+import mainWindow.MainFrameController;
 
 
 // Controls the chat of one connection
@@ -22,6 +31,9 @@ public class ChatController {
 	
 	private RecieveAndSend receiveAndSend = null;
 	private boolean isHost= false;
+	private Tab chatTab;
+	private Node InteractionArea;
+	private InteractionTabManagerController interactionTabManagerController;
 	
 
 	public boolean isHost() {
@@ -39,6 +51,9 @@ public class ChatController {
 			Platform.runLater(() -> {receiveAndSend.sendChatMessage("CHAT-" + message);});
 			viewMessage(message, true);
 			event.consume();
+		}
+		else if(event.getCode() == KeyCode.I){
+			System.out.println(interactionTabManagerController.isFinishedLoading());
 		}
 	}
 	
@@ -82,6 +97,65 @@ public class ChatController {
 
 	public void ableToType(boolean tof) {
 		this.userText.setEditable(tof);
+	}
+
+	public void setChatTab(Tab chatTab) {
+		this.chatTab = chatTab;
+	}
+	
+	
+	
+	public Tab getChatTab(){
+		return this.chatTab;
+	}
+
+	public void initializeInteractionArea() {
+		FXMLLoader loader =  new FXMLLoader(getClass().getResource("/mainWindow/InteractionTabManager.fxml"));
+		try{
+		this.InteractionArea  = loader.load();
+		this.interactionTabManagerController = loader.getController();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		if(!isHost()){
+			interactionTabManagerController.setURL("http://connected-1e044.firebaseapp.com");
+		}
+		
+		else{
+			setDefaultURL();
+
+		}
+	}
+	
+	public void setDefaultURL(){
+		interactionTabManagerController.setDefaultURL();
+	}
+	
+	
+	public Node getInteractionArea(){
+		return this.InteractionArea;
+	}
+	
+	public void setCodeUrl(String URL){
+		this.interactionTabManagerController.setURL(URL);
+	}
+	
+	public String getCodeURL(){
+		return interactionTabManagerController.getURL();
+	}
+	
+//	public void reloadCodeEditor(){
+//		interactionTabManagerController.reloadCodeEditor();
+//	}
+
+	public boolean codeEditorFinishedLoading() {
+		return interactionTabManagerController.isFinishedLoading();
+	}
+
+	public void sendCodeURLWhenFinishedLoading() {
+		receiveAndSend.sendCodeUrl("CODEURL-" +interactionTabManagerController.getURL());
+
 	}
 	
 }
