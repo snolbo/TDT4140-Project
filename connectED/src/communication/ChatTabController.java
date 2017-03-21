@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -15,6 +16,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Pane;
+import mainWindow.MainFrameController;
 
 public class ChatTabController {
 	@FXML private TabPane chatTab;
@@ -26,6 +29,7 @@ public class ChatTabController {
 	private ArrayDeque<Thread> waitingThreads;
 	ArrayDeque<ChatController> chatControllerQueue;
 	private boolean isWaitingForConnection = false;
+	private MainFrameController mainFrameController = null;
 
 	
 	public ChatTabController(){
@@ -42,6 +46,9 @@ public class ChatTabController {
 		ChatTabController.PotentialConnections--;
 	}
 	
+	public void passMainFrameController(MainFrameController mainFrameController){ // new
+		this.mainFrameController = mainFrameController;
+	}
 
 	
 	
@@ -78,19 +85,43 @@ public class ChatTabController {
 				Tab newTab = new Tab("Chat session", node);	// creates new tab with the content in the Node and adds the tab to the current tabs in GUI
 				this.chatTab.getTabs().add(newTab);
 				ChatController chatController = loader.getController();
+				chatController.setChatTab(newTab);
 
 				if(connector.isHost()){
-					connector.sendHelperRequest();
 					chatController.setHost(true);
+					chatController.initializeInteractionArea();
+					connector.sendHelperRequest();
 				}
-				else {chatController.setHost(false);}
-				chatControllerQueue.addLast(chatController);
+				else {
+					chatController.setHost(false);
+					chatController.initializeInteractionArea();
+				}
 				
+				
+				chatControllerQueue.addLast(chatController);
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
 					chatControllerQueue.remove(chatController);
 					ChatTabController.decrementPotentialConnections();
 					chatController.onClosed(); // dont know if this is correct!!!!!!
+					if(chatTab.getTabs().size() == 1){
+						mainFrameController.getInteractionTabManagerController().setDefaultURL();
+						mainFrameController.loadNewInteractionArea(mainFrameController.getStartingInteractionTab());
+					}
 				});
+				
+				
+				newTab.setOnSelectionChanged((event) -> {
+					if(newTab.isSelected()){
+						mainFrameController.loadNewInteractionArea(chatController.getInteractionArea());
+					}
+				});
+
+				if(chatTab.getTabs().size() == 1){
+					Event.fireEvent(newTab, new Event(Tab.SELECTION_CHANGED_EVENT));
+				}
+
+				
+				chatTab.getSelectionModel().select(ChatTabController.getPotentialConnections()-1);
 				
 				if(this.waitingThreads.isEmpty() && !isWaitingForConnection){
 					isWaitingForConnection = true;
@@ -112,7 +143,9 @@ public class ChatTabController {
 	public void startChatSession(Socket socket){ //, ChatController chatController){
 		isWaitingForConnection = false;
 		ChatController chatController = chatControllerQueue.poll();
-		RecieveAndSend connection = new RecieveAndSend(socket, chatController);	
+		
+
+		RecieveAndSend connection = new RecieveAndSend(socket, chatController);
 		new Thread(connection).start();
 		if(!this.waitingThreads.isEmpty()){
 			this.waitingThreads.poll().start(); // removes and starts the next thread in queue to retrive socket
