@@ -38,7 +38,7 @@ public class TCPServer {
 		}
 		
 		public boolean hasMatch(LinkedList<Socket> studentQueue, LinkedList<String> studentAssistantQueue, LinkedList<String> studentHelperQueue){ // exist match to connect student to helper?
-			return !studentQueue.isEmpty() && !studentAssistantQueue.isEmpty() || !studentHelperQueue.isEmpty();
+			return (!studentQueue.isEmpty() && (!studentAssistantQueue.isEmpty() || !studentHelperQueue.isEmpty()));
 		}
 		
 		public String formatIP(String returnIP){ // receives format: dhcp-10-22-11-63.wlan.ntnu.no. Change to: 10.22.11.63
@@ -134,7 +134,7 @@ public class TCPServer {
 			studentIPQueue.poll();
 			String helperAddress = null;
 			//pror
-			if (!studentAssistantQueue.isEmpty() && studentHelperQueue.isEmpty() || !studentHelperQueue.isEmpty())
+			if (!studentAssistantQueue.isEmpty())
 				helperAddress = studentAssistantQueue.poll();
 			else if (!studentHelperQueue.isEmpty())
 				helperAddress = studentHelperQueue.poll();

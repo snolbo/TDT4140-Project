@@ -91,16 +91,16 @@ public class ChatTabController {
 	//subject string has to begin with uppercase letter
 	public void mergeTags(String subject){
 		if (this.connector.isAssistantHost())
-			this.tag = "StudentAssistant" + subject;
+			tag = "StudentAssistant" + subject;
 		else if (this.connector.isHelperHost())
-			this.tag = "StudentHelper" + subject;
+			tag = "StudentHelper" + subject;
 		else if (!this.connector.isHelperHost() && !this.connector.isAssistantHost())
-			this.tag= "Student" + subject;
+			tag = "Student" + subject;
 	}
 	
 	//method for returning tag in purpose of retreiving it in Connector - method run()
 	public String getTag(){
-		return this.tag;
+		return tag;
 	}
 
 	
@@ -120,11 +120,11 @@ public class ChatTabController {
 				ChatController chatController = loader.getController();
 
 				if(connector.isHelperHost()){
-					connector.sendHelperRequest(this.tag);
+					connector.sendHelperRequest(tag);
 					chatController.setHelperHost(true);
 				}
 				else if(connector.isAssistantHost()){
-					connector.sendHelperRequest(this.tag);
+					connector.sendHelperRequest(tag);
 					chatController.setAssistantHost(true);
 				}
 				else {
@@ -136,7 +136,7 @@ public class ChatTabController {
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
 					chatControllerQueue.remove(chatController);
 					ChatTabController.decrementPotentialConnections();
-					chatController.onClosed(this.tag); // dont know if this is correct!!!!!!
+					chatController.onClosed(tag); // dont know if this is correct!!!!!!
 				});
 				
 				if(this.waitingThreads.isEmpty() && !isWaitingForConnection){
