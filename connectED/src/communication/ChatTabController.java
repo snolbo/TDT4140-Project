@@ -13,9 +13,12 @@ import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.Stage;
 
 public class ChatTabController {
 	@FXML private TabPane chatTab;
@@ -49,34 +52,46 @@ public class ChatTabController {
 		ChatTabController.PotentialConnections--;
 	}
 	
-
+	private void initializePopUpSubject() throws Exception{               
+        try {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/communication/PopUpSubject.fxml"));
+                Parent root1 = (Parent) fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root1));  
+                stage.show();
+        } catch(Exception e) {
+           e.printStackTrace();
+      }
+	}	
 	
-	
-	public void setStudentHelperMode(){
+	public void setStudentHelperMode() throws Exception{
 		if(this.connector.isHelperHost() == null)
 			connector.setHelperHost();
 		else if (this.connector.isHelperHost() == false && this.connector.isAssistantHost() == false)
 			System.out.println("Already set to be client");
 		else
 			System.out.println("Already helperHostMode");
+		initializePopUpSubject();
 	}
 	
-	public void setStudentMode(){
+	public void setStudentMode() throws Exception{
 		if(this.connector.isHelperHost() == null && this.connector.isAssistantHost() == null)
 			connector.setClient();
 		else if(this.connector.isHelperHost() == true || this.connector.isAssistantHost() == true)
 			System.out.println("Already set to be host");
 		else
 			System.out.println("Already clientMode");
+		initializePopUpSubject();
 	}
 	
-	public void setAssistantMode(){
+	public void setAssistantMode() throws Exception{
 		if(this.connector.isAssistantHost() == null)
 			connector.setAssistantHost();
 		else if (this.connector.isAssistantHost() == false && this.connector.isHelperHost() == false)
 			System.out.println("Already set to be client");
 		else
 			System.out.println("Already assistantHostMode");
+		initializePopUpSubject();
 	}
 	
 	public void initializeJavaButton(){
@@ -175,7 +190,6 @@ public class ChatTabController {
 			Event.fireEvent(tab, closeRequestEvent);
 		}
 	}
-
 
 	
 

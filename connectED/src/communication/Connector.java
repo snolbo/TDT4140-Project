@@ -6,6 +6,10 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 import T2.ServerRequest;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 // Either connect to or sets up connection depending on mode
 public class Connector implements Runnable {
@@ -29,6 +33,8 @@ public class Connector implements Runnable {
 		return this.isHelperHost;
 	}
 	
+	
+	
 	public void setHelperHost() {
 		this.isHelperHost = true;
 		this.isAssistantHost = false;
@@ -39,6 +45,7 @@ public class Connector implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		
 	}
 	
 	public void setAssistantHost() {
