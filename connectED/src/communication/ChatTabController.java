@@ -21,8 +21,6 @@ public class ChatTabController {
 	@FXML private Button studentHelperBtn;
 	@FXML private Button studentAssistantBtn;
 	@FXML private Button studentBtn;
-	@FXML private Button javaBtn;
-	@FXML private Button itgkBtn;
 	
 	
 	private String tag;
@@ -32,6 +30,7 @@ public class ChatTabController {
 	private ArrayDeque<Thread> waitingThreads;
 	ArrayDeque<ChatController> chatControllerQueue;
 	private boolean isWaitingForConnection = false;
+	private Stage stage;
 
 	
 	public ChatTabController(){
@@ -88,15 +87,19 @@ public class ChatTabController {
                 Parent root = (Parent) subjectLoader.load();
                 PopUpSubjectController contr = subjectLoader.getController();
                 contr.passChatTabController(this);
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));  
-                stage.show();
+                this.stage = new Stage();
+                this.stage.setScene(new Scene(root));  
+                this.stage.show();
                 
         } catch(Exception e) {
            e.printStackTrace();
         }
       
 	}	
+	
+	public void closePopUp(){
+		this.stage.close();
+	}
 	
 
 	

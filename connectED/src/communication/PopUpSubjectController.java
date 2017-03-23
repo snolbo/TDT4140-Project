@@ -16,10 +16,12 @@ public class PopUpSubjectController {
 	
 	public void initializeJavaButton(){
 		chatTabController.mergeTags("Java");
+		chatTabController.closePopUp();
 	}
 	
 	public void initializeITGKButton(){
 		chatTabController.mergeTags("ITGK");
+		chatTabController.closePopUp();
 	}
 	
 	
