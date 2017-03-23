@@ -81,6 +81,7 @@ public class ChatTabController {
 			System.out.println("Already assistantHostMode");
 	}
 	
+	//initializes a new popup window with subjects
 	public void initializePopUpSubject() throws Exception{               
         try {
         		FXMLLoader subjectLoader = new FXMLLoader(getClass().getResource("PopUpSubject.fxml"));
@@ -97,6 +98,7 @@ public class ChatTabController {
       
 	}	
 	
+	//closes popup subjects
 	public void closePopUp(){
 		this.stage.close();
 	}
