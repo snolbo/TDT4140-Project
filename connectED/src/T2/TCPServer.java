@@ -42,7 +42,9 @@ public class TCPServer {
 		}
 		
 		public String formatIP(String returnIP){ // receives format: dhcp-10-22-11-63.wlan.ntnu.no. Change to: 10.22.11.63
-			if(!returnIP.matches("^([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})$")){
+			if (returnIP.equals("localhost"))
+				return returnIP;
+			else if(!returnIP.matches("^([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})$")){
 				String[] parts = returnIP.split("-");
 				System.out.println(returnIP);
 				String part1 = parts[1];

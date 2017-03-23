@@ -4,10 +4,6 @@ import java.io.IOException;
 
 import java.net.Socket;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -51,56 +47,58 @@ public class ChatTabController {
 	public static void decrementPotentialConnections() {
 		ChatTabController.PotentialConnections--;
 	}
-	
-	private void initializePopUpSubject() throws Exception{               
-        try {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/communication/PopUpSubject.fxml"));
-                Parent root1 = (Parent) fxmlLoader.load();
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root1));  
-                stage.show();
-        } catch(Exception e) {
-           e.printStackTrace();
-      }
-	}	
+
 	
 	public void setStudentHelperMode() throws Exception{
-		if(this.connector.isHelperHost() == null)
+		if(this.connector.isHelperHost() == null){
 			connector.setHelperHost();
+			initializePopUpSubject();
+		}
 		else if (this.connector.isHelperHost() == false && this.connector.isAssistantHost() == false)
 			System.out.println("Already set to be client");
 		else
 			System.out.println("Already helperHostMode");
-		initializePopUpSubject();
 	}
 	
 	public void setStudentMode() throws Exception{
-		if(this.connector.isHelperHost() == null && this.connector.isAssistantHost() == null)
+		if(this.connector.isHelperHost() == null && this.connector.isAssistantHost() == null){
 			connector.setClient();
+			initializePopUpSubject();
+		}
 		else if(this.connector.isHelperHost() == true || this.connector.isAssistantHost() == true)
 			System.out.println("Already set to be host");
 		else
 			System.out.println("Already clientMode");
-		initializePopUpSubject();
 	}
 	
 	public void setAssistantMode() throws Exception{
-		if(this.connector.isAssistantHost() == null)
+		if(this.connector.isAssistantHost() == null){
 			connector.setAssistantHost();
+			initializePopUpSubject();
+		}
 		else if (this.connector.isAssistantHost() == false && this.connector.isHelperHost() == false)
 			System.out.println("Already set to be client");
 		else
 			System.out.println("Already assistantHostMode");
-		initializePopUpSubject();
 	}
 	
-	public void initializeJavaButton(){
-		mergeTags("Java");
-	}
+	public void initializePopUpSubject() throws Exception{               
+        try {
+        		FXMLLoader subjectLoader = new FXMLLoader(getClass().getResource("PopUpSubject.fxml"));
+                Parent root = (Parent) subjectLoader.load();
+                PopUpSubjectController contr = subjectLoader.getController();
+                contr.passChatTabController(this);
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));  
+                stage.show();
+                
+        } catch(Exception e) {
+           e.printStackTrace();
+        }
+      
+	}	
 	
-	public void initializeITGKButton(){
-		mergeTags("ITGK");
-	}
+
 	
 	//merging user string with subject string to make a tag in purpose of identifying itself to server
 	//subject string has to begin with uppercase letter
@@ -151,7 +149,7 @@ public class ChatTabController {
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
 					chatControllerQueue.remove(chatController);
 					ChatTabController.decrementPotentialConnections();
-					chatController.onClosed(tag); // dont know if this is correct!!!!!!
+					chatController.onClosed(tag); 
 				});
 				
 				if(this.waitingThreads.isEmpty() && !isWaitingForConnection){

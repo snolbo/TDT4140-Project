@@ -12,8 +12,7 @@
             <Button mnemonicParsing="false" onAction="#newChatTab" text="Take another connection" />
             <Button fx:id="studentHelperBtn" mnemonicParsing="false" onAction="#setStudentHelperMode" text="Student Helper" />
             <Button fx:id="studentAssistantBtn" mnemonicParsing="false" onAction= "#setAssistantMode" text="Student Assistant" />
-            <Button fx:id="studentBtn" mnemonicParsing="false" onAction="#setStudentMode" text="Student" />
-            
+            <Button fx:id="studentBtn" mnemonicParsing="false" onAction="#setStudentMode" text="Student" /> 
          </children>
       </HBox>
       <TabPane fx:id="chatTab" />

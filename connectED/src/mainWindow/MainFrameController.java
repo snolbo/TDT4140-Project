@@ -1,7 +1,6 @@
 package mainWindow;
 
 import java.io.IOException;
-import java.util.List;
 
 import communication.ChatTabController;
 import javafx.fxml.FXML;
