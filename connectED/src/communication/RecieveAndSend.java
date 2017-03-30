@@ -32,6 +32,19 @@ public class RecieveAndSend implements Runnable{
 	public void run() {
 		try{
 			setupStreams();
+			
+			if(!chatController.isAssistantHost() && !chatController.isHelperHost()){
+				try {
+					Thread.sleep(2000); // THIS IS FUCKING BAD SOLUTION, HELPER WILL NOT GET WEBSITE OF SENDCODEURL IF IT IS CALLED BEFORE THE SITE AT STUDENT IS LOADED
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}finally{
+//					
+					Platform.runLater( ()->{
+						chatController.sendCodeURLWhenFinishedLoading();
+					});
+				}
+			}
 			whileReceiving();
 		}catch(EOFException e){
 			viewMessage("Server terminated the connection", true);
@@ -51,6 +64,10 @@ public class RecieveAndSend implements Runnable{
 		output.flush();
 	}
 	
+	public void sendCodeUrl(String URL){
+		System.out.println("sending:" + URL);
+		sendChatMessage(URL);
+	}
 
 	private void whileReceiving(){
 		String message = "You are now connected!";
@@ -85,7 +102,7 @@ public class RecieveAndSend implements Runnable{
 	// sending message to the server, method is used from the controller
 	public void sendChatMessage(String message){
 			try{
-				 this.output.writeBytes(message +"\r");
+				this.output.writeBytes(message +"\r");
 				this.output.flush();
 			}catch(IOException e){
 				 e.printStackTrace();

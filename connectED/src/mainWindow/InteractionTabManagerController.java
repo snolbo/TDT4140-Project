@@ -1,9 +1,12 @@
 package mainWindow;
 
+import org.w3c.dom.Document;
+
 import com.sun.glass.ui.EventLoop.State;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -16,13 +19,36 @@ public class InteractionTabManagerController {
 	@FXML
 	void initialize(){
 		this.sharedCodeBrowser.getEngine().setUserStyleSheetLocation("data:,body { font: 15px Helvetica; font-weight: bold; }");
-		this.sharedCodeBrowser.getEngine().load("https://connected-1e044.firebaseapp.com/#-KexK4r_hmnBYMtjSObv");
+		sharedCodeBrowser.getEngine().load("http://www.lutanho.net/play/tetris.html");
 		sharedCodeBrowser.setOnKeyPressed((event) ->{
 			handleKeyEvent(event);
 		});
 		
-
-
+	}
+	
+	public void setURL(String URL){
+		sharedCodeBrowser.getEngine().load(URL);
+	}
+	
+	public String getURL(){
+		Document doc = sharedCodeBrowser.getEngine().getDocument();
+		return doc.getBaseURI();
+	}
+	
+	public void reloadCodeEditor(){
+		sharedCodeBrowser.getEngine().reload();
+	}
+	
+	
+	public void setDefaultURL(){
+		sharedCodeBrowser.getEngine().load("http://www.lutanho.net/play/tetris.html");
+	}
+	
+	public boolean isFinishedLoading(){
+		if(sharedCodeBrowser.getEngine().getLoadWorker().getState().equals(Worker.State.SUCCEEDED))
+			return true;
+		else
+			return false;
 	}
 	
 	public void handleKeyEvent(KeyEvent event){
