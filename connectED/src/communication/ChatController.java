@@ -163,9 +163,14 @@ public class ChatController {
 		return interactionTabManagerController.isFinishedLoading();
 	}
 
-	public void sendCodeURLWhenFinishedLoading() {
-		receiveAndSend.sendCodeUrl("CODEURL-" +interactionTabManagerController.getURL());
+	public void sendCodeURLWhenLoaded() {
+		interactionTabManagerController.sendPageURLWhenLoaded(this);
 
 	}
+	
+	public void sendCodeURL(){
+		receiveAndSend.sendCodeUrl("CODEURL-"+ interactionTabManagerController.getURL());
+	}
+	
 	
 }

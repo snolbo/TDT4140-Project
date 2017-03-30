@@ -14,7 +14,7 @@ public class ServerRequest {
 	public ServerRequest(String tag){
 		this.tag = tag;
 		this.serverPort = 9999; //NTNU server Port
-		this.serverIP = "hv-6221"; 
+		this.serverIP = ""; 
 	}
 	
 	//method for sending a tag "student" to server, 

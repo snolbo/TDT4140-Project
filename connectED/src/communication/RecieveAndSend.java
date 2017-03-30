@@ -33,18 +33,15 @@ public class RecieveAndSend implements Runnable{
 		try{
 			setupStreams();
 			
-			if(!chatController.isAssistantHost() && !chatController.isHelperHost()){
-				try {
-					Thread.sleep(2000); // THIS IS FUCKING BAD SOLUTION, HELPER WILL NOT GET WEBSITE OF SENDCODEURL IF IT IS CALLED BEFORE THE SITE AT STUDENT IS LOADED
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}finally{
-//					
-					Platform.runLater( ()->{
-						chatController.sendCodeURLWhenFinishedLoading();
+			if(!chatController.isAssistantHost() && !chatController.isHelperHost()){ 
+					Platform.runLater( () -> {
+						if(chatController.codeEditorFinishedLoading())
+							chatController.sendCodeURL();
+						else
+							chatController.sendCodeURLWhenLoaded();
 					});
-				}
 			}
+				
 			whileReceiving();
 		}catch(EOFException e){
 			viewMessage("Server terminated the connection", true);

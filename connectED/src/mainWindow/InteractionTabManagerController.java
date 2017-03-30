@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 
 import com.sun.glass.ui.EventLoop.State;
 
+import communication.ChatController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -59,6 +60,15 @@ public class InteractionTabManagerController {
 			else if(event.getCode() == KeyCode.PLUS && currentVal < 2)
 				sharedCodeBrowser.setFontScale(currentVal + 0.1);
 		}
+	}
+	
+	public void sendPageURLWhenLoaded(ChatController chatController){
+		sharedCodeBrowser.getEngine().getLoadWorker().stateProperty().addListener((observed, oldValue, newValue) -> {
+			if(newValue.equals(Worker.State.SUCCEEDED)){
+				System.out.println("URL finished loading, sending to helper...");
+				chatController.sendCodeURL();
+			}
+		});
 	}
 	
 }
