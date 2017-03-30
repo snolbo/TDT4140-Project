@@ -37,16 +37,23 @@ public class RecieveAndSend implements Runnable{
 			
 			
 			if(!chatController.isHost()){
-				try {
-					Thread.sleep(2000); // THIS IS FUCKING BAD SOLUTION, HELPER WILL NOT GET WEBSITE OF SENDCODEURL IF IT IS CALLED BEFORE THE SITE AT STUDENT IS LOADED
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}finally{
+//				try {
+//					Thread.sleep(2000); // THIS IS FUCKING BAD SOLUTION, HELPER WILL NOT GET WEBSITE OF SENDCODEURL IF IT IS CALLED BEFORE THE SITE AT STUDENT IS LOADED
+						Platform.runLater( () ->{
+							if(chatController.codeEditorFinishedLoading())
+								chatController.sendCodeURL();
+							else
+								chatController.sendCodeURLWhenLoaded();
+						});
+
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}finally{
 //					
-					Platform.runLater( ()->{
-						chatController.sendCodeURLWhenFinishedLoading();
-					});
-				}
+//					Platform.runLater( ()->{
+//						chatController.sendCodeURLWhenFinishedLoading();
+//					});
+//				}
 			}
 			
 			
@@ -87,10 +94,15 @@ public class RecieveAndSend implements Runnable{
 				message = buffread.readLine();
 				protocolParser.handleMessageProtocoll(message);
 			}catch(IOException e){
-				e.printStackTrace(); //cathes the socket closed exception when tabing out
-				break;
+				if(socket.isClosed()){
+					System.out.println("Socket is closed so we stop looping in whileReceiving");
+					break;
+				}
+				else{
+					e.printStackTrace(); //cathes the socket closed exception when tabing out
+				}
 			}
-		} while(message != null && !message.substring(0, 3).equals("END") && !socket.isClosed());
+		} while(message != null && !socket.isClosed());
 	}
 	
 	
@@ -111,10 +123,12 @@ public class RecieveAndSend implements Runnable{
 	// sending message to the server, method is used from the controller
 	public void sendChatMessage(String message){
 			try{
-				this.output.writeBytes(message +"\r");
+				this.output.writeBytes(message +"\r\n");
 				this.output.flush();
 			}catch(IOException e){
 				 e.printStackTrace();
+				 if(socket.isClosed())
+					 closeConnection();
 			}
 	}
 	

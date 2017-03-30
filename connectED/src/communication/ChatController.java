@@ -59,15 +59,19 @@ public class ChatController {
 	
 	// used by tab creates in serverChatController on closeRequest of tab
 	public void onClosed() {
+		System.out.println("Closing chatController...");
 		if(receiveAndSend != null){
+			System.out.println("Closing chatController - sends END message and closes connection...");
 			receiveAndSend.sendChatMessage("END-null");
 			receiveAndSend.closeConnection();
 		}
 		if(isHost && receiveAndSend == null){
+			System.out.println("Closing chatController - sends HelperDelete to TCPserver since in queue...");
 			ServerRequest request = new ServerRequest("HelperDelete");
 			request.removeAdressFromQueue();
 		}
 		else if(receiveAndSend == null){
+			System.out.println("Closing chatController - sends StudentDelete to TCPserver since in queue...");
 			ServerRequest request = new ServerRequest("StudentDelete");
 			request.removeAdressFromQueue();
 		}
@@ -110,6 +114,7 @@ public class ChatController {
 	}
 
 	public void initializeInteractionArea() {
+		System.out.println("Initializing interactionArea assisiated with this chatController");
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("/mainWindow/InteractionTabManager.fxml"));
 		try{
 		this.InteractionArea  = loader.load();
@@ -153,9 +158,14 @@ public class ChatController {
 		return interactionTabManagerController.isFinishedLoading();
 	}
 
-	public void sendCodeURLWhenFinishedLoading() {
+	public void sendCodeURL() {
+		System.out.println("Sending CodeURL to helper...");
 		receiveAndSend.sendCodeUrl("CODEURL-" +interactionTabManagerController.getURL());
-
+	}
+	
+	public void sendCodeURLWhenLoaded(){
+		System.out.println("Sending codeURL to helper when the page is finished loading...");
+		interactionTabManagerController.sendPageURLWhenLoaded(this);
 	}
 	
 }

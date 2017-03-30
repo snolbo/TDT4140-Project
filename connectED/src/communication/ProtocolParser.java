@@ -13,47 +13,41 @@ public class ProtocolParser{
 	}
 
 	public void handleMessageProtocoll(String protocolMessage) {
-		int protocolIndexEnd = protocolMessage.indexOf("-");
-		String protocol = protocolMessage.substring(0,protocolIndexEnd);
-		String message = protocolMessage.substring(protocolIndexEnd+1);
-		System.out.println("receive message");
-		System.out.println(message);
-		
-		switch (protocol) {
-		case "CHAT":
-			// do stuff
-			this.chatController.viewMessage(message, false);
-			break;
-		case "END":
-			// do stuff
-			break;
-		case "CODEURL":
-			Platform.runLater(() ->{
-				chatController.setCodeUrl(message);
-				System.out.println("url set");
-//				try {
-//					Thread.sleep(2000);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//				chatController.reloadCodeEditor();
-				System.out.println("page reloaded");
-
-
-			});
-//			Platform.runLater(() ->{
-//				chatController.reloadCodeEditor();
-//			});
+		if(protocolMessage != null){
+			int protocolIndexEnd = protocolMessage.indexOf("-");
+			String protocol = protocolMessage.substring(0,protocolIndexEnd);
+			String message = protocolMessage.substring(protocolIndexEnd+1);
+			System.out.println("receive protocolMessage: " + protocolMessage);
 			
-			
-			break;
-			
-			/// etc.... this is a framework for adding more utillities
+			switch (protocol) {
+			case "CHAT":
+				// do stuff
+				this.chatController.viewMessage(message, false);
+				break;
+			case "END":
+				// do stuff
+				break;
+			case "CODEURL":
+				Platform.runLater(() ->{
+					chatController.setCodeUrl(message);
+					System.out.println("URL received and set");
+	
+	
+				});
+	//			Platform.runLater(() ->{
+	//				chatController.reloadCodeEditor();
+	//			});
 				
-		default:
-			// not recognized protocoll, 
-			System.out.println("Unknown protocoll");
-			break;
+				
+				break;
+				
+				/// etc.... this is a framework for adding more utillities
+					
+			default:
+				// not recognized protocoll, 
+				System.out.println("Unknown protocoll");
+				break;
+			}
 		}
 		
 	
