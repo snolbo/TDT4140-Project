@@ -14,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSException;
 
 public class InteractionTabManagerController {
 	@FXML
@@ -78,7 +79,9 @@ public class InteractionTabManagerController {
 	}
 
 	public void deleteFirepad() {
-		sharedCodeBrowser.getEngine().executeScript("deleteFirepadReference();");
+		if(getURL().startsWith("https://connected-1e044.firebaseapp.com"))
+			sharedCodeBrowser.getEngine().executeScript("deleteFirepadReference();");	
+		sharedCodeBrowser.getEngine().load(null);
 	}
 
 	
