@@ -77,6 +77,10 @@ public class InteractionTabManagerController {
 		}
 	}
 
+	public void deleteFirepad() {
+		sharedCodeBrowser.getEngine().executeScript("deleteFirepadReference();");
+	}
+
 	
 	
 	

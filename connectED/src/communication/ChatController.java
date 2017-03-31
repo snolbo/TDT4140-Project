@@ -75,6 +75,8 @@ public class ChatController {
 			ServerRequest request = new ServerRequest("StudentDelete");
 			request.removeAdressFromQueue();
 		}
+		//if(!isHost())
+			interactionTabManagerController.deleteFirepad();
 	}
 	
 	// shows message in chatWIndow

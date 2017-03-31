@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
+import mainWindow.InteractionTabManagerController;
 import mainWindow.MainFrameController;
 
 public class ChatTabController {
@@ -104,12 +105,12 @@ public class ChatTabController {
 					chatControllerQueue.remove(chatController);
 					ChatTabController.decrementPotentialConnections();
 					System.out.println("Closing current tab -  calling onClosed on assisiated chatController...");
-					chatController.onClosed(); // dont know if this is correct!!!!!!
 					if(chatTab.getTabs().size() == 1){
 						System.out.println("Closing current tab - No active current tabs -> sets default URL in interactionTabManagerController and laods startingInteractionTab in interactionArea...");
 						mainFrameController.getInteractionTabManagerController().setDefaultURL();
 						mainFrameController.loadNewInteractionArea(mainFrameController.getStartingInteractionTab());
 					}
+					chatController.onClosed(); // dont know if this is correct!!!!!!
 				});
 				
 				
