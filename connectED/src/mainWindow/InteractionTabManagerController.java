@@ -84,6 +84,10 @@ public class InteractionTabManagerController {
 		sharedCodeBrowser.getEngine().load(null);
 	}
 
+	public void changeCodeLanguage(String codeLanguage){
+		if(getURL().startsWith("https://connected-1e044.firebaseapp.com"))
+			sharedCodeBrowser.getEngine().executeScript("changeCodeLanguage(" + "'" + codeLanguage + "'" + ");");
+	}
 	
 	
 	
