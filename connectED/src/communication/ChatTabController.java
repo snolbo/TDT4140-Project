@@ -2,6 +2,7 @@ package communication;
 
 import java.io.IOException;
 
+
 import java.net.Socket;
 import java.util.ArrayDeque;
 import javafx.event.Event;
@@ -218,7 +219,17 @@ public class ChatTabController {
 			Event.fireEvent(tab, closeRequestEvent);
 		}
 	}
-
 	
+	public Connector getConnector(){
+		return this.connector;
+	}
+	
+	public Stage getStage(){
+		return this.stage;
+	}
+	
+	public MainFrameController getMainFrameController(){
+		return this.mainFrameController;
+	}
 
 }

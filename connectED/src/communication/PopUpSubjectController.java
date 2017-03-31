@@ -24,7 +24,9 @@ public class PopUpSubjectController {
 		chatTabController.closePopUp();
 	}
 	
-	
+	public ChatTabController getChatTabController(){
+		return chatTabController;
+	}
 	
 	
 }
