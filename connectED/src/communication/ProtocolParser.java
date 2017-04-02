@@ -12,7 +12,7 @@ public class ProtocolParser{
 		this.chatController = chatController;
 	}
 
-	public void handleMessageProtocoll(String protocolMessage) {
+	public void handleMessageProtocol(String protocolMessage) {
 		int protocolIndexEnd = protocolMessage.indexOf("-");
 		String protocol = protocolMessage.substring(0,protocolIndexEnd);
 		String message = protocolMessage.substring(protocolIndexEnd+1);

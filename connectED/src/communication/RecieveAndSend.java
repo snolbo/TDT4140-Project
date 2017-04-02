@@ -54,7 +54,7 @@ public class RecieveAndSend implements Runnable{
 	}
 	
 
-	private void setupStreams() throws IOException{
+	public void setupStreams() throws IOException{
 		input = socket.getInputStream();
 		buffread = new BufferedReader(new InputStreamReader(input));
 		output = new DataOutputStream(socket.getOutputStream());
@@ -66,14 +66,14 @@ public class RecieveAndSend implements Runnable{
 		sendChatMessage(URL);
 	}
 
-	private void whileReceiving(){
+	public void whileReceiving(){
 		String message = "You are now connected!";
 		viewMessage(message, true);
 		ableToType(true); 					
 		do{
 			try{
 				message = buffread.readLine();
-				protocolParser.handleMessageProtocoll(message);
+				protocolParser.handleMessageProtocol(message);
 			}catch(IOException e){
 				e.printStackTrace(); //cathes the socket closed exception when tabing out
 				break;
@@ -108,13 +108,24 @@ public class RecieveAndSend implements Runnable{
 	
 
 
-	private void viewMessage(final String text, boolean madeByMe){
+	public void viewMessage(final String text, boolean madeByMe){
 		Platform.runLater(() -> {chatController.viewMessage(text, madeByMe);});
 	}
 	
-	private void ableToType(final boolean tof){
+	public void ableToType(final boolean tof){
 		Platform.runLater(() -> { chatController.ableToType(tof);});
 	}
 	
+	public InputStream getInputStream(){
+		return this.input;
+	}
+	
+	public DataOutputStream getOutputStream(){
+		return this.output;
+	}
+	
+	public BufferedReader getBufferedReader(){
+		return this.buffread;
+	}
 	
 }

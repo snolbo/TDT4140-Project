@@ -100,13 +100,21 @@ public class ChatController {
 		this.userText.clear();
 	}
 
-	// sets a serverCOnnection to this chattab
+	// sets a serverConnection to this chattab
 	public void setRecieveAndSendConnection(RecieveAndSend connection){
 		this.receiveAndSend = connection;
+	}
+	
+	public RecieveAndSend getReceiveAndSendConnection(){
+		return this.receiveAndSend;
 	}
 
 	public void ableToType(boolean tof) {
 		this.userText.setEditable(tof);
+	}
+	
+	public TextArea getTextArea(){
+		return this.userText;
 	}
 	
 	public void setChatTab(Tab chatTab) {
@@ -158,6 +166,7 @@ public class ChatController {
 //	public void reloadCodeEditor(){
 //		interactionTabManagerController.reloadCodeEditor();
 //	}
+	
 
 	public boolean codeEditorFinishedLoading() {
 		return interactionTabManagerController.isFinishedLoading();

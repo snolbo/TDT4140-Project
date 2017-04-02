@@ -1,6 +1,9 @@
 package unitTests;
 
 import junit.framework.*;
+
+import java.net.ServerSocket;
+
 import communication.ChatTabController;
 import communication.Connector;
 

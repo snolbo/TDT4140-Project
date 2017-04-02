@@ -12,7 +12,7 @@ import mainWindow.MainFrameController;
 
 public class ChatTabControllerTest extends TestCase{
 	
-	ChatTabController chatTabController;
+	public ChatTabController chatTabController;
 	
 	public void setUp(){
 		this.chatTabController = new ChatTabController();
