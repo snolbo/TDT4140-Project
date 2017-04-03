@@ -37,6 +37,7 @@ public class MainFrameController {
 	}
 	
 	private void initializeChat(){
+		System.out.println("Initializing chat-area...");
 		FXMLLoader chatLoader =  new FXMLLoader(getClass().getResource("/communication/ChatManager.fxml"));
 		try{
 		Node newChatPane  = chatLoader.load();
@@ -55,6 +56,7 @@ public class MainFrameController {
 	}
 	
 	private void initializeInteractionTab(){
+		System.out.println("Initializing welcome interactiontab in interactionArea...");
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("InteractionTabManager.fxml"));
 		try{
 		Node newTabManager  = loader.load();
@@ -70,15 +72,14 @@ public class MainFrameController {
 	}
 	
 	public void loadNewInteractionArea(Node interactionArea){
+		System.out.println("Loading new interactionTab in interactionArea");
 		rootNode.getChildren().remove(currentInteractionArea);
-		System.out.println("removed interationsArea");
-		System.out.println("adding: " + interactionArea);
 		rootNode.add(interactionArea, 0, 0, 1, 3);
-		System.out.println("added: " + interactionArea);
 		currentInteractionArea = interactionArea;
 	}
 	
 	public void onCloseRequest(){
+		System.out.println("Closerequest in MainFrameController calling onCloseRequest in chatTabController...");
 		chatTabController.onCloseRequest();
 	}
 	

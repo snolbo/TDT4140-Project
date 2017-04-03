@@ -162,13 +162,15 @@ public class ChatTabController {
 				chatControllerQueue.addLast(chatController);
 				
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
+					System.out.println("Closing current tab -  removing assisiated controller form queue if exists...");
 					chatControllerQueue.remove(chatController);
 					ChatTabController.decrementPotentialConnections();
-					chatController.onClosed(tag); 
+					System.out.println("Closing current tab -  calling onClosed on assisiated chatController...");
 					if(chatTab.getTabs().size() == 1){
 						mainFrameController.getInteractionTabManagerController().setDefaultURL();
 						mainFrameController.loadNewInteractionArea(mainFrameController.getStartingInteractionTab());
 					}
+					chatController.onClosed(tag); 
 				});
 				
 				newTab.setOnSelectionChanged((event) -> {
@@ -201,6 +203,7 @@ public class ChatTabController {
 	
 	
 	public void startChatSession(Socket socket){ //, ChatController chatController){
+		System.out.println("Starting a chat session after received a person to connect to...");
 		isWaitingForConnection = false;
 		ChatController chatController = chatControllerQueue.poll();
 		RecieveAndSend connection = new RecieveAndSend(socket, chatController);	
@@ -212,10 +215,12 @@ public class ChatTabController {
 	}
 	
 	public void onCloseRequest(){
+		System.out.println("Closing welcomesocket in Connector");
 		this.connector.closeWelcomeSocket();
 		final EventType<Event> closeRequestEventType = Tab.TAB_CLOSE_REQUEST_EVENT;
 		final Event closeRequestEvent = new Event(closeRequestEventType);
 		for(Tab tab : chatTab.getTabs()){
+			System.out.println("Firing closerequest on remaining open tab");
 			Event.fireEvent(tab, closeRequestEvent);
 		}
 	}

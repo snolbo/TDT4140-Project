@@ -75,10 +75,14 @@ public class RecieveAndSend implements Runnable{
 				message = buffread.readLine();
 				protocolParser.handleMessageProtocol(message);
 			}catch(IOException e){
-				e.printStackTrace(); //cathes the socket closed exception when tabing out
-				break;
+				if (socket.isClosed()){
+					System.out.println("Socket is closed so we stop looping in whileReceiving");
+					break;
+				}
+				else
+					e.printStackTrace(); //cathes the socket closed exception when tabing out
 			}
-		} while(message != null && !message.substring(0, 3).equals("END") && !socket.isClosed());
+		} while(message != null && !socket.isClosed());
 	}
 	
 	
@@ -103,6 +107,8 @@ public class RecieveAndSend implements Runnable{
 				this.output.flush();
 			}catch(IOException e){
 				 e.printStackTrace();
+				 if(socket.isClosed())
+					 closeConnection();
 			}
 	}
 	

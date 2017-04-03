@@ -66,21 +66,27 @@ public class ChatController {
 	// used by tab creates in serverChatController on closeRequest of tab
 	public void onClosed(String tag) {
 		if(receiveAndSend != null){
+			System.out.println("Closing chatController - sends END message and closes connection...");
 			receiveAndSend.sendChatMessage("END-null");
 			receiveAndSend.closeConnection();
 		}
 		if(isHelperHost && receiveAndSend == null){
+			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
 			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
 		else if(isAssistantHost && receiveAndSend == null){
+			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
 			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
 		else if(receiveAndSend == null){
+			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
 			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
+		if(!isAssistantHost() && !isHelperHost())
+			interactionTabManagerController.deleteFirepad();
 	}
 	
 	// shows message in chatWIndow
@@ -128,6 +134,7 @@ public class ChatController {
 	}
 
 	public void initializeInteractionArea() {
+		System.out.println("Initializing interactionArea assisiated with this chatController");
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("/mainWindow/InteractionTabManager.fxml"));
 		try{
 		this.InteractionArea  = loader.load();
@@ -173,11 +180,13 @@ public class ChatController {
 	}
 
 	public void sendCodeURLWhenLoaded() {
+		System.out.println("Sending codeURL to helper when the page is finished loading...");
 		interactionTabManagerController.sendPageURLWhenLoaded(this);
 
 	}
 	
 	public void sendCodeURL(){
+		System.out.println("Sending CodeURL to helper...");
 		receiveAndSend.sendCodeUrl("CODEURL-"+ interactionTabManagerController.getURL());
 	}
 	

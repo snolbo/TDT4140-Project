@@ -28,6 +28,7 @@ public class InteractionTabManagerController {
 	}
 	
 	public void setURL(String URL){
+		System.out.println("Loading the given URL: " + URL);
 		sharedCodeBrowser.getEngine().load(URL);
 	}
 	
@@ -42,6 +43,7 @@ public class InteractionTabManagerController {
 	
 	
 	public void setDefaultURL(){
+		System.out.println("Setting default URL");
 		sharedCodeBrowser.getEngine().load("http://www.lutanho.net/play/tetris.html");
 	}
 	
@@ -69,6 +71,17 @@ public class InteractionTabManagerController {
 				chatController.sendCodeURL();
 			}
 		});
+	}
+	
+	public void deleteFirepad() {
+		if(getURL().startsWith("https://connected-1e044.firebaseapp.com"))
+			sharedCodeBrowser.getEngine().executeScript("deleteFirepadReference();");	
+		sharedCodeBrowser.getEngine().load(null);
+	}
+	
+	public void changeCodeLanguage(String codeLanguage){
+		if(getURL().startsWith("https://connected-1e044.firebaseapp.com"))
+			sharedCodeBrowser.getEngine().executeScript("changeCodeLanguage(" + "'" + codeLanguage + "'" + ");");
 	}
 	
 }
