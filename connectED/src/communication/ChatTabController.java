@@ -2,6 +2,7 @@ package communication;
 
 import java.io.IOException;
 
+
 import java.net.Socket;
 import java.util.ArrayDeque;
 import javafx.event.Event;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
+import mainWindow.MainFrameController;
 
 public class ChatTabController {
 	@FXML private TabPane chatTab;
@@ -31,6 +33,7 @@ public class ChatTabController {
 	ArrayDeque<ChatController> chatControllerQueue;
 	private boolean isWaitingForConnection = false;
 	private Stage stage;
+	private MainFrameController mainFrameController = null;
 
 	
 	public ChatTabController(){
@@ -46,7 +49,10 @@ public class ChatTabController {
 	public static void decrementPotentialConnections() {
 		ChatTabController.PotentialConnections--;
 	}
-
+	
+	public void passMainFrameController(MainFrameController mainFrameController){ // new
+		this.mainFrameController = mainFrameController;
+	}
 	
 	public void setStudentHelperMode() throws Exception{
 		if(this.connector.isHelperHost() == null){
@@ -136,26 +142,48 @@ public class ChatTabController {
 				Tab newTab = new Tab("Chat session", node);	// creates new tab with the content in the Node and adds the tab to the current tabs in GUI
 				this.chatTab.getTabs().add(newTab);
 				ChatController chatController = loader.getController();
+				chatController.setChatTab(newTab);
 
 				if(connector.isHelperHost()){
-					connector.sendHelperRequest(tag);
 					chatController.setHelperHost(true);
+					chatController.initializeInteractionArea();
+					connector.sendHelperRequest(tag);
 				}
 				else if(connector.isAssistantHost()){
-					connector.sendHelperRequest(tag);
 					chatController.setAssistantHost(true);
+					chatController.initializeInteractionArea();
+					connector.sendHelperRequest(tag);
 				}
 				else {
 					chatController.setHelperHost(false);
 					chatController.setAssistantHost(false);
+					chatController.initializeInteractionArea();
 				}
 				chatControllerQueue.addLast(chatController);
 				
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
+					System.out.println("Closing current tab -  removing assisiated controller form queue if exists...");
 					chatControllerQueue.remove(chatController);
 					ChatTabController.decrementPotentialConnections();
+					System.out.println("Closing current tab -  calling onClosed on assisiated chatController...");
+					if(chatTab.getTabs().size() == 1){
+						mainFrameController.getInteractionTabManagerController().setDefaultURL();
+						mainFrameController.loadNewInteractionArea(mainFrameController.getStartingInteractionTab());
+					}
 					chatController.onClosed(tag); 
 				});
+				
+				newTab.setOnSelectionChanged((event) -> {
+					if(newTab.isSelected()){
+						mainFrameController.loadNewInteractionArea(chatController.getInteractionArea());
+					}
+				});
+				
+				if(chatTab.getTabs().size() == 1){
+					Event.fireEvent(newTab, new Event(Tab.SELECTION_CHANGED_EVENT));
+				}
+				
+				chatTab.getSelectionModel().select(ChatTabController.getPotentialConnections()-1);
 				
 				if(this.waitingThreads.isEmpty() && !isWaitingForConnection){
 					isWaitingForConnection = true;
@@ -175,6 +203,7 @@ public class ChatTabController {
 	
 	
 	public void startChatSession(Socket socket){ //, ChatController chatController){
+		System.out.println("Starting a chat session after received a person to connect to...");
 		isWaitingForConnection = false;
 		ChatController chatController = chatControllerQueue.poll();
 		RecieveAndSend connection = new RecieveAndSend(socket, chatController);	
@@ -186,14 +215,26 @@ public class ChatTabController {
 	}
 	
 	public void onCloseRequest(){
+		System.out.println("Closing welcomesocket in Connector");
 		this.connector.closeWelcomeSocket();
 		final EventType<Event> closeRequestEventType = Tab.TAB_CLOSE_REQUEST_EVENT;
 		final Event closeRequestEvent = new Event(closeRequestEventType);
 		for(Tab tab : chatTab.getTabs()){
+			System.out.println("Firing closerequest on remaining open tab");
 			Event.fireEvent(tab, closeRequestEvent);
 		}
 	}
-
 	
+	public Connector getConnector(){
+		return this.connector;
+	}
+	
+	public Stage getStage(){
+		return this.stage;
+	}
+	
+	public MainFrameController getMainFrameController(){
+		return this.mainFrameController;
+	}
 
 }

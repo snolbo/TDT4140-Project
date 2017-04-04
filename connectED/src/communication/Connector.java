@@ -97,6 +97,10 @@ public class Connector implements Runnable {
 		}
 	}
 	
+	public ServerSocket getWelcomeSocket(){
+		return this.welcomeSocket;
+	}
+	
 	
 
 }
