@@ -18,6 +18,12 @@ public class TCPServer {
 		private LinkedList<String> studentHelperQueueITGK;
 		private LinkedList<String> studentAssistantQueueITGK;
 		
+		private String tag; // to hold received tag
+		private ServerSocket welcomeSocket; // welcomeSocket accepting connections
+		private String IP; // hold IP of sende
+		private Socket connectionSocket;
+		private String helperAddress = null;
+		
 		public TCPServer(){
 			
 			studentIPJava = new LinkedList<String>(); // queue to hold student's IPs
@@ -35,6 +41,59 @@ public class TCPServer {
 			studentAssistantQueueITGK = new LinkedList<String>();
 			
 			//TODO: make additional separate queues for each relevant subject
+		}
+		
+		public LinkedList<String> getstudentIPJava(){
+			return studentIPJava;
+		}
+		
+		public LinkedList<String> getstudentIPITGK(){
+			return studentIPITGK;
+		}
+		
+		public LinkedList<Socket> getstudentQueueJava(){
+			return studentQueueJava;
+		}
+		
+		public LinkedList<String> getstudentHelperQueueJava(){
+			return studentHelperQueueJava;
+		}
+		
+		public LinkedList<String> getstudentAssistantQueueJava(){
+			return studentAssistantQueueJava;
+		}
+		
+		public LinkedList<Socket> getstudentQueueITGK(){
+			return studentQueueITGK;
+		}
+		
+		public LinkedList<String> getstudentHelperQueueITGK(){
+			return studentHelperQueueITGK;
+		}
+		
+		public LinkedList<String> getstudentAssistantQueueITGK(){
+			return studentAssistantQueueITGK;
+			
+		}
+		
+		public String getTag(){
+			return tag;
+		}
+		
+		public ServerSocket getWelcomeSocket(){
+			return welcomeSocket;
+		}
+		
+		public String getIP(){
+			return IP;
+		}
+		
+		public Socket getconnectionSocket(){
+			return connectionSocket;
+		}
+		
+		public String getHelperAddress(){
+			return helperAddress;
 		}
 		
 		public boolean hasMatch(LinkedList<Socket> studentQueue, LinkedList<String> studentAssistantQueue, LinkedList<String> studentHelperQueue){ // exist match to connect student to helper?
@@ -59,60 +118,22 @@ public class TCPServer {
 				return returnIP;
 		}
 		
+		
 		public void start(){
-				String tag; // to hold received tag
-				ServerSocket welcomeSocket; // welcomeSocket accepting connections
-				String IP; // hold IP of sender
 				try { // to receive connections and sort them into right queue by sent tag
 					welcomeSocket = new ServerSocket(9999, 1000);
 					while(true) { // receives one connection, and sorts it into the right queue
 						try{ // putting this try inside while will retry while-loop if something fucks up, and not crash entire server like if you sorround everything
-							Socket connectionSocket;
 							connectionSocket = welcomeSocket.accept(); // receive connection
 							IP = connectionSocket.getInetAddress().getHostName();
 							IP = formatIP(IP);
 							BufferedReader recvBuff = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 							tag = recvBuff.readLine(); // reads one line from connection. Sent messages are end with \n
 								System.out.println("Received: " + tag);
-							if (tag.equals("StudentJava")){
-								studentQueueJava.addLast(connectionSocket);
-								studentIPJava.addLast(IP);
-							}
-							else if (tag.equals("StudentITGK")){
-								studentQueueITGK.addLast(connectionSocket);
-								studentIPITGK.addLast(IP);
-							}
-							else if (tag.equals("StudentAssistantJava")){
-								studentAssistantQueueJava.addLast(IP);
-								connectionSocket.close(); // don't know if this is smart, or if it should also be saved if they drop out of queue
-							}
-							else if (tag.equals("StudentAssistantITGK")){
-								studentAssistantQueueITGK.addLast(IP);
-								connectionSocket.close(); // don't know if this is smart, or if it should also be saved if they drop out of queue
-							}
-							else if(tag.equals("StudentHelperJava")){
-								studentHelperQueueJava.addLast(IP);
-								connectionSocket.close();
-							}
-							else if(tag.equals("StudentHelperITGK")){
-								studentHelperQueueITGK.addLast(IP);
-								connectionSocket.close();
-							}
-							else if(tag.equals("StudentJavaDelete"))
-								deleteStudentFromQueue(IP, studentIPJava, studentQueueJava);
-							else if(tag.equals("StudentITGKDelete"))
-								deleteStudentFromQueue(IP, studentIPITGK, studentQueueITGK);
-							else if(tag.equals("StudentHelperJavaDelete"))
-								deleteStudentHelperFromQueue(IP, studentHelperQueueJava);
-							else if(tag.equals("StudentHelperITGKDelete"))
-								deleteStudentHelperFromQueue(IP, studentHelperQueueITGK);
-							else if(tag.equals("StudentAssistantJavaDelete"))
-								deleteStudentAssistantFromQueue(IP, studentAssistantQueueJava);
-							else if(tag.equals("StudentAssistantITGKDelete"))
-								deleteStudentAssistantFromQueue(IP, studentAssistantQueueITGK);
-							
+							delegateTag(tag, IP, connectionSocket);
 						} catch (IOException e) {
 							e.printStackTrace();
+
 						}
 						if (hasMatch(studentQueueJava, studentAssistantQueueJava, studentHelperQueueJava))
 							match(studentQueueJava, studentIPJava, studentAssistantQueueJava, studentHelperQueueJava);
@@ -127,6 +148,50 @@ public class TCPServer {
 				}
 		}
 		
+		public void delegateTag(String tag, String IP, Socket connectionSocket){
+			try{
+				if (tag.equals("StudentJava")){
+					studentQueueJava.addLast(connectionSocket);
+					studentIPJava.addLast(IP);
+				}
+				else if (tag.equals("StudentITGK")){
+					studentQueueITGK.addLast(connectionSocket);
+					studentIPITGK.addLast(IP);
+				}
+				else if (tag.equals("StudentAssistantJava")){
+					studentAssistantQueueJava.addLast(IP);
+					connectionSocket.close(); // don't know if this is smart, or if it should also be saved if they drop out of queue
+				}
+				else if (tag.equals("StudentAssistantITGK")){
+					studentAssistantQueueITGK.addLast(IP);
+					connectionSocket.close(); // don't know if this is smart, or if it should also be saved if they drop out of queue
+				}
+				else if(tag.equals("StudentHelperJava")){
+					studentHelperQueueJava.addLast(IP);
+					connectionSocket.close();
+				}
+				else if(tag.equals("StudentHelperITGK")){
+					studentHelperQueueITGK.addLast(IP);
+					connectionSocket.close();
+				}
+				else if(tag.equals("StudentJavaDelete"))
+					deleteStudentFromQueue(IP, studentIPJava, studentQueueJava);
+				else if(tag.equals("StudentITGKDelete"))
+					deleteStudentFromQueue(IP, studentIPITGK, studentQueueITGK);
+				else if(tag.equals("StudentHelperJavaDelete"))
+					deleteStudentHelperFromQueue(IP, studentHelperQueueJava);
+				else if(tag.equals("StudentHelperITGKDelete"))
+					deleteStudentHelperFromQueue(IP, studentHelperQueueITGK);
+				else if(tag.equals("StudentAssistantJavaDelete"))
+					deleteStudentAssistantFromQueue(IP, studentAssistantQueueJava);
+				else if(tag.equals("StudentAssistantITGKDelete"))
+					deleteStudentAssistantFromQueue(IP, studentAssistantQueueITGK);
+				}
+			catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+		
 		
 		//sends helperAddress to the next student in line when a match has occurred, such that he/she can set up a connection to the helper
 		//also removing both the helper and student from queues, making way for new matches
@@ -134,7 +199,6 @@ public class TCPServer {
 			System.out.println("Hurra! A match was found!");
 			Socket studentSocket = studentQueue.poll(); //connectionSocket
 			studentIPQueue.poll();
-			String helperAddress = null;
 			//pror
 			if (!studentAssistantQueue.isEmpty())
 				helperAddress = studentAssistantQueue.poll();
