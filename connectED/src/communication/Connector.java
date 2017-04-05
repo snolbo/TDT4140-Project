@@ -9,6 +9,9 @@ import T2.ServerRequest;
 // Either connect to or sets up connection depending on mode
 public class Connector implements Runnable {
 	private ServerSocket welcomeSocket = null; // sockets at server
+	private Socket socket = null;
+	
+	private String helperIP;
 
 	private Boolean isAssistantHost = null;
 	private Boolean isHelperHost = null;
@@ -17,7 +20,7 @@ public class Connector implements Runnable {
 
 	public Connector(ChatTabController chatTabController) {
 		this.chatTabController = chatTabController;
-		this.hostPort = 9001; // port to connect to if client, port to open at if host
+		this.hostPort = 9006; // port to connect to if client, port to open at if host
 	}
 
 	public Boolean isAssistantHost(){
@@ -67,7 +70,6 @@ public class Connector implements Runnable {
 	
 	@Override
 	public void run() {
-		Socket socket = null;
 		if (isHelperHost || isAssistantHost) {
 			try {
 				socket = welcomeSocket.accept();
@@ -77,7 +79,7 @@ public class Connector implements Runnable {
 		}
 		else {
 			ServerRequest request = new ServerRequest(chatTabController.getTag());
-			String helperIP = request.studentRequest();
+			helperIP = request.studentRequest();
 			try {
 				socket = new Socket(helperIP,hostPort);
 			} catch (IOException e) {
@@ -101,6 +103,12 @@ public class Connector implements Runnable {
 		return this.welcomeSocket;
 	}
 	
+	public Socket getSocket(){
+		return this.socket;
+	}
 	
+	public String getHelperIP(){
+		return this.helperIP;
+	}
 
 }

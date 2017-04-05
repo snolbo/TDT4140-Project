@@ -126,7 +126,10 @@ public class ChatTabController {
 	public String getTag(){
 		return tag;
 	}
-
+	
+	public void setTag(String tag){
+		this.tag = tag;
+	}
 	
 	@FXML
 	public void newChatTab(){ // TODO should send message to server queuing its ip

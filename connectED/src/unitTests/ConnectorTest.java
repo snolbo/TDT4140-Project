@@ -2,8 +2,10 @@ package unitTests;
 
 import junit.framework.*;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 
+import T2.ServerRequest;
 import communication.ChatTabController;
 import communication.Connector;
 
@@ -12,57 +14,65 @@ import communication.Connector;
 
 public class ConnectorTest extends TestCase{
 	
+	
 	public ChatTabController chatTabController;
 	public Connector connector;
+	
 	
 	public void setUp(){
 		this.chatTabController = new ChatTabController();
 		this.connector = new Connector(chatTabController);
+		
 	}
 	
 	
-	public void testSetHelperHost(){
-		setUp();
+	public void testSetHelperHost() throws IOException{
 		connector.setHelperHost();
 		assertTrue(connector.isHelperHost());
 		assertFalse(connector.isAssistantHost());
 		assertNotNull(connector.getWelcomeSocket());
+		connector.getWelcomeSocket().close();
 	}
 	
-	public void testSetAssistantHost(){
-		setUp();
+	
+	public void testSetAssistantHost() throws IOException{
 		connector.setAssistantHost();
 		assertFalse(connector.isHelperHost());
 		assertTrue(connector.isAssistantHost());
-		assertNotNull(connector.getWelcomeSocket());
+		connector.getWelcomeSocket().close();
 	}
 	
-	
-	public void testSetCLient(){
-		setUp();
+	public void testSetClient(){
 		connector.setClient();
 		assertFalse(connector.isHelperHost());
 		assertFalse(connector.isAssistantHost());
 		
 	}
 	
-	public void testCloseWelcomeSocket(){
-		setUp();
+	public void testCloseWelcomeSocket() {
 		connector.setHelperHost();
 		connector.closeWelcomeSocket();
 		assertTrue(connector.getWelcomeSocket().isClosed());
 	}
 	
-	public void testSendHelperRequest(){
-		connector.sendHelperRequest("StudentAssistantJava");
-		//TODO: find test objects for this method
+	public void testRun() throws IOException{
+		connector.setHelperHost();
+		connector.run();
+		assertTrue(connector.getSocket().isConnected());
+		connector.getWelcomeSocket().close();
+		//TODO: find out how to test and start chat sessions (last line in run())
+		
+		ServerRequest serverRequest = new ServerRequest("StudentAssistantJava");
+		serverRequest.helperRequest();
+		connector.setClient();
+		chatTabController.setTag("StudentJava");
+		connector.run();
+		assertEquals("10.22.43.121", connector.getHelperIP());
+		assertTrue(connector.getSocket().isConnected());
+		connector.getWelcomeSocket().close();
 	}
 	
-	public void testRun(){
-		setUp();
-		//sette host eller client
-		connector.run();
-		//TODO: find test objects for this method
-	}
+	
+	
 	
 }
