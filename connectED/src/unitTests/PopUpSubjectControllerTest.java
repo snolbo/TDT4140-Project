@@ -2,16 +2,18 @@ package unitTests;
 
 import communication.ChatTabController;
 import communication.PopUpSubjectController;
-import junit.framework.*;
 
-//Error: "Could not initialize class javafx.scene.control.Button", fail in both initializebuttons-methods
-//TODO: find out the general form of junit tests
+import static org.junit.Assert.*;
 
-public class PopUpSubjectControllerTest extends TestCase {
+import org.junit.Before;
+import org.junit.Test;
+
+public class PopUpSubjectControllerTest{
 	
 	public ChatTabController chatTabController;
 	public PopUpSubjectController popUpSubjectController;
 	
+	@Before
 	public void setUp() throws Exception{
 		this.popUpSubjectController = new PopUpSubjectController();
 		this.chatTabController = new ChatTabController();
@@ -19,11 +21,13 @@ public class PopUpSubjectControllerTest extends TestCase {
 		popUpSubjectController.passChatTabController(chatTabController);
 	}
 	
+	@Test
 	public void testPassChatTabController(){
 		popUpSubjectController.passChatTabController(chatTabController);
 		assertEquals(chatTabController, popUpSubjectController.getChatTabController());
 	}
 	
+	@Test
 	public void testInitializeJavaButton() throws Exception{
 		setUp();
 		chatTabController.initializePopUpSubject();
@@ -34,6 +38,7 @@ public class PopUpSubjectControllerTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testInitializeITGKButton() throws Exception{
 		setUp();
 		chatTabController.initializePopUpSubject();

@@ -1,29 +1,38 @@
 package unitTests;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 import T2.ServerRequest;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class ServerRequestTest extends TestCase{
+import org.junit.Before;
+import org.junit.Test;
+
+
+public class ServerRequestTest{
 	
-	ServerRequest serverRequestStudent = new ServerRequest("StudentJava");
-	ServerRequest serverRequestAssistant = new ServerRequest("StudentAssistantJava");
-	ServerRequest serverRequestAssistant2 = new ServerRequest("StudentAssistantJava");
-	ServerRequest serverRequestDelete = new ServerRequest("StudentAssistantJavaDelete");
+	public ServerRequest serverRequestStudent;
+	public ServerRequest serverRequestAssistant;
+	public ServerRequest serverRequestAssistant2;
+	public ServerRequest serverRequestDelete;
 	
+	@Before
+	public void setUp(){
+		serverRequestStudent = new ServerRequest("StudentJava");
+		serverRequestAssistant = new ServerRequest("StudentAssistantJava");
+		serverRequestAssistant2 = new ServerRequest("StudentAssistantJava");
+		serverRequestDelete = new ServerRequest("StudentAssistantJavaDelete");
+	}
 	
+	@Test
 	public void testStudentRequest() throws IOException{
 		serverRequestAssistant.helperRequest();
 		String returnIP = serverRequestStudent.studentRequest();
 		assertEquals("localhost", returnIP);
 	}
 	
+	@Test
 	public void  testRemoveAdressFromQueue(){
 		serverRequestAssistant2.studentRequest();
 		serverRequestDelete.removeAdressFromQueue();

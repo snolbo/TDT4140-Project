@@ -1,31 +1,31 @@
 package unitTests;
 
-import junit.framework.*;
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 
 import T2.ServerRequest;
 import communication.ChatTabController;
 import communication.Connector;
 
-//Error: testSetAssistantHost and testCloseWelcomeSocket fails
-//TODO: find out the general form of junit tests, finish testRun and testSendHelperRequest 
 
-public class ConnectorTest extends TestCase{
+public class ConnectorTest{
 	
 	
 	public ChatTabController chatTabController;
 	public Connector connector;
 	
-	
+	@Before
 	public void setUp(){
 		this.chatTabController = new ChatTabController();
 		this.connector = new Connector(chatTabController);
 		
 	}
 	
-	
+	@Test
 	public void testSetHelperHost() throws IOException{
 		connector.setHelperHost();
 		assertTrue(connector.isHelperHost());
@@ -34,7 +34,7 @@ public class ConnectorTest extends TestCase{
 		connector.getWelcomeSocket().close();
 	}
 	
-	
+	@Test
 	public void testSetAssistantHost() throws IOException{
 		connector.setAssistantHost();
 		assertFalse(connector.isHelperHost());
@@ -42,6 +42,7 @@ public class ConnectorTest extends TestCase{
 		connector.getWelcomeSocket().close();
 	}
 	
+	@Test
 	public void testSetClient(){
 		connector.setClient();
 		assertFalse(connector.isHelperHost());
@@ -49,12 +50,14 @@ public class ConnectorTest extends TestCase{
 		
 	}
 	
+	@Test
 	public void testCloseWelcomeSocket() {
 		connector.setHelperHost();
 		connector.closeWelcomeSocket();
 		assertTrue(connector.getWelcomeSocket().isClosed());
 	}
 	
+	@Test
 	public void testConnect1() throws IOException{
 		connector.setHelperHost();
 		connector.connect();
@@ -63,6 +66,7 @@ public class ConnectorTest extends TestCase{
 		//må kjøre TestClient
 	}
 	
+	@Test
 	public void testConnect2() throws IOException{
 		//må kjøre TCPServer (ikke lokalt)!!
 		ServerRequest serverRequest = new ServerRequest("StudentAssistantJava");
