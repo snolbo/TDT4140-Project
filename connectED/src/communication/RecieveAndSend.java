@@ -122,16 +122,4 @@ public class RecieveAndSend implements Runnable{
 		Platform.runLater(() -> { chatController.ableToType(tof);});
 	}
 	
-	public InputStream getInputStream(){
-		return this.input;
-	}
-	
-	public DataOutputStream getOutputStream(){
-		return this.output;
-	}
-	
-	public BufferedReader getBufferedReader(){
-		return this.buffread;
-	}
-	
 }

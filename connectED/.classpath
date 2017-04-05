@@ -3,6 +3,14 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3">
+		<accessrules>
+			<accessrule kind="accessible" pattern="org/junit/runners/model/Statement"/>
+			<accessrule kind="accessible" pattern="org/junit/runner/Description"/>
+			<accessrule kind="accessible" pattern="org/junit/rules/TestRule"/>
+			<accessrule kind="accessible" pattern="org/junit/Rule"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFXTesting"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

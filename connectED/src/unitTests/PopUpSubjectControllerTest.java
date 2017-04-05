@@ -24,7 +24,7 @@ public class PopUpSubjectControllerTest extends TestCase {
 		assertEquals(chatTabController, popUpSubjectController.getChatTabController());
 	}
 	
-	/*public void testInitializeJavaButton() throws Exception{
+	public void testInitializeJavaButton() throws Exception{
 		setUp();
 		chatTabController.initializePopUpSubject();
 		popUpSubjectController.initializeJavaButton();
@@ -43,7 +43,6 @@ public class PopUpSubjectControllerTest extends TestCase {
 		assertEquals("StudentAssistantITGK", tag);
 		assertFalse(chatTabController.getStage().isShowing());
 	}
-	*/
 	
 	
 }

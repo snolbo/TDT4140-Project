@@ -1,25 +1,19 @@
 package unitTests;
 
-import java.net.Socket;
+
 
 import communication.ChatTabController;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import junit.framework.*;
+import junit.framework.*; 
 import mainWindow.MainFrameController;
-
 
 //Error: alle testSetMode-methods fail (JavaFX Loader fail)
 //TODO: find out the general form of junit tests, finish testNewChatTab, testStartChatSession and testOnCloseRequest
 
 public class ChatTabControllerTest extends TestCase{
 	
-	@FXML private Button javaBtn;
-	@FXML private Button itgkBtn;
-	
-	
 	public ChatTabController chatTabController;
 	
+
 	public void setUp(){
 		this.chatTabController = new ChatTabController();
 	}
@@ -41,16 +35,46 @@ public class ChatTabControllerTest extends TestCase{
 		assertEquals(mainFrameController, chatTabController.getMainFrameController());
 	}
 	
-	/*public void testSetStudentHelperMode() throws Exception{
+	public void testSetStudentHelperMode() throws Exception{
 		chatTabController.setStudentHelperMode();
 		assertTrue(chatTabController.getConnector().isHelperHost());
+		assertFalse(chatTabController.getConnector().isAssistantHost());
 		assertTrue(chatTabController.getStage().isShowing());
+		chatTabController.getConnector().getWelcomeSocket().close();
+		
+		chatTabController.getConnector().setClient();
+		chatTabController.setStudentHelperMode();
+		assertFalse(chatTabController.getConnector().isAssistantHost());
+		assertFalse(chatTabController.getConnector().isHelperHost());
+		chatTabController.getConnector().getWelcomeSocket().close();
+		
+		chatTabController.getConnector().setHelperHost();
+		chatTabController.getConnector().getWelcomeSocket().close();
+		chatTabController.setStudentHelperMode();
+		assertTrue(chatTabController.getConnector().isHelperHost());
+		assertFalse(chatTabController.getConnector().isAssistantHost());
+		chatTabController.getConnector().getWelcomeSocket().close();
+		
 	}
+	
 	
 	public void testSetStudentAssistantMode() throws Exception{
 		chatTabController.setAssistantMode();
 		assertTrue(chatTabController.getConnector().isAssistantHost());
+		assertFalse(chatTabController.getConnector().isHelperHost());
 		assertTrue(chatTabController.getStage().isShowing());
+		chatTabController.getConnector().getWelcomeSocket().close();
+		
+		chatTabController.getConnector().setClient();
+		chatTabController.setAssistantMode();
+		assertFalse(chatTabController.getConnector().isAssistantHost());
+		assertFalse(chatTabController.getConnector().isHelperHost());
+		
+		chatTabController.getConnector().setAssistantHost();
+		chatTabController.getConnector().getWelcomeSocket().close();
+		chatTabController.setAssistantMode();
+		assertFalse(chatTabController.getConnector().isHelperHost());
+		assertTrue(chatTabController.getConnector().isAssistantHost());
 	}
 	
 	public void testSetStudentMode() throws Exception{
@@ -58,6 +82,17 @@ public class ChatTabControllerTest extends TestCase{
 		assertFalse(chatTabController.getConnector().isAssistantHost());
 		assertFalse(chatTabController.getConnector().isHelperHost());
 		assertTrue(chatTabController.getStage().isShowing());
+		
+		chatTabController.getConnector().setAssistantHost();
+		chatTabController.getConnector().getWelcomeSocket().close();
+		chatTabController.setStudentMode();
+		assertTrue(chatTabController.getConnector().isAssistantHost());
+		assertFalse(chatTabController.getConnector().isHelperHost());
+		
+		chatTabController.getConnector().setClient();
+		chatTabController.setStudentMode();
+		assertFalse(chatTabController.getConnector().isAssistantHost());
+		assertFalse(chatTabController.getConnector().isHelperHost());
 	}
 	
 	public void testInitializePopUpSubject() throws Exception{
@@ -66,15 +101,13 @@ public class ChatTabControllerTest extends TestCase{
 	}
 	
 	public void testClosePopUp() throws Exception{
-		setUp();
 		chatTabController.initializePopUpSubject();
 		chatTabController.closePopUp();
 		assertFalse(chatTabController.getStage().isShowing());
 	}
-	*/
+	
 	
 	public void testMergeTags(){
-		setUp();
 		chatTabController.getConnector().setAssistantHost();
 		chatTabController.mergeTags("Java");
 		assertEquals("StudentAssistantJava", chatTabController.getTag());
@@ -84,6 +117,11 @@ public class ChatTabControllerTest extends TestCase{
 		chatTabController.getConnector().setClient();;
 		chatTabController.mergeTags("Java");
 		assertEquals("StudentJava", chatTabController.getTag());
+	}
+	
+	public void testSetTag(){
+		chatTabController.setTag("StudentHelperITGK");
+		assertEquals("StudentHelperITGK", chatTabController.getTag());
 	}
 	
 	

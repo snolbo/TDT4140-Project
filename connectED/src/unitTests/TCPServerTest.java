@@ -23,16 +23,7 @@ public class TCPServerTest extends TestCase{
 		LinkedList<Socket> studentQueueITGK = tcpserver.getstudentQueueITGK();
 		LinkedList<String> studentHelperQueueITGK = tcpserver.getstudentHelperQueueITGK();
 		LinkedList<String> studentAssistantQueueITGK = tcpserver.getstudentAssistantQueueITGK();
-	
-	
-	/*
-	LinkedList<Socket> studentQueueJava;
-	LinkedList<String> studentHelperQueueJava;
-	LinkedList<String> studentAssistantQueueJava;
-	LinkedList<Socket> studentQueueITGK;
-	LinkedList<String> studentHelperQueueITGK;
-	LinkedList<String> studentAssistantQueueITGK;
-	*/		
+		
 	
 	public void testTrueHasMatch(){
 		try{
@@ -100,19 +91,6 @@ public class TCPServerTest extends TestCase{
 		assertEquals(testIP3,returnIP3);
 	}
 
-	
-	/* ikke mulig å teste fordi serveren har en while-løkke
-	public void testStart(){
-		assertNull(tcpserver.getWelcomeSocket());
-		tcpserver.start();
-		ServerRequest serverRequestSJ = new ServerRequest("StudentJava");
-		serverRequestSJ.studentRequest();
-		assertNotNull(tcpserver.getWelcomeSocket());
-		assertEquals("StudentJava", tcpserver.getTag());
-		assertEquals("10.22.36.28", tcpserver.getstudentIPJava().getFirst());
-	}
-	
-	*/
 	
 	public void testDelegateTags(){
 		String tag = "StudentJava";
