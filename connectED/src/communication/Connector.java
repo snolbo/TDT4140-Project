@@ -68,8 +68,7 @@ public class Connector implements Runnable {
 		request.helperRequest();
 	}
 	
-	@Override
-	public void run() {
+	public void connect(){
 		if (isHelperHost || isAssistantHost) {
 			try {
 				socket = welcomeSocket.accept();
@@ -86,6 +85,11 @@ public class Connector implements Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@Override
+	public void run() {
+		connect();
 		if(socket != null)
 			this.chatTabController.startChatSession(socket);
 	}

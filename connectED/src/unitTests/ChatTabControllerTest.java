@@ -3,6 +3,8 @@ package unitTests;
 import java.net.Socket;
 
 import communication.ChatTabController;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import junit.framework.*;
 import mainWindow.MainFrameController;
 
@@ -11,6 +13,10 @@ import mainWindow.MainFrameController;
 //TODO: find out the general form of junit tests, finish testNewChatTab, testStartChatSession and testOnCloseRequest
 
 public class ChatTabControllerTest extends TestCase{
+	
+	@FXML private Button javaBtn;
+	@FXML private Button itgkBtn;
+	
 	
 	public ChatTabController chatTabController;
 	
@@ -31,27 +37,23 @@ public class ChatTabControllerTest extends TestCase{
 	
 	public void testPassMainFrameController(){
 		MainFrameController mainFrameController = new MainFrameController();
-		setUp();
 		chatTabController.passMainFrameController(mainFrameController);
 		assertEquals(mainFrameController, chatTabController.getMainFrameController());
 	}
 	
 	public void testSetStudentHelperMode() throws Exception{
-		setUp();
 		chatTabController.setStudentHelperMode();
 		assertTrue(chatTabController.getConnector().isHelperHost());
 		assertTrue(chatTabController.getStage().isShowing());
 	}
 	
 	public void testSetStudentAssistantMode() throws Exception{
-		setUp();
 		chatTabController.setAssistantMode();
 		assertTrue(chatTabController.getConnector().isAssistantHost());
 		assertTrue(chatTabController.getStage().isShowing());
 	}
 	
 	public void testSetStudentMode() throws Exception{
-		setUp();
 		chatTabController.setStudentMode();
 		assertFalse(chatTabController.getConnector().isAssistantHost());
 		assertFalse(chatTabController.getConnector().isHelperHost());
@@ -59,7 +61,6 @@ public class ChatTabControllerTest extends TestCase{
 	}
 	
 	public void testInitializePopUpSubject() throws Exception{
-		setUp();
 		chatTabController.initializePopUpSubject();
 		assertTrue(chatTabController.getStage().isShowing());
 	}
@@ -84,21 +85,14 @@ public class ChatTabControllerTest extends TestCase{
 		assertEquals("StudentJava", chatTabController.getTag());
 	}
 	
-	public void testNewChatTab(){
-		setUp();
-		chatTabController.newChatTab();
-		//TODO: find test objects for this method
-	}
 	
 	public void testStartChatSession(){
-		setUp();
 		Socket socket = new Socket();
 		chatTabController.startChatSession(socket);
 		//TODO: find test objects for this method
 	}
 	
 	public void testOnCloseRequest(){
-		setUp();
 		chatTabController.onCloseRequest();
 		//TODO: find test objects for this method
 	}

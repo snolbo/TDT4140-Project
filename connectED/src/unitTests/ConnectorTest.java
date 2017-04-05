@@ -55,23 +55,25 @@ public class ConnectorTest extends TestCase{
 		assertTrue(connector.getWelcomeSocket().isClosed());
 	}
 	
-	public void testRun() throws IOException{
+	public void testConnect1() throws IOException{
 		connector.setHelperHost();
-		connector.run();
+		connector.connect();
 		assertTrue(connector.getSocket().isConnected());
 		connector.getWelcomeSocket().close();
-		//TODO: find out how to test and start chat sessions (last line in run())
-		
+		//må kjøre TestClient
+	}
+	
+	public void testConnect2() throws IOException{
+		//må kjøre TCPServer (ikke lokalt)!!
 		ServerRequest serverRequest = new ServerRequest("StudentAssistantJava");
 		serverRequest.helperRequest();
 		connector.setClient();
 		chatTabController.setTag("StudentJava");
-		connector.run();
+		connector.connect();
 		assertEquals("10.22.43.121", connector.getHelperIP());
-		assertTrue(connector.getSocket().isConnected());
-		connector.getWelcomeSocket().close();
+		//assertTrue(connector.getSocket().isConnected());
+		//connector.getWelcomeSocket().close();
 	}
-	
 	
 	
 	
