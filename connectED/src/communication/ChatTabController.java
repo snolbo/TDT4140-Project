@@ -26,7 +26,6 @@ public class ChatTabController {
 	
 	
 	private String tag;
-	
 	private Connector connector;
 	static private int PotentialConnections = 0;
 	private ArrayDeque<Thread> waitingThreads;
