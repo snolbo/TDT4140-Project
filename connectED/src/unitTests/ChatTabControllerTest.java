@@ -41,7 +41,7 @@ public class ChatTabControllerTest extends TestCase{
 		assertEquals(mainFrameController, chatTabController.getMainFrameController());
 	}
 	
-	public void testSetStudentHelperMode() throws Exception{
+	/*public void testSetStudentHelperMode() throws Exception{
 		chatTabController.setStudentHelperMode();
 		assertTrue(chatTabController.getConnector().isHelperHost());
 		assertTrue(chatTabController.getStage().isShowing());
@@ -71,6 +71,7 @@ public class ChatTabControllerTest extends TestCase{
 		chatTabController.closePopUp();
 		assertFalse(chatTabController.getStage().isShowing());
 	}
+	*/
 	
 	public void testMergeTags(){
 		setUp();
@@ -85,16 +86,5 @@ public class ChatTabControllerTest extends TestCase{
 		assertEquals("StudentJava", chatTabController.getTag());
 	}
 	
-	
-	public void testStartChatSession(){
-		Socket socket = new Socket();
-		chatTabController.startChatSession(socket);
-		//TODO: find test objects for this method
-	}
-	
-	public void testOnCloseRequest(){
-		chatTabController.onCloseRequest();
-		//TODO: find test objects for this method
-	}
 	
 }

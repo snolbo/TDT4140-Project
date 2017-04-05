@@ -40,13 +40,6 @@ public class ChatControllerTest extends TestCase{
 		//TODO: find test objects for this method
 	}
 	
-	public void testOnClosed(){
-		setUp();
-		String tag = null;
-		chatController.onClosed(tag);
-		//need to set ReceiveAndSend and already set tags
-		//TODO: find test objects for this method
-	}
 	
 	public void testViewMessage(){
 		setUp();
@@ -62,12 +55,6 @@ public class ChatControllerTest extends TestCase{
 		assertEquals(recieveAndSend, chatController.getReceiveAndSendConnection());
 	}
 	
-	public void testAbleToType() {
-		setUp();
-		//need to simulate user text
-		chatController.ableToType(true);
-		assertTrue(chatController.getTextArea().isEditable());
-	}
 	
 	public void testSetChatTab(){
 		setUp();
@@ -75,47 +62,6 @@ public class ChatControllerTest extends TestCase{
 		chatController.setChatTab(chatTab);
 		assertEquals(chatTab, chatController.getChatTab());
 	}
-	
-	public void testInitializeInteractionArea() throws IOException{
-		setUp();
-		chatController.setAssistantHost(true);
-		FXMLLoader loader =  new FXMLLoader(getClass().getResource("/mainWindow/InteractionTabManager.fxml"));
-		Node InteractionArea  = loader.load();
-		chatController.initializeInteractionArea();
-		assertEquals(InteractionArea, chatController.getInteractionArea());
-		//assertEquals for default URL
-		
-		chatController.setHelperHost(false);
-		chatController.setAssistantHost(true);
-		chatController.initializeInteractionArea();
-		assertEquals(InteractionArea, chatController.getInteractionArea());
-		//assertEquals for URL: "http://connected-1e044.firebaseapp.com"
-		
-	}
-	
-	public void testSetDefaultURL(){
-		setUp();
-		chatController.setDefaultURL();
-		assertEquals("http://www.lutanho.net/play/tetris.html", chatController.getCodeURL());
-	}
-	
-	public void testSetCodeURL(){
-		setUp();
-		chatController.setCodeUrl("http://connected-1e044.firebaseapp.com");
-		assertEquals("http://connected-1e044.firebaseapp.com", chatController.getCodeURL());
-	}
-	
-	public void testSendCodeURLWhenLoaded(){
-		setUp();
-		chatController.sendCodeURLWhenLoaded();
-		//TODO: find test objects for this method
-	}
-	
-	public void testSendCodeURL(){
-		setUp();
-		chatController.setCodeUrl("http://connected-1e044.firebaseapp.com");
-		chatController.sendCodeURL();
-		//TODO: find test objects for this method
-	}
+
 	
 }
