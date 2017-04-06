@@ -3,15 +3,22 @@ package unitTests;
 
 
 import communication.ChatTabController;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.stage.Stage;
 
 import static org.junit.Assert.*;
 
+
+
 import org.junit.Before;
 import org.junit.Test;
+import org.testfx.framework.junit.ApplicationTest;
 
 import mainWindow.MainFrameController;
 
-public class ChatTabControllerTest{
+public class ChatTabControllerTest extends ApplicationTest{
 	
 	public ChatTabController chatTabController;
 	
@@ -41,79 +48,74 @@ public class ChatTabControllerTest{
 	}
 	
 	@Test
-	public void testSetStudentHelperMode() throws Exception{
+	public void testSetStudentHelperMode1() throws Exception{
 		chatTabController.setStudentHelperMode();
 		assertTrue(chatTabController.getConnector().isHelperHost());
 		assertFalse(chatTabController.getConnector().isAssistantHost());
-		assertTrue(chatTabController.getStage().isShowing());
-		chatTabController.getConnector().getWelcomeSocket().close();
+		//assertTrue(chatTabController.getStage().isShowing());
 		
+	}
+	
+	@Test
+	public void testSetStudentHelperMode2() throws Exception{
 		chatTabController.getConnector().setClient();
 		chatTabController.setStudentHelperMode();
 		assertFalse(chatTabController.getConnector().isAssistantHost());
 		assertFalse(chatTabController.getConnector().isHelperHost());
-		chatTabController.getConnector().getWelcomeSocket().close();
-		
+	}
+	
+	@Test
+	public void testSetStudentHelperMode3() throws Exception{
 		chatTabController.getConnector().setHelperHost();
-		chatTabController.getConnector().getWelcomeSocket().close();
 		chatTabController.setStudentHelperMode();
 		assertTrue(chatTabController.getConnector().isHelperHost());
 		assertFalse(chatTabController.getConnector().isAssistantHost());
-		chatTabController.getConnector().getWelcomeSocket().close();
-		
 	}
 	
 	@Test
-	public void testSetStudentAssistantMode() throws Exception{
+	public void testSetStudentAssistantMode1() throws Exception{
 		chatTabController.setAssistantMode();
 		assertTrue(chatTabController.getConnector().isAssistantHost());
 		assertFalse(chatTabController.getConnector().isHelperHost());
-		assertTrue(chatTabController.getStage().isShowing());
-		chatTabController.getConnector().getWelcomeSocket().close();
-		
+	}
+	
+	@Test
+	public void testSetStudentAssistantMode2() throws Exception{
 		chatTabController.getConnector().setClient();
 		chatTabController.setAssistantMode();
 		assertFalse(chatTabController.getConnector().isAssistantHost());
 		assertFalse(chatTabController.getConnector().isHelperHost());
-		
+	}
+	
+	public void testSetStudentAssistantMode3() throws Exception{
 		chatTabController.getConnector().setAssistantHost();
-		chatTabController.getConnector().getWelcomeSocket().close();
 		chatTabController.setAssistantMode();
 		assertFalse(chatTabController.getConnector().isHelperHost());
 		assertTrue(chatTabController.getConnector().isAssistantHost());
 	}
-	
 	@Test
-	public void testSetStudentMode() throws Exception{
+	public void testSetStudentMode1() throws Exception{
 		chatTabController.setStudentMode();
 		assertFalse(chatTabController.getConnector().isAssistantHost());
 		assertFalse(chatTabController.getConnector().isHelperHost());
-		assertTrue(chatTabController.getStage().isShowing());
-		
+	}
+	
+	@Test
+	public void testSetStudentMode2() throws Exception{
 		chatTabController.getConnector().setAssistantHost();
-		chatTabController.getConnector().getWelcomeSocket().close();
 		chatTabController.setStudentMode();
 		assertTrue(chatTabController.getConnector().isAssistantHost());
 		assertFalse(chatTabController.getConnector().isHelperHost());
-		
+	}
+	
+	@Test
+	public void testSetStudentMode3()throws Exception{
 		chatTabController.getConnector().setClient();
 		chatTabController.setStudentMode();
 		assertFalse(chatTabController.getConnector().isAssistantHost());
 		assertFalse(chatTabController.getConnector().isHelperHost());
 	}
 	
-	@Test
-	public void testInitializePopUpSubject() throws Exception{
-		chatTabController.initializePopUpSubject();
-		assertTrue(chatTabController.getStage().isShowing());
-	}
-	
-	@Test
-	public void testClosePopUp() throws Exception{
-		chatTabController.initializePopUpSubject();
-		chatTabController.closePopUp();
-		assertFalse(chatTabController.getStage().isShowing());
-	}
 	
 	@Test
 	public void testMergeTags(){
@@ -133,6 +135,13 @@ public class ChatTabControllerTest{
 		chatTabController.setTag("StudentHelperITGK");
 		assertEquals("StudentHelperITGK", chatTabController.getTag());
 	}
+
+	@Override
+	public void start(Stage stage) throws Exception {
+		
+		
+	}
+
 	
 	
 }

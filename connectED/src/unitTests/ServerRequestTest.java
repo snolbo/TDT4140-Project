@@ -29,7 +29,7 @@ public class ServerRequestTest{
 	public void testStudentRequest() throws IOException{
 		serverRequestAssistant.helperRequest();
 		String returnIP = serverRequestStudent.studentRequest();
-		assertEquals("localhost", returnIP);
+		assertEquals("10.22.43.121", returnIP);
 	}
 	
 	@Test

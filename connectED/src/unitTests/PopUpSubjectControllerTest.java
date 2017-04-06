@@ -27,27 +27,5 @@ public class PopUpSubjectControllerTest{
 		assertEquals(chatTabController, popUpSubjectController.getChatTabController());
 	}
 	
-	@Test
-	public void testInitializeJavaButton() throws Exception{
-		setUp();
-		chatTabController.initializePopUpSubject();
-		popUpSubjectController.initializeJavaButton();
-		String tag = chatTabController.getTag();
-		assertEquals("StudentAssistantJava", tag);
-		assertFalse(chatTabController.getStage().isShowing()); 
-		
-	}
-	
-	@Test
-	public void testInitializeITGKButton() throws Exception{
-		setUp();
-		chatTabController.initializePopUpSubject();
-		PopUpSubjectControllerTest testITGK = new PopUpSubjectControllerTest();
-		popUpSubjectController.initializeITGKButton();
-		String tag = chatTabController.getTag();
-		assertEquals("StudentAssistantITGK", tag);
-		assertFalse(chatTabController.getStage().isShowing());
-	}
-	
 	
 }

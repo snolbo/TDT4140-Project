@@ -28,5 +28,4 @@ public class PopUpSubjectController {
 		return chatTabController;
 	}
 	
-	
 }
