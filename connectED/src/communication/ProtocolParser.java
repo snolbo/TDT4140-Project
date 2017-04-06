@@ -7,6 +7,8 @@ public class ProtocolParser{
 	
 	
 	private ChatController chatController;
+	private String protocol;
+	private String message;
 
 	public ProtocolParser(ChatController chatController){
 		this.chatController = chatController;
@@ -14,22 +16,19 @@ public class ProtocolParser{
 
 	public void handleMessageProtocol(String protocolMessage) {
 		if (protocolMessage != null){
-			int protocolIndexEnd = protocolMessage.indexOf("-");
-			String protocol = protocolMessage.substring(0,protocolIndexEnd);
-			String message = protocolMessage.substring(protocolIndexEnd+1);
-			System.out.println("receive protocolMessage: " + protocolMessage);
+			splitUpString(protocolMessage);
 			
-			switch (protocol) {
+			switch (this.protocol) {
 			case "CHAT":
 				// do stuff
-				this.chatController.viewMessage(message, false);
+				this.chatController.viewMessage(this.message, false);
 				break;
 			case "END":
 				// do stuff
 				break;
 			case "CODEURL":
 				Platform.runLater(() ->{
-					chatController.setCodeUrl(message);
+					chatController.setCodeUrl(this.message);
 					System.out.println("URL received and set");
 	
 	
@@ -49,6 +48,21 @@ public class ProtocolParser{
 				break;
 			}
 		}
+	}
+	
+	public void splitUpString(String protocolMessage){
+		int protocolIndexEnd = protocolMessage.indexOf("-");
+		this.protocol = protocolMessage.substring(0,protocolIndexEnd);
+		this.message = protocolMessage.substring(protocolIndexEnd+1);
+		System.out.println("receive protocolMessage: " + protocolMessage);
+	}
+	
+	public String getProtocol(){
+		return this.protocol;
+	}
+	
+	public String getMessage(){
+		return this.message;
 	}
 	
 }

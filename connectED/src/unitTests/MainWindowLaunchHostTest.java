@@ -22,12 +22,7 @@ import mainWindow.MainWindowLaunchHost;
 public class MainWindowLaunchHostTest extends ApplicationTest{
 	
 	Stage stage; 
-	MainWindowLaunchHost mainWindow;
 	
-	@Before 
-	public void setUp(){
-		mainWindow = new MainWindowLaunchHost();
-	}
 	
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -37,7 +32,6 @@ public class MainWindowLaunchHostTest extends ApplicationTest{
 		this.stage = stage;
         stage.setScene(scene);
         stage.show();
-		
 	}
 
 	@Test

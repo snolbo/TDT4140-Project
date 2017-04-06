@@ -68,6 +68,14 @@ public class ConnectorTest{
 	
 	@Test
 	public void testConnect2() throws IOException{
+		connector.setAssistantHost();
+		connector.connect();
+		assertTrue(connector.getSocket().isConnected());
+		connector.getWelcomeSocket().close();
+	}
+	
+	@Test
+	public void testConnect3() throws IOException{
 		//må kjøre TCPServer (ikke lokalt)!!
 		ServerRequest serverRequest = new ServerRequest("StudentAssistantJava");
 		serverRequest.helperRequest();

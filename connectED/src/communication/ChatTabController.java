@@ -63,7 +63,7 @@ public class ChatTabController {
 		else if (this.connector.isHelperHost() == false && this.connector.isAssistantHost() == false)
 			System.out.println("Already set to be client");
 		else
-			System.out.println("Already helperHostMode");
+			System.out.println("Already HostMode");
 	}
 	
 	public void setStudentMode() throws Exception{
@@ -85,7 +85,7 @@ public class ChatTabController {
 		else if (this.connector.isAssistantHost() == false && this.connector.isHelperHost() == false)
 			System.out.println("Already set to be client");
 		else
-			System.out.println("Already assistantHostMode");
+			System.out.println("Already HostMode");
 	}
 	
 	//initializes a new popup window with subjects
@@ -115,7 +115,9 @@ public class ChatTabController {
 	//merging user string with subject string to make a tag in purpose of identifying itself to server
 	//subject string has to begin with uppercase letter
 	public void mergeTags(String subject){
-		if (this.connector.isAssistantHost())
+		if(this.connector.isAssistantHost() == null && this.connector.isHelperHost() == null)
+			System.out.println("Need to choose user type before choosing subject!");
+		else if (this.connector.isAssistantHost())
 			tag = "StudentAssistant" + subject;
 		else if (this.connector.isHelperHost())
 			tag = "StudentHelper" + subject;
