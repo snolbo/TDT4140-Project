@@ -35,31 +35,16 @@ public class RecieveAndSend implements Runnable{
 		try{
 			setupStreams();
 			
-			
-			if(!chatController.isHost()){
-//				try {
-//					Thread.sleep(2000); // THIS IS FUCKING BAD SOLUTION, HELPER WILL NOT GET WEBSITE OF SENDCODEURL IF IT IS CALLED BEFORE THE SITE AT STUDENT IS LOADED
-						Platform.runLater( () ->{
-							if(chatController.codeEditorFinishedLoading())
-								chatController.sendCodeURL();
-							else
-								chatController.sendCodeURLWhenLoaded();
-						});
 
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}finally{
-//					
-//					Platform.runLater( ()->{
-//						chatController.sendCodeURLWhenFinishedLoading();
-//					});
-//				}
+			if(!chatController.isAssistantHost() && !chatController.isHelperHost()){ 
+					Platform.runLater( () -> {
+						if(chatController.codeEditorFinishedLoading())
+							chatController.sendCodeURL();
+						else
+							chatController.sendCodeURLWhenLoaded();
+					});
 			}
-			
-			
-			
-			
-			
+				
 			whileReceiving();
 		}catch(EOFException e){
 			viewMessage("Server terminated the connection", true);
@@ -72,35 +57,36 @@ public class RecieveAndSend implements Runnable{
 	}
 	
 	
-	public void sendCodeUrl(String URL){
-		System.out.println("sending:" + URL);
-		sendChatMessage(URL);
-	}
 
-	private void setupStreams() throws IOException{
+
+	public void setupStreams() throws IOException{
 		input = socket.getInputStream();
 		buffread = new BufferedReader(new InputStreamReader(input));
 		output = new DataOutputStream(socket.getOutputStream());
 		output.flush();
 	}
 	
+	public void sendCodeUrl(String URL){
+		System.out.println("sending:" + URL);
+		sendChatMessage(URL);
+	}
 
-	private void whileReceiving(){
+	public void whileReceiving(){
 		String message = "You are now connected!";
 		viewMessage(message, true);
 		ableToType(true); 					
 		do{
 			try{
 				message = buffread.readLine();
-				protocolParser.handleMessageProtocoll(message);
+				protocolParser.handleMessageProtocol(message);
 			}catch(IOException e){
-				if(socket.isClosed()){
+
+				if (socket.isClosed()){
 					System.out.println("Socket is closed so we stop looping in whileReceiving");
 					break;
 				}
-				else{
+				else
 					e.printStackTrace(); //cathes the socket closed exception when tabing out
-				}
 			}
 		} while(message != null && !socket.isClosed());
 	}
@@ -134,11 +120,11 @@ public class RecieveAndSend implements Runnable{
 	
 
 
-	private void viewMessage(final String text, boolean madeByMe){
+	public void viewMessage(final String text, boolean madeByMe){
 		Platform.runLater(() -> {chatController.viewMessage(text, madeByMe);});
 	}
 	
-	private void ableToType(final boolean tof){
+	public void ableToType(final boolean tof){
 		Platform.runLater(() -> { chatController.ableToType(tof);});
 	}
 

@@ -1,7 +1,6 @@
 package mainWindow;
 
 import java.io.IOException;
-import java.util.List;
 
 import communication.ChatTabController;
 import javafx.fxml.FXML;
@@ -20,11 +19,11 @@ public class MainFrameController {
 	
 	private InteractionTabManagerController interactionTabManagerController;
 	private ChatTabController chatTabController;
-	
+
 	Node startingInteractionTab;
 	Node currentInteractionArea;
 
-	
+
 	
 	
 	@FXML
@@ -47,9 +46,10 @@ public class MainFrameController {
 		try{
 		Node newChatPane  = chatLoader.load();
 		this.chatTabController = chatLoader.getController();
+
 		
-		chatTabController.passMainFrameController(this); // new
-		
+		chatTabController.passMainFrameController(this);
+
 		rootNode.getChildren().remove(chatPane);
 		rootNode.add(newChatPane, 1, 2);
 		}
@@ -61,6 +61,12 @@ public class MainFrameController {
 	public Node getStartingInteractionTab(){
 		return this.startingInteractionTab;
 	}
+
+	
+	public Node getCurrentInteractionArea(){
+		return this.currentInteractionArea;
+	}
+
 	
 	private void initializeInteractionTab(){
 		System.out.println("Initializing welcome interactiontab in interactionArea...");
@@ -78,7 +84,6 @@ public class MainFrameController {
 		}
 	}
 	
-	
 	public void loadNewInteractionArea(Node interactionArea){
 		System.out.println("Loading new interactionTab in interactionArea");
 		rootNode.getChildren().remove(currentInteractionArea);
@@ -90,6 +95,5 @@ public class MainFrameController {
 		System.out.println("Closerequest in MainFrameController calling onCloseRequest in chatTabController...");
 		chatTabController.onCloseRequest();
 	}
-	
 
 }

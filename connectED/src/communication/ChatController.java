@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 
 import T2.ServerRequest;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,7 @@ import mainWindow.InteractionTabManagerController;
 import mainWindow.MainFrameController;
 
 
+
 // Controls the chat of one connection
 public class ChatController {
 
@@ -30,18 +32,28 @@ public class ChatController {
 	@FXML private ListView<Label> chatWindow;
 	
 	private RecieveAndSend receiveAndSend = null;
-	private boolean isHost= false;
+
+	private boolean isAssistantHost= false;
+	private boolean isHelperHost = false;
 	private Tab chatTab;
 	private Node InteractionArea;
 	private InteractionTabManagerController interactionTabManagerController;
-	
 
-	public boolean isHost() {
-		return isHost;
+
+	public boolean isHelperHost() {
+		return isHelperHost;
+	}
+	
+	public boolean isAssistantHost() {
+		return isAssistantHost;
 	}
 
-	public void setHost(boolean isHost) {
-		this.isHost = isHost;
+	public void setHelperHost(boolean isHelperHost) {
+		this.isHelperHost = isHelperHost;
+	}
+	
+	public void setAssistantHost(boolean isAssistantHost) {
+		this.isAssistantHost = isAssistantHost;
 	}
 	
 	@FXML // listens to keyevents in userText, if keyevent is enter, send CHAT protovol and the text
@@ -58,24 +70,32 @@ public class ChatController {
 	}
 	
 	// used by tab creates in serverChatController on closeRequest of tab
-	public void onClosed() {
-		System.out.println("Closing chatController...");
+
+	public void onClosed(String tag) {
 		if(receiveAndSend != null){
 			System.out.println("Closing chatController - sends END message and closes connection...");
 			receiveAndSend.sendChatMessage("END-null");
 			receiveAndSend.closeConnection();
 		}
-		if(isHost && receiveAndSend == null){
-			System.out.println("Closing chatController - sends HelperDelete to TCPserver since in queue...");
-			ServerRequest request = new ServerRequest("HelperDelete");
+
+		if(isHelperHost && receiveAndSend == null){
+			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
+			ServerRequest request = new ServerRequest(tag + "Delete");
+			request.removeAdressFromQueue();
+		}
+		else if(isAssistantHost && receiveAndSend == null){
+			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
+			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
 		else if(receiveAndSend == null){
-			System.out.println("Closing chatController - sends StudentDelete to TCPserver since in queue...");
-			ServerRequest request = new ServerRequest("StudentDelete");
+
+			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
+			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
-		if(!isHost())
+
+		if(!isAssistantHost() && !isHelperHost())
 			interactionTabManagerController.deleteFirepad();
 	}
 	
@@ -96,19 +116,24 @@ public class ChatController {
 		this.userText.clear();
 	}
 
-	// sets a serverCOnnection to this chattab
+	// sets a serverConnection to this chattab
 	public void setRecieveAndSendConnection(RecieveAndSend connection){
 		this.receiveAndSend = connection;
+	}
+	
+	public RecieveAndSend getReceiveAndSendConnection(){
+		return this.receiveAndSend;
 	}
 
 	public void ableToType(boolean tof) {
 		this.userText.setEditable(tof);
 	}
 
+	
+	
 	public void setChatTab(Tab chatTab) {
 		this.chatTab = chatTab;
 	}
-	
 	
 	
 	public Tab getChatTab(){
@@ -125,7 +150,7 @@ public class ChatController {
 		catch(IOException e){
 			e.printStackTrace();
 		}
-		if(!isHost()){
+		if(!isAssistantHost() && !isHelperHost()){
 			interactionTabManagerController.setURL("http://connected-1e044.firebaseapp.com");
 		}
 		
@@ -155,19 +180,22 @@ public class ChatController {
 //	public void reloadCodeEditor(){
 //		interactionTabManagerController.reloadCodeEditor();
 //	}
+	
 
 	public boolean codeEditorFinishedLoading() {
 		return interactionTabManagerController.isFinishedLoading();
 	}
 
-	public void sendCodeURL() {
-		System.out.println("Sending CodeURL to helper...");
-		receiveAndSend.sendCodeUrl("CODEURL-" +interactionTabManagerController.getURL());
-	}
-	
-	public void sendCodeURLWhenLoaded(){
+	public void sendCodeURLWhenLoaded() {
 		System.out.println("Sending codeURL to helper when the page is finished loading...");
 		interactionTabManagerController.sendPageURLWhenLoaded(this);
+
 	}
+	
+	public void sendCodeURL(){
+		System.out.println("Sending CodeURL to helper...");
+		receiveAndSend.sendCodeUrl("CODEURL-"+ interactionTabManagerController.getURL());
+	}
+	
 	
 }

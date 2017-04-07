@@ -2,16 +2,19 @@ package communication;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 import T2.ServerRequest;
+
 
 // Either connect to or sets up connection depending on mode
 public class Connector implements Runnable {
 	private ServerSocket welcomeSocket = null; // sockets at server
+	private Socket socket = null;
+	
+	private String helperIP;
 
-	private Boolean isHost = null;
+	private Boolean isAssistantHost = null;
+	private Boolean isHelperHost = null;
 	private int hostPort;
 	private ChatTabController chatTabController;
 
@@ -20,12 +23,32 @@ public class Connector implements Runnable {
 		this.hostPort = 9006; // port to connect to if client, port to open at if host
 	}
 
-	public Boolean isHost(){
-		return this.isHost;
+	public Boolean isAssistantHost(){
+		return this.isAssistantHost;
 	}
 	
-	public void setHost() {
-		this.isHost = true;
+	public Boolean isHelperHost(){
+		return this.isHelperHost;
+	}
+	
+	
+	
+	public void setHelperHost() {
+		this.isHelperHost = true;
+		this.isAssistantHost = false;
+		if(this.welcomeSocket == null){
+			try {
+				welcomeSocket = new ServerSocket(hostPort, 20);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void setAssistantHost() {
+		this.isAssistantHost = true;
+		this.isHelperHost = false;
 		if(this.welcomeSocket == null){
 			try {
 				welcomeSocket = new ServerSocket(hostPort, 20);
@@ -36,18 +59,17 @@ public class Connector implements Runnable {
 	}
 
 	public void setClient() {
-		this.isHost = false;
+		this.isHelperHost = false;
+		this.isAssistantHost = false;
 	}
 	
-	public void sendHelperRequest(){
-		ServerRequest request = new ServerRequest("Helper");
+	public void sendHelperRequest(String tag){
+		ServerRequest request = new ServerRequest(tag);
 		request.helperRequest();
 	}
 	
-	@Override
-	public void run() {
-		Socket socket = null;
-		if (isHost) {
+	public void connect(){
+		if (isHelperHost || isAssistantHost) {
 			try {
 				socket = welcomeSocket.accept();
 			} catch (IOException e) {
@@ -55,14 +77,19 @@ public class Connector implements Runnable {
 			}
 		}
 		else {
-			ServerRequest request = new ServerRequest("Student");
-			String helperIP = request.studentRequest();
+			ServerRequest request = new ServerRequest(chatTabController.getTag());
+			helperIP = request.studentRequest();
 			try {
 				socket = new Socket(helperIP,hostPort);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@Override
+	public void run() {
+		connect();
 		if(socket != null)
 			this.chatTabController.startChatSession(socket);
 	}
@@ -74,6 +101,19 @@ public class Connector implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public ServerSocket getWelcomeSocket(){
+		return this.welcomeSocket;
+	}
+	
+	
+	public Socket getSocket(){
+		return this.socket;
+	}
+	
+	public String getHelperIP(){
+		return this.helperIP;
 	}
 
 }

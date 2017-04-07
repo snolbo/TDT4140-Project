@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
+
 import javafx.fxml.FXML;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -29,7 +30,10 @@ public class InteractionTabManagerController {
 		sharedCodeBrowser.setOnKeyPressed((event) ->{
 			handleKeyEvent(event);
 		});
+
+		
 	}
+
 	
 	public void setURL(String URL){
 		System.out.println("Loading the given URL: " + URL);
@@ -45,15 +49,7 @@ public class InteractionTabManagerController {
 		sharedCodeBrowser.getEngine().reload();
 	}
 	
-	
-	public void sendPageURLWhenLoaded(ChatController chatController){
-		sharedCodeBrowser.getEngine().getLoadWorker().stateProperty().addListener((observed, oldValue, newValue) -> {
-			if(newValue.equals(Worker.State.SUCCEEDED)){
-				System.out.println("URL finished loading, sending to helper...");
-				chatController.sendCodeURL();
-			}
-		});
-	}
+
 	
 	public void setDefaultURL(){
 		System.out.println("Setting default URL");
@@ -77,20 +73,28 @@ public class InteractionTabManagerController {
 				sharedCodeBrowser.setFontScale(currentVal + 0.1);
 		}
 	}
-
+	
+	
+	
+	public void sendPageURLWhenLoaded(ChatController chatController){
+		sharedCodeBrowser.getEngine().getLoadWorker().stateProperty().addListener((observed, oldValue, newValue) -> {
+			if(newValue.equals(Worker.State.SUCCEEDED)){
+				System.out.println("URL finished loading, sending to helper...");
+				chatController.sendCodeURL();
+			}
+		});
+	}
+	
 	public void deleteFirepad() {
 		if(getURL().startsWith("https://connected-1e044.firebaseapp.com"))
 			sharedCodeBrowser.getEngine().executeScript("deleteFirepadReference();");	
 		sharedCodeBrowser.getEngine().load(null);
 	}
-
+	
 	public void changeCodeLanguage(String codeLanguage){
 		if(getURL().startsWith("https://connected-1e044.firebaseapp.com"))
 			sharedCodeBrowser.getEngine().executeScript("changeCodeLanguage(" + "'" + codeLanguage + "'" + ");");
 	}
-	
-	
-	
 	
 }
 
