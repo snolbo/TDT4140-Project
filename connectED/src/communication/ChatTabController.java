@@ -1,34 +1,45 @@
 package communication;
 
 import java.io.IOException;
+
+
 import java.net.Socket;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
+import mainWindow.InteractionTabManagerController;
+import javafx.stage.Stage;
 import mainWindow.MainFrameController;
 
 public class ChatTabController {
 	@FXML private TabPane chatTab;
-	@FXML private Button giveHelpBtn;
-	@FXML private Button getHelpBtn;
+	@FXML private Button studentHelperBtn;
+	@FXML private Button studentAssistantBtn;
+	@FXML private Button studentBtn;
 	
+	
+	private String tag;
 	private Connector connector;
 	static private int PotentialConnections = 0;
 	private ArrayDeque<Thread> waitingThreads;
 	ArrayDeque<ChatController> chatControllerQueue;
 	private boolean isWaitingForConnection = false;
+
+	private Stage stage;
 	private MainFrameController mainFrameController = null;
 
 	
@@ -51,32 +62,93 @@ public class ChatTabController {
 	}
 
 	
+
 	
-	public void setHostMode(){
-		if(this.connector.isHost() == null)
-			connector.setHost();
-		else if (this.connector.isHost() == false)
+	public void setStudentHelperMode() throws Exception{
+		if(this.connector.isHelperHost() == null){
+			connector.setHelperHost();
+			initializePopUpSubject();
+		}
+		else if (this.connector.isHelperHost() == false && this.connector.isAssistantHost() == false)
 			System.out.println("Already set to be client");
 		else
-			System.out.println("Already hostMode");
+			System.out.println("Already HostMode");
 	}
 	
-	public void setClientMode(){
-		if(this.connector.isHost() == null)
+	public void setStudentMode() throws Exception{
+		if(this.connector.isHelperHost() == null && this.connector.isAssistantHost() == null){
 			connector.setClient();
-		else if(this.connector.isHost() == true)
+			initializePopUpSubject();
+		}
+		else if(this.connector.isHelperHost() == true || this.connector.isAssistantHost() == true)
 			System.out.println("Already set to be host");
 		else
 			System.out.println("Already clientMode");
 	}
+	
+	public void setAssistantMode() throws Exception{
+		if(this.connector.isAssistantHost() == null){
+			connector.setAssistantHost();
+			initializePopUpSubject();
+		}
+		else if (this.connector.isAssistantHost() == false && this.connector.isHelperHost() == false)
+			System.out.println("Already set to be client");
+		else
+			System.out.println("Already HostMode");
+	}
+	
+	//initializes a new popup window with subjects
+	public void initializePopUpSubject() throws Exception{               
+        try {
+        		FXMLLoader subjectLoader = new FXMLLoader(getClass().getResource("PopUpSubject.fxml"));
+                Parent root = (Parent) subjectLoader.load();
+                PopUpSubjectController contr = subjectLoader.getController();
+                contr.passChatTabController(this);
+                this.stage = new Stage();
+                this.stage.setScene(new Scene(root));  
+                this.stage.show();
+                
+        } catch(Exception e) {
+           e.printStackTrace();
+        }
+      
+	}	
+	
+	//closes popup subjects
+	public void closePopUp(){
+		this.stage.close();
+	}
+	
 
+	
+	//merging user string with subject string to make a tag in purpose of identifying itself to server
+	//subject string has to begin with uppercase letter
+	public void mergeTags(String subject){
+		if(this.connector.isAssistantHost() == null && this.connector.isHelperHost() == null)
+			System.out.println("Need to choose user type before choosing subject!");
+		else if (this.connector.isAssistantHost())
+			tag = "StudentAssistant" + subject;
+		else if (this.connector.isHelperHost())
+			tag = "StudentHelper" + subject;
+		else if (!this.connector.isHelperHost() && !this.connector.isAssistantHost())
+			tag = "Student" + subject;
+	}
+	
+	//method for returning tag in purpose of retreiving it in Connector - method run()
+	public String getTag(){
+		return tag;
+	}
+	
+	public void setTag(String tag){
+		this.tag = tag;
+	}
 	
 	@FXML
 	public void newChatTab(){ // TODO should send message to server queuing its ip
-		if(connector.isHost() == null)
-			System.out.println("Must choose get help or give help before opening connection");
+		if(connector.isHelperHost() == null && connector.isAssistantHost() == null)
+			System.out.println("Must choose user type before opening connection");
 		// host can serve 3, client can only queue once
-		else if(ChatTabController.getPotentialConnections() < 3 && connector.isHost() || ChatTabController.getPotentialConnections() < 1 && !connector.isHost()){
+		else if(ChatTabController.getPotentialConnections() < 3 && (connector.isHelperHost() || connector.isAssistantHost()) || ChatTabController.getPotentialConnections() < 1 && (!connector.isHelperHost() && !connector.isAssistantHost())){
 		try {
 				ChatTabController.PotentialConnections++;
 				// setting up the Chat GUI element
@@ -87,39 +159,51 @@ public class ChatTabController {
 				ChatController chatController = loader.getController();
 				chatController.setChatTab(newTab);
 
-				if(connector.isHost()){
-					chatController.setHost(true);
+				if(connector.isHelperHost()){
+					chatController.setHelperHost(true);
 					chatController.initializeInteractionArea();
-					connector.sendHelperRequest();
+					connector.sendHelperRequest(tag);
+
+				}
+
+				else if(connector.isAssistantHost()){
+					chatController.setAssistantHost(true);
+					chatController.initializeInteractionArea();
+					connector.sendHelperRequest(tag);
 				}
 				else {
-					chatController.setHost(false);
+					chatController.setHelperHost(false);
+					chatController.setAssistantHost(false);
 					chatController.initializeInteractionArea();
 				}
+				chatControllerQueue.addLast(chatController);
+
 				
 				
 				chatControllerQueue.addLast(chatController);
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
+					System.out.println("Closing current tab -  removing assisiated controller form queue if exists...");
 					chatControllerQueue.remove(chatController);
 					ChatTabController.decrementPotentialConnections();
-					chatController.onClosed(); // dont know if this is correct!!!!!!
+					System.out.println("Closing current tab -  calling onClosed on assisiated chatController...");
 					if(chatTab.getTabs().size() == 1){
+
 						mainFrameController.getInteractionTabManagerController().setDefaultURL();
 						mainFrameController.loadNewInteractionArea(mainFrameController.getStartingInteractionTab());
 					}
+					chatController.onClosed(tag); 
 				});
 				
-				
+
 				newTab.setOnSelectionChanged((event) -> {
 					if(newTab.isSelected()){
 						mainFrameController.loadNewInteractionArea(chatController.getInteractionArea());
 					}
 				});
-
+				
 				if(chatTab.getTabs().size() == 1){
 					Event.fireEvent(newTab, new Event(Tab.SELECTION_CHANGED_EVENT));
 				}
-
 				
 				chatTab.getSelectionModel().select(ChatTabController.getPotentialConnections()-1);
 				
@@ -141,10 +225,9 @@ public class ChatTabController {
 	
 	
 	public void startChatSession(Socket socket){ //, ChatController chatController){
+		System.out.println("Starting a chat session after received a person to connect to...");
 		isWaitingForConnection = false;
 		ChatController chatController = chatControllerQueue.poll();
-		
-
 		RecieveAndSend connection = new RecieveAndSend(socket, chatController);
 		new Thread(connection).start();
 		if(!this.waitingThreads.isEmpty()){
@@ -154,15 +237,27 @@ public class ChatTabController {
 	}
 	
 	public void onCloseRequest(){
+		System.out.println("Closing welcomesocket in Connector");
 		this.connector.closeWelcomeSocket();
 		final EventType<Event> closeRequestEventType = Tab.TAB_CLOSE_REQUEST_EVENT;
 		final Event closeRequestEvent = new Event(closeRequestEventType);
 		for(Tab tab : chatTab.getTabs()){
+			System.out.println("Firing closerequest on remaining open tab");
 			Event.fireEvent(tab, closeRequestEvent);
 		}
 	}
-
-
 	
+	public Connector getConnector(){
+		return this.connector;
+	}
+	
+	public Stage getStage(){
+		return this.stage;
+	}
+	
+	public MainFrameController getMainFrameController(){
+		return this.mainFrameController;
+	}
+
 
 }

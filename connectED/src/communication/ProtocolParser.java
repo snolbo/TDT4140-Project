@@ -7,58 +7,55 @@ public class ProtocolParser{
 	
 	
 	private ChatController chatController;
+	private String protocol;
+	private String message;
 
 	public ProtocolParser(ChatController chatController){
 		this.chatController = chatController;
 	}
 
-	public void handleMessageProtocoll(String protocolMessage) {
-		int protocolIndexEnd = protocolMessage.indexOf("-");
-		String protocol = protocolMessage.substring(0,protocolIndexEnd);
-		String message = protocolMessage.substring(protocolIndexEnd+1);
-		System.out.println("receive message");
-		System.out.println(message);
-		
-		switch (protocol) {
-		case "CHAT":
-			// do stuff
-			this.chatController.viewMessage(message, false);
-			break;
-		case "END":
-			// do stuff
-			break;
-		case "CODEURL":
-			Platform.runLater(() ->{
-				chatController.setCodeUrl(message);
-				System.out.println("url set");
-//				try {
-//					Thread.sleep(2000);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//				chatController.reloadCodeEditor();
-				System.out.println("page reloaded");
 
-
-			});
-//			Platform.runLater(() ->{
-//				chatController.reloadCodeEditor();
-//			});
+	public void handleMessageProtocol(String protocolMessage) {
+		if (protocolMessage != null){
+			splitUpString(protocolMessage);
 			
-			
-			break;
-			
-			/// etc.... this is a framework for adding more utillities
-				
-		default:
-			// not recognized protocoll, 
-			System.out.println("Unknown protocoll");
-			break;
-		}
-		
+			switch (this.protocol) {
+			case "CHAT":
+				// do stuff
+				this.chatController.viewMessage(this.message, false);
+				break;
+			case "END":
+				// do stuff
+				break;
+			case "CODEURL":
+				Platform.runLater(() ->{
+					chatController.setCodeUrl(this.message);
+					System.out.println("URL received and set");
 	
-		
+	
+				});
+				break;
+
+			default:
+				System.out.println("Unknown protocoll");
+				break;
+			}
+		}
 	}
 	
+	public void splitUpString(String protocolMessage){
+		int protocolIndexEnd = protocolMessage.indexOf("-");
+		this.protocol = protocolMessage.substring(0,protocolIndexEnd);
+		this.message = protocolMessage.substring(protocolIndexEnd+1);
+		System.out.println("receive protocolMessage: " + protocolMessage);
+	}
+	
+	public String getProtocol(){
+		return this.protocol;
+	}
+	
+	public String getMessage(){
+		return this.message;
+	}
 	
 }
