@@ -82,7 +82,7 @@ public class ConnectorTest{
 		connector.setClient();
 		chatTabController.setTag("StudentJava");
 		connector.connect();
-		assertEquals("10.22.43.121", connector.getHelperIP());
+		assertEquals("129.241.158.222", connector.getHelperIP());
 		//assertTrue(connector.getSocket().isConnected());
 		//connector.getWelcomeSocket().close();
 	}

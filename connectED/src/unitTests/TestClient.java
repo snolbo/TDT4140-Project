@@ -8,7 +8,7 @@ public class TestClient {
 	
 	
 	public void connect() throws UnknownHostException, IOException{
-		Socket clientSocket = new Socket("10.22.43.121", 9006);
+		Socket clientSocket = new Socket("129.241.158.222", 9006);
 		clientSocket.close();
 	}
 	

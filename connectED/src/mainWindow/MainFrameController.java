@@ -55,6 +55,10 @@ public class MainFrameController {
 		return this.startingInteractionTab;
 	}
 	
+	public Node getCurrentInteractionArea(){
+		return this.currentInteractionArea;
+	}
+	
 	private void initializeInteractionTab(){
 		System.out.println("Initializing welcome interactiontab in interactionArea...");
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("InteractionTabManager.fxml"));
@@ -82,6 +86,5 @@ public class MainFrameController {
 		System.out.println("Closerequest in MainFrameController calling onCloseRequest in chatTabController...");
 		chatTabController.onCloseRequest();
 	}
-	
 
 }

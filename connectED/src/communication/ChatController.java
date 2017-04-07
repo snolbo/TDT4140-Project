@@ -69,6 +69,7 @@ public class ChatController {
 			System.out.println("Closing chatController - sends END message and closes connection...");
 			receiveAndSend.sendChatMessage("END-null");
 			receiveAndSend.closeConnection();
+			
 		}
 		if(isHelperHost && receiveAndSend == null){
 			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
@@ -119,9 +120,6 @@ public class ChatController {
 		this.userText.setEditable(tof);
 	}
 	
-	public TextArea getTextArea(){
-		return this.userText;
-	}
 	
 	public void setChatTab(Tab chatTab) {
 		this.chatTab = chatTab;
