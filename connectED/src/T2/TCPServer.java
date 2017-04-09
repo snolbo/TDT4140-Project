@@ -103,9 +103,9 @@ public class TCPServer {
 		public String formatIP(String returnIP){ // receives format: dhcp-10-22-11-63.wlan.ntnu.no. Change to: 10.22.11.63
 			if (returnIP.equals("localhost"))
 				return returnIP;
-			else if(!returnIP.matches("^([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})$")){
+			else if(0==1 && !returnIP.matches("^([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})$")){
 				String[] parts = returnIP.split("-");
-				System.out.println(returnIP);
+				//System.out.println(returnIP);
 				String part1 = parts[1];
 				String part2 = parts[2];
 				String part3 = parts[3];
@@ -121,18 +121,19 @@ public class TCPServer {
 		
 		public void start(){
 				try { // to receive connections and sort them into right queue by sent tag
-					welcomeSocket = new ServerSocket(9999, 1000);
+					welcomeSocket = new ServerSocket(9050, 1000);
 					while(true) { // receives one connection, and sorts it into the right queue
 						try{ // putting this try inside while will retry while-loop if something fucks up, and not crash entire server like if you sorround everything
 							connectionSocket = welcomeSocket.accept(); // receive connection
 							IP = connectionSocket.getInetAddress().getHostName();
-							IP = formatIP(IP);
+							System.out.println("Received IP: " + IP);
+							//IP = formatIP(IP);
 							BufferedReader recvBuff = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 							tag = recvBuff.readLine(); // reads one line from connection. Sent messages are end with \n
-								System.out.println("Received: " + tag);
+							System.out.println("Received: " + tag);
 							delegateTag(tag, IP, connectionSocket);
 						} catch (IOException e) {
-							e.printStackTrace();
+							e.printStackTrace(); // dont need to to enything if connection is lost, or not receiving readline as then the socket is not saved as delegateTag is not run
 
 						}
 						if (hasMatch(studentQueueJava, studentAssistantQueueJava, studentHelperQueueJava))
@@ -140,6 +141,17 @@ public class TCPServer {
 						
 						if (hasMatch(studentQueueITGK, studentAssistantQueueITGK, studentHelperQueueITGK))
 							match(studentQueueITGK, studentIPITGK, studentAssistantQueueITGK, studentHelperQueueITGK);
+						
+						System.out.println("studentQueueJava: " + studentQueueJava.toString());
+						System.out.println("studentHelperQueueJava: " + studentHelperQueueJava.toString());
+						System.out.println("studentAssistantQueueJava: " + studentAssistantQueueJava.toString());
+
+
+						System.out.println("studentQueueITGK: " + studentQueueITGK.toString());
+						System.out.println("studentHelperQueueITGK: " + studentHelperQueueITGK.toString());
+						System.out.println("studentAssistantQueueITGK: " + studentAssistantQueueITGK.toString());
+						
+						System.out.println();
 					}
 				}
 
@@ -190,13 +202,17 @@ public class TCPServer {
 			catch(IOException e){
 				e.printStackTrace();
 			}
+
+			
+
+
 		}
 		
 		
 		//sends helperAddress to the next student in line when a match has occurred, such that he/she can set up a connection to the helper
 		//also removing both the helper and student from queues, making way for new matches
 		public void match(LinkedList<Socket> studentQueue, LinkedList<String> studentIPQueue, LinkedList<String> studentAssistantQueue, LinkedList<String> studentHelperQueue){
-			System.out.println("Hurra! A match was found!");
+			//System.out.println("Hurra! A match was found!");
 			Socket studentSocket = studentQueue.poll(); //connectionSocket
 			studentIPQueue.poll();
 			//pror
@@ -207,12 +223,18 @@ public class TCPServer {
 			DataOutputStream clientStream;
 			try {
 				clientStream = new DataOutputStream(studentSocket.getOutputStream());
-				clientStream.writeBytes(helperAddress);
+				clientStream.writeBytes(helperAddress + "\n");
 				clientStream.close();
 				studentSocket.close();
 				
 			} catch (IOException e) {
 				e.printStackTrace();
+				try {
+					studentSocket.close();
+				} catch (IOException closeEX) {
+					closeEX.printStackTrace();
+				}
+				
 			}
 		}
 		
@@ -255,6 +277,7 @@ public class TCPServer {
 		}
 		
 		public static void main(String[] args) throws Exception{
+			System.out.println("Hi, starting server");
 			TCPServer server = new TCPServer();
 			server.start();
 		}

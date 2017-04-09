@@ -20,7 +20,7 @@ public class Connector implements Runnable {
 
 	public Connector(ChatTabController chatTabController) {
 		this.chatTabController = chatTabController;
-		this.hostPort = 9006; // port to connect to if client, port to open at if host
+		this.hostPort = 9000; // port to connect to if client, port to open at if host
 	}
 
 	public Boolean isAssistantHost(){
@@ -83,6 +83,7 @@ public class Connector implements Runnable {
 				socket = new Socket(helperIP,hostPort);
 			} catch (IOException e) {
 				e.printStackTrace();
+				socket = null;
 			}
 		}
 	}

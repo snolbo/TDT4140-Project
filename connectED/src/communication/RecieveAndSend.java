@@ -85,8 +85,6 @@ public class RecieveAndSend implements Runnable{
 					System.out.println("Socket is closed so we stop looping in whileReceiving");
 					break;
 				}
-				else
-					e.printStackTrace(); //cathes the socket closed exception when tabing out
 			}
 		} while(message != null && !socket.isClosed());
 	}

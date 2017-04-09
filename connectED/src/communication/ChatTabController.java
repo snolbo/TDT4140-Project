@@ -176,11 +176,10 @@ public class ChatTabController {
 					chatController.setAssistantHost(false);
 					chatController.initializeInteractionArea();
 				}
+
 				chatControllerQueue.addLast(chatController);
 
 				
-				
-				chatControllerQueue.addLast(chatController);
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
 					System.out.println("Closing current tab -  removing assisiated controller form queue if exists...");
 					chatControllerQueue.remove(chatController);

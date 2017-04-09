@@ -78,16 +78,16 @@ public class ChatController {
 			receiveAndSend.closeConnection();
 		}
 
-		if(isHelperHost && receiveAndSend == null){
+		if( (isHelperHost || isAssistantHost) && receiveAndSend == null){
 			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
 			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
-		else if(isAssistantHost && receiveAndSend == null){
-			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
-			ServerRequest request = new ServerRequest(tag + "Delete");
-			request.removeAdressFromQueue();
-		}
+//		else if(isAssistantHost && receiveAndSend == null){
+//			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
+//			ServerRequest request = new ServerRequest(tag + "Delete");
+//			request.removeAdressFromQueue();
+//		}
 		else if(receiveAndSend == null){
 
 			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
@@ -95,8 +95,9 @@ public class ChatController {
 			request.removeAdressFromQueue();
 		}
 
-		if(!isAssistantHost() && !isHelperHost())
-			interactionTabManagerController.deleteFirepad();
+//		if(!isAssistantHost() && !isHelperHost())
+//			interactionTabManagerController.deleteFirepad();
+		interactionTabManagerController.deleteFirepad();
 	}
 	
 	// shows message in chatWIndow
