@@ -79,11 +79,13 @@ public class Connector implements Runnable {
 		else {
 			ServerRequest request = new ServerRequest(chatTabController.getTag());
 			helperIP = request.studentRequest();
-			try {
-				socket = new Socket(helperIP,hostPort);
-			} catch (IOException e) {
-				e.printStackTrace();
-				socket = null;
+			if(helperIP != null){
+				try {
+					socket = new Socket(helperIP,hostPort);
+				} catch (IOException e) {
+					e.printStackTrace();
+					socket = null;
+				}
 			}
 		}
 	}
