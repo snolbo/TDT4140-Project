@@ -31,9 +31,24 @@ public class ProtocolParser{
 				Platform.runLater(() ->{
 					chatController.setCodeUrl(this.message);
 					System.out.println("URL received and set");
-	
-	
 				});
+				break;
+			case "VOICE":
+				if(message.equals("request")){
+					if(ChatTabController.isVoiceCommunicating){
+						chatController.getReceiveAndSendConnection().sendChatMessage("CHAT-Peer already in voice communication, try again later");
+						chatController.viewMessage("Peer tried connection with voice communication, but you are already talking to someone else", true);
+					}
+					else{
+						chatController.getReceiveAndSendConnection().sendChatMessage("VOICE-accept");
+						chatController.setupVoiceCommunication();
+					}
+				}
+				else if(message.equals("accept"))
+					chatController.setupVoiceCommunication();
+				else if(message.equals("cancel")){
+					chatController.cancelVoiceCommunication();
+				}
 				break;
 
 			default:

@@ -4,7 +4,7 @@ package unitTests;
 import java.net.Socket;
 
 import communication.ChatController;
-import communication.RecieveAndSend;
+import communication.ReceiveAndSend;
 import javafx.scene.control.Tab;
 import static org.junit.Assert.*;
 
@@ -16,7 +16,7 @@ import T2.ServerRequest;
 public class ChatControllerTest {
 	
 	public ChatController chatController;
-	public RecieveAndSend recieveAndSend;
+	public ReceiveAndSend receiveAndSend;
 	
 	@Before
 	public void setUp(){
@@ -38,9 +38,9 @@ public class ChatControllerTest {
 	@Test
 	public void testSetRecieveAndSendConnection(){
 		Socket socket = new Socket();
-		this.recieveAndSend = new RecieveAndSend(socket, chatController);
-		chatController.setRecieveAndSendConnection(recieveAndSend);
-		assertEquals(recieveAndSend, chatController.getReceiveAndSendConnection());
+		this.receiveAndSend = new ReceiveAndSend(socket, chatController);
+		chatController.setRecieveAndSendConnection(receiveAndSend);
+		assertEquals(receiveAndSend, chatController.getReceiveAndSendConnection());
 	}
 	
 	@Test

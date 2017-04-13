@@ -8,8 +8,8 @@ import javafx.application.Platform;
 
 
 
-// recieves and sends data to other party that is connected
-public class RecieveAndSend implements Runnable{
+// Receives and sends data to other party that is connected
+public class ReceiveAndSend implements Runnable{
 	
 	// streams to read and write to socket
 	private InputStream input;
@@ -21,7 +21,7 @@ public class RecieveAndSend implements Runnable{
 	private ProtocolParser protocolParser;
 	private ChatController chatController;
 	
-	public RecieveAndSend(Socket clientSocket, ChatController chatController){
+	public ReceiveAndSend(Socket clientSocket, ChatController chatController){
 		this.socket = clientSocket;
 		this.chatController = chatController;
 		chatController.setRecieveAndSendConnection(this);
@@ -126,5 +126,12 @@ public class RecieveAndSend implements Runnable{
 		Platform.runLater(() -> { chatController.ableToType(tof);});
 	}
 
+	
+	public InetAddress getInetAddress(){
+		if(socket != null)
+			return socket.getInetAddress();
+		else
+			return null;
+	}
 	
 }

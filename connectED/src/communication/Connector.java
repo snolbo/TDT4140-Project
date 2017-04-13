@@ -31,6 +31,11 @@ public class Connector implements Runnable {
 		return this.isHelperHost;
 	}
 	
+	public void resetMode(){
+		isAssistantHost = null;
+		isHelperHost = null;
+	}
+	
 	
 	
 	public void setHelperHost() {

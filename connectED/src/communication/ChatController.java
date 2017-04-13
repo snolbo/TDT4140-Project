@@ -4,16 +4,20 @@ import java.io.IOException;
 
 import org.w3c.dom.Document;
 
+
 import T2.ServerRequest;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
@@ -22,6 +26,8 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import mainWindow.InteractionTabManagerController;
 import mainWindow.MainFrameController;
+import voiceclient.ClientVoice;
+import voiceserver.ServerVoice;
 
 
 
@@ -30,16 +36,25 @@ public class ChatController {
 
 	@FXML private TextArea userText;
 	@FXML private ListView<Label> chatWindow;
+	@FXML private Button microphoneBtn;
+	private ServerVoice sv;
+	private ClientVoice cv;
 	
-	private RecieveAndSend receiveAndSend = null;
+	
+	private ReceiveAndSend receiveAndSend = null;
 
 	private boolean isAssistantHost= false;
 	private boolean isHelperHost = false;
 	private Tab chatTab;
 	private Node InteractionArea;
 	private InteractionTabManagerController interactionTabManagerController;
-
-
+	
+	@FXML
+	public void initialize(){
+		System.out.println("running initialize in chatController");
+	}
+	
+	
 	public boolean isHelperHost() {
 		return isHelperHost;
 	}
@@ -54,6 +69,34 @@ public class ChatController {
 	
 	public void setAssistantHost(boolean isAssistantHost) {
 		this.isAssistantHost = isAssistantHost;
+	}
+	
+	public void requestVoiceCommunication(){
+		if(!ChatTabController.isVoiceCommunicating){
+			receiveAndSend.sendChatMessage("VOICE-request");
+		}
+		else
+			viewMessage("Cannot initiate voice communication as you already have an active voiceConversation", true);
+	}
+	
+	public void acceptVoiceCommunication(){
+		receiveAndSend.sendChatMessage("VOICE-accept");
+		setupVoiceCommunication();
+	}
+	
+	public void cancelVoiceCommunication(){
+		if(ChatTabController.isVoiceCommunicating){
+			ChatTabController.isVoiceCommunicating = false;
+			receiveAndSend.sendChatMessage("VOICE-cancel");
+		}
+	}
+	
+	public void setupVoiceCommunication(){
+		ChatTabController.isVoiceCommunicating = true;
+		sv = new ServerVoice();
+		sv.initializeAudio();
+		cv = new ClientVoice();
+		cv.initializeAudio(receiveAndSend.getInetAddress());
 	}
 	
 	@FXML // listens to keyevents in userText, if keyevent is enter, send CHAT protovol and the text
@@ -72,6 +115,7 @@ public class ChatController {
 	// used by tab creates in serverChatController on closeRequest of tab
 
 	public void onClosed(String tag) {
+		cancelVoiceCommunication();
 		if(receiveAndSend != null){
 			System.out.println("Closing chatController - sends END message and closes connection...");
 			receiveAndSend.sendChatMessage("END-null");
@@ -83,11 +127,6 @@ public class ChatController {
 			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
-//		else if(isAssistantHost && receiveAndSend == null){
-//			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
-//			ServerRequest request = new ServerRequest(tag + "Delete");
-//			request.removeAdressFromQueue();
-//		}
 		else if(receiveAndSend == null){
 
 			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
@@ -95,8 +134,6 @@ public class ChatController {
 			request.removeAdressFromQueue();
 		}
 
-//		if(!isAssistantHost() && !isHelperHost())
-//			interactionTabManagerController.deleteFirepad();
 		interactionTabManagerController.deleteFirepad();
 	}
 	
@@ -118,11 +155,11 @@ public class ChatController {
 	}
 
 	// sets a serverConnection to this chattab
-	public void setRecieveAndSendConnection(RecieveAndSend connection){
+	public void setRecieveAndSendConnection(ReceiveAndSend connection){
 		this.receiveAndSend = connection;
 	}
 	
-	public RecieveAndSend getReceiveAndSendConnection(){
+	public ReceiveAndSend getReceiveAndSendConnection(){
 		return this.receiveAndSend;
 	}
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
-<GridPane xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="communication.ChatController">
+<GridPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="communication.ChatController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
@@ -18,5 +18,6 @@
    <children>
       <ListView fx:id="chatWindow" />
       <TextArea fx:id="userText" editable="false" onKeyPressed="#handleChatEnterKey" wrapText="true" GridPane.rowIndex="1" />
+      <Button fx:id="microphoneBtn" mnemonicParsing="false" onAction="#requestVoiceCommunication" text="Mic" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP" />
    </children>
 </GridPane>

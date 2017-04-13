@@ -22,6 +22,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import mainWindow.InteractionTabManagerController;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import mainWindow.MainFrameController;
 
@@ -38,7 +39,10 @@ public class ChatTabController {
 	private ArrayDeque<Thread> waitingThreads;
 	ArrayDeque<ChatController> chatControllerQueue;
 	private boolean isWaitingForConnection = false;
-
+	
+	public static boolean isVoiceCommunicating = false;
+	
+	
 	private Stage stage;
 	private MainFrameController mainFrameController = null;
 
@@ -97,7 +101,23 @@ public class ChatTabController {
 			System.out.println("Already HostMode");
 	}
 	
-	//initializes a new popup window with subjects
+	
+
+	 /**
+	 * Resets the selected mode (student/helper/assistant) and the subject.
+	 */
+	
+	public void resetMode(){
+			connector.resetMode();
+			this.tag = null;
+		}
+	
+	
+	//Initializes a new popup window with subjects
+	/**
+	 * @throws Exception 
+	 * Creates a blocking PopUp window that prompts the user for choice 
+	 */
 	public void initializePopUpSubject() throws Exception{               
         try {
         		FXMLLoader subjectLoader = new FXMLLoader(getClass().getResource("PopUpSubject.fxml"));
@@ -105,6 +125,8 @@ public class ChatTabController {
                 PopUpSubjectController contr = subjectLoader.getController();
                 contr.passChatTabController(this);
                 this.stage = new Stage();
+                this.stage.initModality(Modality.WINDOW_MODAL);
+                this.stage.initOwner(chatTab.getScene().getWindow());
                 this.stage.setScene(new Scene(root));  
                 this.stage.show();
                 
@@ -123,6 +145,10 @@ public class ChatTabController {
 	
 	//merging user string with subject string to make a tag in purpose of identifying itself to server
 	//subject string has to begin with uppercase letter
+	/**
+	 * @param subject
+	 * Marges the tag mode (assistant/helper/student) and the selected subject chosen, making it ready to be set in right queue at server
+	 */
 	public void mergeTags(String subject){
 		if(this.connector.isAssistantHost() == null && this.connector.isHelperHost() == null)
 			System.out.println("Need to choose user type before choosing subject!");
@@ -223,11 +249,15 @@ public class ChatTabController {
 	
 	
 	
+	/**
+	 * @param socket
+	 * Creates a new chat session and assigns a chatController to the Chat-tab
+	 */
 	public void startChatSession(Socket socket){ //, ChatController chatController){
 		System.out.println("Starting a chat session after received a person to connect to...");
 		isWaitingForConnection = false;
 		ChatController chatController = chatControllerQueue.poll();
-		RecieveAndSend connection = new RecieveAndSend(socket, chatController);
+		ReceiveAndSend connection = new ReceiveAndSend(socket, chatController);
 		new Thread(connection).start();
 		if(!this.waitingThreads.isEmpty()){
 			this.waitingThreads.poll().start(); // removes and starts the next thread in queue to retrive socket
