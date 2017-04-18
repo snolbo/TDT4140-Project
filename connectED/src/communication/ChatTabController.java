@@ -66,7 +66,9 @@ public class ChatTabController {
 	}
 
 	
-
+	public void notifyAction(){
+		// make tab that calls method colored to indicate undread message
+	}
 	
 	public void setStudentHelperMode() throws Exception{
 		if(this.connector.isHelperHost() == null){

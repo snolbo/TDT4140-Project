@@ -6,14 +6,17 @@ import communication.ChatTabController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.web.WebView;
 
 public class MainFrameController {
 	@FXML private Pane interactionPane;
 	@FXML private Pane chatPane;
 	@FXML private Pane infoPane;
-	@FXML private Pane stuffPane;
+	@FXML private WebView searchBrowser;
 	
 	private GridPane rootNode;
 	
@@ -22,6 +25,8 @@ public class MainFrameController {
 
 	Node startingInteractionTab;
 	Node currentInteractionArea;
+	private Node selectionModeContent;
+	private Tab selectionModeTab;
 
 
 	
@@ -31,7 +36,7 @@ public class MainFrameController {
 			this.rootNode = (GridPane) interactionPane.getParent();
 			initializeChat();
 			initializeInteractionTab();
-			
+			searchBrowser.getEngine().load("http://www.google.com");
 			
 
 	}
@@ -39,6 +44,8 @@ public class MainFrameController {
 	public InteractionTabManagerController getInteractionTabManagerController(){
 		return this.interactionTabManagerController;
 	}
+	
+	
 	
 	private void initializeChat(){
 		System.out.println("Initializing chat-area...");
@@ -83,6 +90,9 @@ public class MainFrameController {
 			e.printStackTrace();
 		}
 	}
+	
+
+		
 	
 	public void loadNewInteractionArea(Node interactionArea){
 		System.out.println("Loading new interactionTab in interactionArea");
