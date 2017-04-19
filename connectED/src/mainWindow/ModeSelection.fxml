@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<GridPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane styleClass="tabBackground" stylesheets="@mainWindow.css" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainWindow.ModeSelectionController">
   <columnConstraints>
     <ColumnConstraints />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -19,29 +22,98 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Button fx:id="assistantBtn" mnemonicParsing="false" text="Student Assistant" />
-            <Button fx:id="helperBtn" mnemonicParsing="false" text="Helpful student" />
-            <Button fx:id="studentBtn" mnemonicParsing="false" text="Need Help!" />
-         </children>
-      </HBox>
-      <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-         <children>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose to give or get help">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="50.0" right="50.0" top="50.0" />
+               </VBox.margin>
+            </Text>
             <HBox alignment="CENTER">
                <children>
-                  <Button fx:id="javaBtn" mnemonicParsing="false" text="TDT4100 Java" />
-                  <Button fx:id="itgkPythonBtn" mnemonicParsing="false" text="ITGK Python" />
-                  <Button fx:id="itgkMatlabBtn" mnemonicParsing="false" text="ITGK Matlab" />
+                  <Button fx:id="assistantBtn" focusTraversable="false" mnemonicParsing="false" text="Student Assistant">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="helperBtn" focusTraversable="false" mnemonicParsing="false" text="Helpful student">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="studentBtn" focusTraversable="false" mnemonicParsing="false" text="Need Help!">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
                </children>
             </HBox>
-            <HBox />
+         </children>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </VBox>
+      <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose Subject">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="50.0" right="50.0" top="50.0" />
+               </VBox.margin>
+            </Text>
+            <HBox alignment="CENTER">
+               <children>
+                  <Button fx:id="javaBtn" focusTraversable="false" mnemonicParsing="false" text="TDT4100 Java">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Button>
+                  <Button fx:id="itgkPythonBtn" focusTraversable="false" mnemonicParsing="false" text="ITGK Python">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Button>
+               </children>
+            </HBox>
+         </children>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </VBox>
+      <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <children>
+            <Button fx:id="connectBtn" alignment="CENTER" focusTraversable="false" mnemonicParsing="false" prefHeight="80.0" prefWidth="80.0" style="-fx-background-radius: 50%; -fx-background-color: linear-gradient(#FF8708,#75260C); -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );" text="CONNECT" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+            </Button>
+            <Text fx:id="errorText" fill="#cd0000" strokeType="OUTSIDE" strokeWidth="0.0" text="Select your purpose and subject before connecting">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </Text>
          </children>
       </VBox>
-      <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3">
-         <children>
-            <Button fx:id="queueuBtn" mnemonicParsing="false" text="QUEUE UP!" />
-         </children>
-      </HBox>
    </children>
 </GridPane>

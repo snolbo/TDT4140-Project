@@ -52,6 +52,7 @@ public class ChatController {
 	@FXML
 	public void initialize(){
 		System.out.println("running initialize in chatController");
+		microphoneBtn.getStyleClass().add("micButton");
 	}
 	
 	
@@ -103,12 +104,11 @@ public class ChatController {
 	public void handleChatEnterKey(KeyEvent event) {
 		if(event.getCode() == KeyCode.ENTER ){
 			String message = userText.getText();
-			Platform.runLater(() -> {receiveAndSend.sendChatMessage("CHAT-" + message);});
-			viewMessage(message, true);
+			if(message.length() > 0){
+				Platform.runLater(() -> {receiveAndSend.sendChatMessage("CHAT-" + message);});
+				viewMessage(message, true);
+			}
 			event.consume();
-		}
-		else if(event.getCode() == KeyCode.I){
-			System.out.println(interactionTabManagerController.isFinishedLoading());
 		}
 	}
 	
@@ -150,7 +150,10 @@ public class ChatController {
 			message.setTextFill(Color.BLACK);
 			message.setBackground(new Background(new BackgroundFill(Color.web("#EFEEEE"), new CornerRadii(5), null)));
 		}	
-		Platform.runLater(() -> {chatWindow.getItems().add(message);});
+		Platform.runLater(() -> {
+			chatWindow.getItems().add(message);
+			chatWindow.scrollTo(message);
+			});
 		this.userText.clear();
 	}
 

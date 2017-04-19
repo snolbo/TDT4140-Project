@@ -15,7 +15,6 @@ public class ServerRequest {
 		this.tag = tag;
 		this.serverPort = 9050; //NTNU server Port
 		this.serverIP = "hv-6221.idi.ntnu.no"; 
-//		this.serverIP = ""; 
 
 	}
 	
@@ -24,6 +23,7 @@ public class ServerRequest {
 	//returning helperAddress with IP and port if it has found a match 
 	public String studentRequest() { 
 		try{
+			System.out.println("sending studentrequest with " + tag);
 			Socket clientSocket = new Socket(serverIP, serverPort); // connect to server queuing and distributing IP's
 			DataOutputStream sendStream = new DataOutputStream(clientSocket.getOutputStream()); // create outputstream
 			BufferedReader recvBuff = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); // create receiveing stream
@@ -43,6 +43,8 @@ public class ServerRequest {
 	
 	public void helperRequest() { 
 		try{
+			System.out.println("sending helperrequest with " + tag);
+
 			Socket clientSocket = new Socket(serverIP, serverPort); // socket to server queuing requests
 			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream()); // output stream
 			outToServer.writeBytes(tag + '\n'); // write tag to server. server take IP from message. Port to connect is decided from T1

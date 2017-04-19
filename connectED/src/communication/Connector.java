@@ -20,7 +20,12 @@ public class Connector implements Runnable {
 
 	public Connector(ChatTabController chatTabController) {
 		this.chatTabController = chatTabController;
-		this.hostPort = 9000; // port to connect to if client, port to open at if host
+		this.hostPort = 9005; // port to connect to if client, port to open at if host
+//		try {
+//			welcomeSocket = new ServerSocket(hostPort, 20);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public Boolean isAssistantHost(){
@@ -31,41 +36,43 @@ public class Connector implements Runnable {
 		return this.isHelperHost;
 	}
 	
-	public void resetMode(){
-		isAssistantHost = null;
-		isHelperHost = null;
+	public void close(){
+		closeWelcomeSocket();
 	}
 	
 	
 	
 	public void setHelperHost() {
 		this.isHelperHost = true;
-		this.isAssistantHost = false;
-		if(this.welcomeSocket == null){
-			try {
-				welcomeSocket = new ServerSocket(hostPort, 20);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		this.isAssistantHost = false;	
+		try {
+			welcomeSocket = new ServerSocket(hostPort, 20);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
 	}
 	
 	public void setAssistantHost() {
 		this.isAssistantHost = true;
 		this.isHelperHost = false;
-		if(this.welcomeSocket == null){
-			try {
-				welcomeSocket = new ServerSocket(hostPort, 20);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		try {
+			welcomeSocket = new ServerSocket(hostPort, 20);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	public void setClient() {
 		this.isHelperHost = false;
 		this.isAssistantHost = false;
+		
+		try {
+			if(welcomeSocket != null){
+				welcomeSocket.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void sendHelperRequest(String tag){
@@ -74,11 +81,13 @@ public class Connector implements Runnable {
 	}
 	
 	public void connect(){
+		System.out.println("Connect in connector: helperhost:" + isHelperHost + ", assistantHost:" + isAssistantHost);
 		if (isHelperHost || isAssistantHost) {
 			try {
 				socket = welcomeSocket.accept();
 			} catch (IOException e) {
 				e.printStackTrace();
+				closeWelcomeSocket();
 			}
 		}
 		else {
@@ -104,10 +113,13 @@ public class Connector implements Runnable {
 	
 	public void closeWelcomeSocket(){
 		try {
-			if(this.welcomeSocket != null)
-				this.welcomeSocket.close();
+			if(welcomeSocket != null){
+				welcomeSocket.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally{
+			welcomeSocket = null;
 		}
 	}
 	

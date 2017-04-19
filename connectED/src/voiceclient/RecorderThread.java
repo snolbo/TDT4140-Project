@@ -25,7 +25,6 @@ public class RecorderThread extends Thread{
                 audioIn.read(byteBuffer, 0, byteBuffer.length);
                 DatagramPacket data = new DatagramPacket(byteBuffer, byteBuffer.length, serverIp, serverPort);
                 datagramSocket.send(data);
-                System.out.println("sending package #" + i);
             } catch (IOException ex) {
                 ex.printStackTrace();
                 break;

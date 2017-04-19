@@ -7,6 +7,7 @@ import org.w3c.dom.Document;
 import com.sun.glass.ui.EventLoop.State;
 
 import communication.ChatController;
+import communication.ChatTabController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -41,8 +42,11 @@ public class InteractionTabManagerController {
 	
 	private Node selectionModeContent;
 	private Tab selectionModeTab;
+	private ChatTabController chatTabController;
+	private MainFrameController mainFrameController;
 	
 		
+
 	
 	@FXML
 	void initialize(){
@@ -54,17 +58,30 @@ public class InteractionTabManagerController {
 			handleKeyEvent(event);
 		});
 		
-		initializeSelectionModeContent();
 		tabContainer.getSelectionModel().select(0);
+		
+	
+		
+		
 	}
 
+	
+	public void initSelectionModeContent(MainFrameController mainFrameController){
+		this.mainFrameController = mainFrameController;
+		initializeSelectionModeContent();
+	}
+	
+	
 	
 	private void initializeSelectionModeContent(){
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ModeSelection.fxml"));
 		try {
 			selectionModeContent = loader.load();
+			ModeSelectionController modeSelectionController = loader.getController();
+			modeSelectionController.initButtons(mainFrameController);
 			selectionModeTab = new Tab("Queue Selection", selectionModeContent);
 			tabContainer.getTabs().add(0,selectionModeTab);
+			tabContainer.getSelectionModel().select(tabContainer.getTabs().indexOf(selectionModeTab));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -78,7 +95,9 @@ public class InteractionTabManagerController {
 	
 	public String getURL(){
 		Document doc = sharedCodeBrowser.getEngine().getDocument();
-		return doc.getBaseURI();
+		if(doc != null)
+			return doc.getBaseURI();
+		else return null;
 	}
 	
 	public void reloadCodeEditor(){
@@ -122,7 +141,7 @@ public class InteractionTabManagerController {
 	}
 	
 	public void deleteFirepad() {
-		if(getURL().startsWith("https://connected-1e044.firebaseapp.com"))
+		if(getURL() != null && getURL().startsWith("https://connected-1e044.firebaseapp.com"))
 			sharedCodeBrowser.getEngine().executeScript("deleteFirepadReference();");	
 		sharedCodeBrowser.getEngine().load(null);
 	}
@@ -131,6 +150,8 @@ public class InteractionTabManagerController {
 		if(getURL().startsWith("https://connected-1e044.firebaseapp.com"))
 			sharedCodeBrowser.getEngine().executeScript("changeCodeLanguage(" + "'" + codeLanguage + "'" + ");");
 	}
+	
+	
 	
 }
 

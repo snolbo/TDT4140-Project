@@ -28,12 +28,15 @@ import mainWindow.MainFrameController;
 
 public class ChatTabController {
 	@FXML private TabPane chatTab;
-	@FXML private Button studentHelperBtn;
-	@FXML private Button studentAssistantBtn;
-	@FXML private Button studentBtn;
+	
+//	@FXML private Button studentHelperBtn;
+//	@FXML private Button studentAssistantBtn;
+//	@FXML private Button studentBtn;
 	
 	
 	private String tag;
+	private String subject;
+	private String mode;
 	private Connector connector;
 	static private int PotentialConnections = 0;
 	private ArrayDeque<Thread> waitingThreads;
@@ -45,12 +48,20 @@ public class ChatTabController {
 	
 	private Stage stage;
 	private MainFrameController mainFrameController = null;
+	
+	private Tab extraConnectionTab;
 
 	
 	public ChatTabController(){
 		connector = new Connector(this);
 		waitingThreads = new ArrayDeque<Thread>();
 		chatControllerQueue = new ArrayDeque<ChatController>();
+		extraConnectionTab = new Tab("+");
+		extraConnectionTab.setOnSelectionChanged((event) ->{
+			if(extraConnectionTab.isSelected())
+				newChatTab();
+		});
+		
 	}
 	
 	public static int getPotentialConnections() {
@@ -70,37 +81,22 @@ public class ChatTabController {
 		// make tab that calls method colored to indicate undread message
 	}
 	
-	public void setStudentHelperMode() throws Exception{
-		if(this.connector.isHelperHost() == null){
-			connector.setHelperHost();
-			initializePopUpSubject();
-		}
-		else if (this.connector.isHelperHost() == false && this.connector.isAssistantHost() == false)
-			System.out.println("Already set to be client");
-		else
-			System.out.println("Already HostMode");
+	public void setStudentHelperMode(){
+		resetQueueData();
+		connector.setHelperHost();
+		mode = "StudentHelper";
 	}
 	
-	public void setStudentMode() throws Exception{
-		if(this.connector.isHelperHost() == null && this.connector.isAssistantHost() == null){
+	public void setStudentMode(){
+		resetQueueData();
 			connector.setClient();
-			initializePopUpSubject();
-		}
-		else if(this.connector.isHelperHost() == true || this.connector.isAssistantHost() == true)
-			System.out.println("Already set to be host");
-		else
-			System.out.println("Already clientMode");
+			mode = "Student";
 	}
 	
-	public void setAssistantMode() throws Exception{
-		if(this.connector.isAssistantHost() == null){
-			connector.setAssistantHost();
-			initializePopUpSubject();
-		}
-		else if (this.connector.isAssistantHost() == false && this.connector.isHelperHost() == false)
-			System.out.println("Already set to be client");
-		else
-			System.out.println("Already HostMode");
+	public void setAssistantMode(){
+		resetQueueData();
+		connector.setAssistantHost();
+		mode = "StudentAssistant";
 	}
 	
 	
@@ -108,10 +104,9 @@ public class ChatTabController {
 	 /**
 	 * Resets the selected mode (student/helper/assistant) and the subject.
 	 */
-	
-	public void resetMode(){
-			connector.resetMode();
-			this.tag = null;
+	public void resetQueueData(){
+		waitingThreads.clear();
+		isWaitingForConnection = false;
 		}
 	
 	
@@ -151,15 +146,44 @@ public class ChatTabController {
 	 * @param subject
 	 * Marges the tag mode (assistant/helper/student) and the selected subject chosen, making it ready to be set in right queue at server
 	 */
-	public void mergeTags(String subject){
-		if(this.connector.isAssistantHost() == null && this.connector.isHelperHost() == null)
-			System.out.println("Need to choose user type before choosing subject!");
-		else if (this.connector.isAssistantHost())
-			tag = "StudentAssistant" + subject;
-		else if (this.connector.isHelperHost())
-			tag = "StudentHelper" + subject;
-		else if (!this.connector.isHelperHost() && !this.connector.isAssistantHost())
-			tag = "Student" + subject;
+//	public void mergeTags(String subject){
+//		if(this.connector.isAssistantHost() == null && this.connector.isHelperHost() == null)
+//			System.out.println("Need to choose user type before choosing subject!");
+//		else if (this.connector.isAssistantHost())
+//			tag = "StudentAssistant" + subject;
+//		else if (this.connector.isHelperHost())
+//			tag = "StudentHelper" + subject;
+//		else if (!this.connector.isHelperHost() && !this.connector.isAssistantHost())
+//			tag = "Student" + subject;
+//	}
+	
+	public String getSubject(){
+		return subject;
+	}
+	
+	public String getMode(){
+		return mode;
+	}
+	
+	public boolean modeAndSubjectIsSet(){
+		return subject != null && mode != null;
+	}
+	
+	public boolean combineTags(){
+		if(!modeAndSubjectIsSet())
+			return false;
+		else{
+			tag = mode + subject;
+			return true;
+		}
+	}
+	
+	public void setSubject(String subject){
+		this.subject = subject;
+	}
+	
+	public void setMode(String mode){
+		this.mode = mode;
 	}
 	
 	//method for returning tag in purpose of retreiving it in Connector - method run()
@@ -171,41 +195,54 @@ public class ChatTabController {
 		this.tag = tag;
 	}
 	
+	public void setExtraConnectionTab(){
+		if(mode.equals("StudentAssistant") || mode.equals("StudentHelper")){
+			removeExtraConnectionTab();
+			if(ChatTabController.getPotentialConnections() < 3 && ChatTabController.getPotentialConnections() != 0)
+				chatTab.getTabs().add(extraConnectionTab);
+		}
+	}
+	
+	public void removeExtraConnectionTab(){
+		if(chatTab.getTabs().contains(extraConnectionTab))
+			chatTab.getTabs().remove(extraConnectionTab);
+	}
+	
 	@FXML
 	public void newChatTab(){ // TODO should send message to server queuing its ip
-		if(connector.isHelperHost() == null && connector.isAssistantHost() == null)
-			System.out.println("Must choose user type before opening connection");
+		if(connector.isHelperHost() == null && connector.isAssistantHost() == null || tag == null)
+			System.out.println("Must choose user type and subject before opening connection");
 		// host can serve 3, client can only queue once
 		else if(ChatTabController.getPotentialConnections() < 3 && (connector.isHelperHost() || connector.isAssistantHost()) || ChatTabController.getPotentialConnections() < 1 && (!connector.isHelperHost() && !connector.isAssistantHost())){
 		try {
+				System.out.println("Starting to create a new ChatTab...");
 				ChatTabController.PotentialConnections++;
 				// setting up the Chat GUI element
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatTab.fxml"));	// loads the content of the given FXML file		
 				Node node = (Node) loader.load();				// sets the loaded FXML content in a Node
 				Tab newTab = new Tab("Chat session", node);	// creates new tab with the content in the Node and adds the tab to the current tabs in GUI
 				this.chatTab.getTabs().add(newTab);
+				
 				ChatController chatController = loader.getController();
 				chatController.setChatTab(newTab);
 
 				if(connector.isHelperHost()){
 					chatController.setHelperHost(true);
-					chatController.initializeInteractionArea();
 					connector.sendHelperRequest(tag);
-
 				}
-
 				else if(connector.isAssistantHost()){
 					chatController.setAssistantHost(true);
-					chatController.initializeInteractionArea();
 					connector.sendHelperRequest(tag);
 				}
 				else {
 					chatController.setHelperHost(false);
 					chatController.setAssistantHost(false);
-					chatController.initializeInteractionArea();
 				}
+				chatController.initializeInteractionArea();
 
 				chatControllerQueue.addLast(chatController);
+				setExtraConnectionTab();
+	
 
 				
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
@@ -213,12 +250,14 @@ public class ChatTabController {
 					chatControllerQueue.remove(chatController);
 					ChatTabController.decrementPotentialConnections();
 					System.out.println("Closing current tab -  calling onClosed on assisiated chatController...");
-					if(chatTab.getTabs().size() == 1){
-
+					chatController.onClosed(tag); 
+					setExtraConnectionTab();
+					
+					if(ChatTabController.getPotentialConnections() == 0){
 						mainFrameController.getInteractionTabManagerController().setDefaultURL();
 						mainFrameController.loadNewInteractionArea(mainFrameController.getStartingInteractionTab());
 					}
-					chatController.onClosed(tag); 
+					
 				});
 				
 
@@ -228,14 +267,16 @@ public class ChatTabController {
 					}
 				});
 				
-				if(chatTab.getTabs().size() == 1){
-					Event.fireEvent(newTab, new Event(Tab.SELECTION_CHANGED_EVENT));
-				}
+				
+				Event.fireEvent(newTab, new Event(Tab.SELECTION_CHANGED_EVENT));
 				
 				chatTab.getSelectionModel().select(ChatTabController.getPotentialConnections()-1);
 				
+
+				
 				if(this.waitingThreads.isEmpty() && !isWaitingForConnection){
 					isWaitingForConnection = true;
+					System.out.println("running connector");
 					new Thread(connector).start();
 				}
 				else

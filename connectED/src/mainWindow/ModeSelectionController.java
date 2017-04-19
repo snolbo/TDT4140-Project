@@ -1,0 +1,138 @@
+package mainWindow;
+
+import communication.ChatTabController;
+import javafx.fxml.FXML;
+
+import javafx.scene.control.Button;
+import javafx.scene.text.Text;
+
+public class ModeSelectionController {
+	@FXML
+	private Button assistantBtn;
+	@FXML
+	private Button helperBtn;
+	@FXML
+	private Button studentBtn;
+	@FXML
+	private Button javaBtn;
+	@FXML
+	private Button itgkPythonBtn;
+//	@FXML
+//	private Button itgkMatlabBtn;
+	@FXML
+	private Button connectBtn;
+	
+	@FXML Text errorText;
+
+	
+	
+	private ChatTabController chatTabController;
+	private MainFrameController mainFrameController;
+	
+	private String selectedButtonColor = "linear-gradient(#ff5400, #be1d00)";
+	
+	
+	@FXML
+	void initialize(){
+		errorText.setVisible(false);
+		connectBtn.setOpacity(0.5);
+
+	}
+	
+	public void passChatTabController(ChatTabController chatTabController){
+		this.chatTabController = chatTabController;
+	}
+
+	public void resetSubjectButtonColor(){
+		itgkPythonBtn.setStyle("");
+		javaBtn.setStyle("");
+//		itgkMatlabBtn.setStyle("");
+	}
+	
+	private void resetModeButtonColor(){
+		assistantBtn.setStyle("");
+		helperBtn.setStyle("");
+		studentBtn.setStyle("");
+	}
+	
+	public void colorConnectButton(){
+		if(mainFrameController.chatTabController.modeAndSubjectIsSet()){
+			connectBtn.setOpacity(1);
+			errorText.setVisible(false);
+
+		}
+		else
+			connectBtn.setOpacity(0.5);
+			
+	}
+	
+	public void initButtons(MainFrameController mainFrameController) {
+		this.mainFrameController = mainFrameController;
+		
+		assistantBtn.setOnAction( (event) ->{
+			try {
+				mainFrameController.chatTabController.setAssistantMode();
+				resetModeButtonColor();
+				assistantBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+				colorConnectButton();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		
+		helperBtn.setOnAction( (event) ->{
+			try {
+				mainFrameController.chatTabController.setStudentHelperMode();
+				resetModeButtonColor();
+				helperBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+				colorConnectButton();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		
+		studentBtn.setOnAction( (event) ->{
+			try {
+				mainFrameController.chatTabController.setStudentMode();
+				resetModeButtonColor();
+				studentBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+				colorConnectButton();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		
+		javaBtn.setOnAction((event)-> {
+			mainFrameController.chatTabController.setSubject("Java");
+			resetSubjectButtonColor();
+			javaBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+			colorConnectButton();
+		});
+		
+		itgkPythonBtn.setOnAction((event)-> {
+			mainFrameController.chatTabController.setSubject("ITGK");
+			resetSubjectButtonColor();
+			itgkPythonBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+			colorConnectButton();
+		});
+		
+//		itgkMatlabBtn.setOnAction((event)-> {
+//			mainFrameController.chatTabController.setSubject("ITKG");
+//			resetSubjectButtonColor();
+//			itgkMatlabBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+//		});
+		
+		connectBtn.setOnAction((event)->{
+			if(mainFrameController.chatTabController.combineTags()){
+				errorText.setVisible(false);
+				mainFrameController.chatTabController.newChatTab();
+			}
+			else{
+				errorText.setVisible(true);
+			}
+		});
+
+	}
+	
+
+}

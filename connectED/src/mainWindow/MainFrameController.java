@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
@@ -15,13 +17,12 @@ import javafx.scene.web.WebView;
 public class MainFrameController {
 	@FXML private Pane interactionPane;
 	@FXML private Pane chatPane;
-	@FXML private Pane infoPane;
 	@FXML private WebView searchBrowser;
 	
 	private GridPane rootNode;
 	
-	private InteractionTabManagerController interactionTabManagerController;
-	private ChatTabController chatTabController;
+	public InteractionTabManagerController interactionTabManagerController;
+	public ChatTabController chatTabController;
 
 	Node startingInteractionTab;
 	Node currentInteractionArea;
@@ -37,6 +38,15 @@ public class MainFrameController {
 			initializeChat();
 			initializeInteractionTab();
 			searchBrowser.getEngine().load("http://www.google.com");
+			searchBrowser.setOnKeyPressed((event) ->{
+				if(event.isControlDown()){
+					double currentVal = searchBrowser.getZoom();
+					if(event.getCode() == KeyCode.MINUS && currentVal > 0.5)
+						searchBrowser.setZoom(currentVal - 0.1);
+					else if(event.getCode() == KeyCode.PLUS && currentVal < 2)
+						searchBrowser.setZoom(currentVal + 0.1);
+				}
+			});
 			
 
 	}
@@ -81,6 +91,7 @@ public class MainFrameController {
 		try{
 		Node newTabManager  = loader.load();
 		this.interactionTabManagerController = loader.getController();
+		interactionTabManagerController.initSelectionModeContent(this);
 		rootNode.getChildren().remove(interactionPane);
 		rootNode.add(newTabManager, 0, 0, 1, 3);
 		currentInteractionArea = newTabManager;

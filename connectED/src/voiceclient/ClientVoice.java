@@ -33,7 +33,7 @@ public class ClientVoice {
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
             if(!AudioSystem.isLineSupported(info)){
                 System.out.println("not suport");
-                System.exit(0);
+                return;
             }
             audioIn = (TargetDataLine) AudioSystem.getLine(info);
             audioIn.open(format);

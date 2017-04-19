@@ -30,7 +30,7 @@ public class ServerVoice {
             DataLine.Info info_out = new DataLine.Info(SourceDataLine.class, format);
             if(!AudioSystem.isLineSupported(info_out)){
                 System.out.println("not suport");
-                System.exit(0);
+                return;
             }
             audioOut = (SourceDataLine)AudioSystem.getLine(info_out);
             audioOut.open(format);

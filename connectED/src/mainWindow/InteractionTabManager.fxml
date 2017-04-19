@@ -4,12 +4,11 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.web.WebView?>
 
-<TabPane fx:id="tabContainer" style="-fx-background-color: BLACK;" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainWindow.InteractionTabManagerController">
+<TabPane fx:id="tabContainer" styleClass="tabBackground" stylesheets="@mainWindow.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainWindow.InteractionTabManagerController">
   <tabs>
-    <Tab text="Code">
+    <Tab text="Shared Code">
          <content>
             <WebView fx:id="sharedCodeBrowser" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" />
          </content></Tab>
-    <Tab text="Untitled Tab 2" />
   </tabs>
 </TabPane>

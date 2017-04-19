@@ -22,7 +22,6 @@ public class PlayerThread extends Thread{
     byte[] buffer = new byte[512];
     @Override
     public void run(){
-        int i = 0;
         DatagramPacket incoming  = new DatagramPacket(buffer, buffer.length);
         System.out.println("Starting to receive soundbytes");
         while(ChatTabController.isVoiceCommunicating) {            
@@ -30,7 +29,6 @@ public class PlayerThread extends Thread{
             	datagramSocket.receive(incoming);
                 buffer = incoming.getData();
                 audioOut.write(buffer, 0, buffer.length);
-//                System.out.println("#"+i++);
             } catch (IOException e) {
             	e.printStackTrace();
             	break;

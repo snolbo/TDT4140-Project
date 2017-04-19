@@ -1,0 +1,5 @@
+.micButton{
+	-fx-background-image: url('mic.png');
+	-fx-background-size: cover;
+}
+
