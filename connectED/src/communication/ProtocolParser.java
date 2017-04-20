@@ -45,10 +45,12 @@ public class ProtocolParser{
 					}
 				}
 				else if(message.equals("accept"))
-					chatController.setupVoiceCommunication();
+					chatController.handleAcceptedVoiceRequest();
 				else if(message.equals("cancel")){
 					chatController.cancelVoiceCommunication();
 				}
+				else if(message.equals("deny"))
+					chatController.handleDeniedVoiceRequest();
 				break;
 
 			default:

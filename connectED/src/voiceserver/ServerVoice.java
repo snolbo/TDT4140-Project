@@ -3,6 +3,7 @@ package voiceserver;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
@@ -11,6 +12,17 @@ public class ServerVoice {
     public int serverPort = 8888;
     private SourceDataLine audioOut;
     private PlayerThread playerThread;
+	private DataLine.Info info_out;
+	private AudioFormat format;
+    
+    public ServerVoice() {
+    	 format = getAudioformat();
+         info_out = new DataLine.Info(SourceDataLine.class, format);
+	}
+    
+    public boolean playingIsSupported(){
+    	return !AudioSystem.isLineSupported(info_out);
+    }
     
     public static AudioFormat getAudioformat(){
         float sampleRate = 8000.0F;
@@ -22,7 +34,6 @@ public class ServerVoice {
     }
     
     
-
 
     public void initializeAudio(){
         try {

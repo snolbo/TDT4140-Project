@@ -77,30 +77,56 @@ public class ChatController {
 	
 	public void requestVoiceCommunication(){
 		if(!ChatTabController.isVoiceCommunicating){
-			receiveAndSend.sendChatMessage("VOICE-request");
+			sv = new ServerVoice();
+			cv = new ClientVoice();
+			if(sv.playingIsSupported() && cv.recordingIsSupported()){
+				receiveAndSend.sendChatMessage("VOICE-request");
+			}
+			else
+				System.out.println("Voice communication is not supported on this device");
 		}
 		else
 			viewMessage("-----Cannot initiate voice communication as you already have an active voiceConversation-----", false);
 	}
 	
 	public void acceptVoiceCommunication(){
-		receiveAndSend.sendChatMessage("VOICE-accept");
+		if(!ChatTabController.isVoiceCommunicating){
+			sv = new ServerVoice();
+			cv = new ClientVoice();
+			if(sv.playingIsSupported() && cv.recordingIsSupported()){
+				receiveAndSend.sendChatMessage("VOICE-accept");
+				setupVoiceCommunication();
+			}
+			else{
+				System.out.println("Voice communication is not supported on this device");
+				viewMessage("-----The other person request voice communication, but it is not supported on your device-----", false);
+				receiveAndSend.sendChatMessage("VOCIE-deny");
+			}
+		}
+		else
+			viewMessage("-----The other person request voice communication, but you are already in an active conversation-----", false);
+	}
+	
+	public void handleDeniedVoiceRequest(){
+		ChatTabController.isVoiceCommunicating = false;
+	}
+	
+	public void handleAcceptedVoiceRequest(){
 		setupVoiceCommunication();
 	}
 	
 	public void cancelVoiceCommunication(){
 		if(ChatTabController.isVoiceCommunicating){
-			ChatTabController.isVoiceCommunicating = false;
 			receiveAndSend.sendChatMessage("VOICE-cancel");
+			ChatTabController.isVoiceCommunicating = false;
 		}
 	}
 	
 	public void setupVoiceCommunication(){
-		ChatTabController.isVoiceCommunicating = true;
-		sv = new ServerVoice();
-		sv.initializeAudio();
-		cv = new ClientVoice();
-		cv.initializeAudio(receiveAndSend.getInetAddress());
+		if(sv.playingIsSupported() && cv.recordingIsSupported()){
+			sv.initializeAudio();
+			cv.initializeAudio(receiveAndSend.getInetAddress());
+		}
 	}
 	
 	@FXML // listens to keyevents in userText, if keyevent is enter, send CHAT protovol and the text
