@@ -83,7 +83,8 @@ public class ChatController {
 				receiveAndSend.sendChatMessage("VOICE-request");
 			}
 			else
-				System.out.println("Voice communication is not supported on this device");
+				viewMessage("-----Voice communication is not supported on your device-----", false);
+
 		}
 		else
 			viewMessage("-----Cannot initiate voice communication as you already have an active voiceConversation-----", false);
@@ -100,7 +101,7 @@ public class ChatController {
 			else{
 				System.out.println("Voice communication is not supported on this device");
 				viewMessage("-----The other person request voice communication, but it is not supported on your device-----", false);
-				receiveAndSend.sendChatMessage("VOCIE-deny");
+				receiveAndSend.sendChatMessage("VOICE-deny");
 			}
 		}
 		else

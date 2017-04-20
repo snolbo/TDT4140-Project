@@ -34,16 +34,8 @@ public class ProtocolParser{
 				});
 				break;
 			case "VOICE":
-				if(message.equals("request")){
-					if(ChatTabController.isVoiceCommunicating){
-						chatController.getReceiveAndSendConnection().sendChatMessage("CHAT-Peer already in voice communication, try again later");
-						chatController.viewMessage("Peer tried connection with voice communication, but you are already talking to someone else", true);
-					}
-					else{
-						chatController.getReceiveAndSendConnection().sendChatMessage("VOICE-accept");
-						chatController.setupVoiceCommunication();
-					}
-				}
+				if(message.equals("request"))
+					chatController.acceptVoiceCommunication();
 				else if(message.equals("accept"))
 					chatController.handleAcceptedVoiceRequest();
 				else if(message.equals("cancel")){
