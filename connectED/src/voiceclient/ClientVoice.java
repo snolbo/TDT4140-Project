@@ -26,7 +26,7 @@ public class ClientVoice {
 	}
 
     public boolean recordingIsSupported(){
-    	return !AudioSystem.isLineSupported(info);
+    	return AudioSystem.isLineSupported(info);
     }
     
     public static AudioFormat getAudioformat(){

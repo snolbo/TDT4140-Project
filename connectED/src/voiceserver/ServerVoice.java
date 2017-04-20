@@ -21,7 +21,7 @@ public class ServerVoice {
 	}
     
     public boolean playingIsSupported(){
-    	return !AudioSystem.isLineSupported(info_out);
+    	return AudioSystem.isLineSupported(info_out);
     }
     
     public static AudioFormat getAudioformat(){

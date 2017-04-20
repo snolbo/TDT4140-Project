@@ -113,6 +113,7 @@ public class ReceiveAndSend implements Runnable{
 			}catch(IOException e){
 				 e.printStackTrace();
 				 if(socket.isClosed())
+					 System.out.println("Socket for communication is closed, running closing protocol...");
 					 closeConnection();
 			}
 	}
