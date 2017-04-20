@@ -17,9 +17,14 @@ public class RecorderThread extends Thread{
     byte byteBuffer[] = new byte[512];
     public InetAddress serverIp;
     public int serverPort;
+    
+    
+    /* (non-Javadoc)
+     * @see java.lang.Thread#run()
+     * Reads soundbytes from initialized TargetDataLine and send them thorugh the initialized Datagramsocket to the given IP adress and portnumber
+     */
     @Override
     public void run(){
-        int i = 0;
         while(ChatTabController.isVoiceCommunicating){
             try {
                 audioIn.read(byteBuffer, 0, byteBuffer.length);
@@ -30,12 +35,21 @@ public class RecorderThread extends Thread{
                 break;
             }
         }
+        System.out.println("Exiting from loop sending sound bytes.. closing datagramSocket...");
         audioIn.close();
         audioIn.drain();
         datagramSocket.close();
-        System.out.println("RecordThread stop");
+        System.out.println("RecordThread has stopped succsessfully");
     }
     
+    
+    
+    /**
+     * @param serverIp
+     * @param serverPort
+     * @param audioIn
+     * Creates a Datagramsocket and sets serverIP,port and reference to audio input in order to read data from.
+     */
     public void initializeAudioTransmittion(InetAddress serverIp, int serverPort, TargetDataLine audioIn){
     	try {
 			datagramSocket = new DatagramSocket();

@@ -70,7 +70,7 @@ public class InteractionTabManagerController {
 	 * Used by MainFrameController to pass its reference on order to get access to its children and its methods
 	 */
 	public void initSelectionModeContent(MainFrameController mainFrameController){
-		mainFrameController = mainFrameController;
+		this.mainFrameController = mainFrameController;
 		initializeSelectionModeContent();
 	}
 	

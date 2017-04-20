@@ -86,7 +86,8 @@ public class ModeSelectionController {
 	 */
 	public void initButtons(MainFrameController mainFrameController) {
 		this.mainFrameController = mainFrameController;
-		
+		System.out.println("mainframecontroller: " + mainFrameController);
+		System.out.println("chatTabController: " + chatTabController);
 		assistantBtn.setOnAction( (event) ->{
 			try {
 				mainFrameController.chatTabController.setAssistantMode();

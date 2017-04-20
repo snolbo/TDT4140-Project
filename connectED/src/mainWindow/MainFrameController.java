@@ -24,8 +24,8 @@ public class MainFrameController {
 
 	Node startingInteractionTab;
 	Node currentInteractionArea;
-//	private Node selectionModeContent;
-//	private Tab selectionModeTab;
+	private Node selectionModeContent;
+	private Tab selectionModeTab;
 
 
 	
@@ -107,6 +107,7 @@ public class MainFrameController {
 		try{
 		Node newTabManager  = loader.load();
 		this.interactionTabManagerController = loader.getController();
+		System.out.println(this == null);
 		interactionTabManagerController.initSelectionModeContent(this);
 		rootNode.getChildren().remove(interactionPane);
 		rootNode.add(newTabManager, 0, 0, 1, 3);

@@ -86,7 +86,7 @@ public class Connector implements Runnable {
 			try {
 				socket = welcomeSocket.accept();
 			} catch (IOException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 				closeWelcomeSocket();
 			}
 		}

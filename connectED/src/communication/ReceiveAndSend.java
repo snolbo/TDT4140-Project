@@ -34,8 +34,6 @@ public class ReceiveAndSend implements Runnable{
 			
 		try{
 			setupStreams();
-			
-
 			if(!chatController.isAssistantHost() && !chatController.isHelperHost()){ 
 					Platform.runLater( () -> {
 						if(chatController.codeEditorFinishedLoading())
@@ -52,6 +50,7 @@ public class ReceiveAndSend implements Runnable{
 		catch(IOException e){
 			e.printStackTrace();
 		}finally{
+			chatController.disableMicButton(true);
 			closeConnection();
 		}
 	}
@@ -74,7 +73,8 @@ public class ReceiveAndSend implements Runnable{
 	public void whileReceiving(){
 		String message = "-----You are now connected!-----";
 		viewMessage(message, false);
-		ableToType(true); 					
+		ableToType(true);
+		chatController.disableMicButton(false);
 		do{
 			try{
 				message = buffread.readLine();

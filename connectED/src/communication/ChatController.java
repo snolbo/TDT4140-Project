@@ -50,8 +50,14 @@ public class ChatController {
 		microphoneBtn.getStyleClass().add("micButton");
 		chatWindow.setMouseTransparent(true);
 		chatWindow.setFocusTraversable(false);
+		microphoneBtn.setDisable(true);
 	}
 	
+	public void disableMicButton(boolean value){
+		microphoneBtn.setDisable(value);
+	}
+	
+
 	
 	public boolean isHelperHost() {
 		return isHelperHost;
@@ -74,7 +80,7 @@ public class ChatController {
 			receiveAndSend.sendChatMessage("VOICE-request");
 		}
 		else
-			viewMessage("Cannot initiate voice communication as you already have an active voiceConversation", true);
+			viewMessage("-----Cannot initiate voice communication as you already have an active voiceConversation-----", false);
 	}
 	
 	public void acceptVoiceCommunication(){

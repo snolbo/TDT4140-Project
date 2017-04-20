@@ -150,25 +150,6 @@ public class ChatTabController {
 		this.stage.close();
 	}
 	
-
-	
-	//merging user string with subject string to make a tag in purpose of identifying itself to server
-	//subject string has to begin with uppercase letter
-	/**
-	 * @param subject
-	 * Marges the tag mode (assistant/helper/student) and the selected subject chosen, making it ready to be set in right queue at server
-	 */
-//	public void mergeTags(String subject){
-//		if(this.connector.isAssistantHost() == null && this.connector.isHelperHost() == null)
-//			System.out.println("Need to choose user type before choosing subject!");
-//		else if (this.connector.isAssistantHost())
-//			tag = "StudentAssistant" + subject;
-//		else if (this.connector.isHelperHost())
-//			tag = "StudentHelper" + subject;
-//		else if (!this.connector.isHelperHost() && !this.connector.isAssistantHost())
-//			tag = "Student" + subject;
-//	}
-	
 	/**
 	 * @return
 	 * Returns the current subject selected
@@ -223,7 +204,6 @@ public class ChatTabController {
 		this.mode = mode;
 	}
 	
-	//method for returning tag in purpose of retreiving it in Connector - method run()
 	/**
 	 * @return
 	 * Returns the current tag

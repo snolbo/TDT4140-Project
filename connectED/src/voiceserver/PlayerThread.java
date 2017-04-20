@@ -20,6 +20,10 @@ public class PlayerThread extends Thread{
     public DatagramSocket datagramSocket;
     public SourceDataLine audioOut;
     byte[] buffer = new byte[512];
+    /* (non-Javadoc)
+     * @see java.lang.Thread#run()
+     * Receives soundbytes from initialized datagram socket and plays it though the initialized SourceDataLine
+     */
     @Override
     public void run(){
         DatagramPacket incoming  = new DatagramPacket(buffer, buffer.length);
@@ -40,6 +44,11 @@ public class PlayerThread extends Thread{
         System.out.println("PlayerThread stop");
     }
     
+    /**
+     * @param serverPort
+     * @param audioOut
+     * Creates a Datagramsocket with the given serverPort and a reference to a SourceDataline to  write bytes to in order to play them as a sound 
+     */
     public void initializePlayerThread(int serverPort, SourceDataLine audioOut){
     	try {
 			datagramSocket = new DatagramSocket(serverPort);
