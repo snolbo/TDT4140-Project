@@ -37,8 +37,6 @@ public class ServerVoice {
 
     public void initializeAudio(){
         try {
-            AudioFormat format = getAudioformat();
-            DataLine.Info info_out = new DataLine.Info(SourceDataLine.class, format);
             if(!AudioSystem.isLineSupported(info_out)){
                 System.out.println("not suport");
                 return;

@@ -124,6 +124,7 @@ public class ChatController {
 	
 	public void setupVoiceCommunication(){
 		if(sv.playingIsSupported() && cv.recordingIsSupported()){
+			ChatTabController.isVoiceCommunicating = true;
 			sv.initializeAudio();
 			cv.initializeAudio(receiveAndSend.getInetAddress());
 		}
