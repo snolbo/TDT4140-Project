@@ -7,9 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
@@ -26,8 +24,8 @@ public class MainFrameController {
 
 	Node startingInteractionTab;
 	Node currentInteractionArea;
-	private Node selectionModeContent;
-	private Tab selectionModeTab;
+//	private Node selectionModeContent;
+//	private Tab selectionModeTab;
 
 
 	
@@ -51,12 +49,19 @@ public class MainFrameController {
 
 	}
 	
+	/**
+	 * @return
+	 * Returns the interactionTabManagerController controlling the InteractionTab of the application that is currently shown
+	 */
 	public InteractionTabManagerController getInteractionTabManagerController(){
 		return this.interactionTabManagerController;
 	}
 	
 	
 	
+	/**
+	 * Loads the ChatTab and saves a reference to its controller
+	 */
 	private void initializeChat(){
 		System.out.println("Initializing chat-area...");
 		FXMLLoader chatLoader =  new FXMLLoader(getClass().getResource("/communication/ChatManager.fxml"));
@@ -75,16 +80,27 @@ public class MainFrameController {
 		}
 	}
 	
+	/**
+	 * @return
+	 * Returns the startingInteractionTab
+	 */
 	public Node getStartingInteractionTab(){
 		return this.startingInteractionTab;
 	}
 
 	
+	/**
+	 * @return
+	 * Returns the the TabPane of the interactionArea currently shown by the application
+	 */
 	public Node getCurrentInteractionArea(){
 		return this.currentInteractionArea;
 	}
 
 	
+	/**
+	 * Loasa the InteractionTab and saves this as the starting and current interactiontab
+	 */
 	private void initializeInteractionTab(){
 		System.out.println("Initializing welcome interactiontab in interactionArea...");
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("InteractionTabManager.fxml"));
@@ -105,6 +121,10 @@ public class MainFrameController {
 
 		
 	
+	/**
+	 * @param interactionArea
+	 * Loads a new TabPane in the interactionArea shown by the application
+	 */
 	public void loadNewInteractionArea(Node interactionArea){
 		System.out.println("Loading new interactionTab in interactionArea");
 		rootNode.getChildren().remove(currentInteractionArea);
@@ -112,6 +132,9 @@ public class MainFrameController {
 		currentInteractionArea = interactionArea;
 	}
 	
+	/**
+	 * Handles what to do on being asked to close
+	 */
 	public void onCloseRequest(){
 		System.out.println("Closerequest in MainFrameController calling onCloseRequest in chatTabController...");
 		chatTabController.onCloseRequest();

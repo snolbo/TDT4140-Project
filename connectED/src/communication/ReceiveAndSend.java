@@ -72,8 +72,8 @@ public class ReceiveAndSend implements Runnable{
 	}
 
 	public void whileReceiving(){
-		String message = "You are now connected!";
-		viewMessage(message, true);
+		String message = "-----You are now connected!-----";
+		viewMessage(message, false);
 		ableToType(true); 					
 		do{
 			try{
@@ -93,6 +93,7 @@ public class ReceiveAndSend implements Runnable{
 	// closes the connection
 	public void closeConnection(){
 		viewMessage("Closing connection...", true);
+		viewMessage("--------------------------",false);
 		ableToType(false);
 		try{
 			this.output.close();

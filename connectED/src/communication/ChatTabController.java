@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayDeque;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.application.Application;
+
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -17,11 +14,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.Pane;
-import mainWindow.InteractionTabManagerController;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import mainWindow.MainFrameController;
@@ -64,35 +58,52 @@ public class ChatTabController {
 		
 	}
 	
+	/**
+	 * @return
+	 * Get potential connections that can be made in the current state
+	 */
 	public static int getPotentialConnections() {
 		return PotentialConnections;
 	}
 
+	/**
+	 * Decrements the variable indicating how many potential connections that can be made in the current state
+	 */
 	public static void decrementPotentialConnections() {
 		ChatTabController.PotentialConnections--;
 	}
 	
+	/**
+	 * @param mainFrameController
+	 * Pass the MainFrameController, being the root controller, to this controller
+	 */
 	public void passMainFrameController(MainFrameController mainFrameController){ // new
 		this.mainFrameController = mainFrameController;
 	}
 
+
 	
-	public void notifyAction(){
-		// make tab that calls method colored to indicate undread message
-	}
-	
+	/**
+	 * Tells the connector handling queuing that it is connection as a student offering help
+	 */
 	public void setStudentHelperMode(){
 		resetQueueData();
 		connector.setHelperHost();
 		mode = "StudentHelper";
 	}
 	
+	/**
+	 * Tells the connector handling queuing that it is connection as a student, requesting help
+	 */
 	public void setStudentMode(){
 		resetQueueData();
 			connector.setClient();
 			mode = "Student";
 	}
 	
+	/**
+	 * Tells the connector handling queuing that it is connection as a student-assistant offering help
+	 */
 	public void setAssistantMode(){
 		resetQueueData();
 		connector.setAssistantHost();
@@ -107,13 +118,12 @@ public class ChatTabController {
 	public void resetQueueData(){
 		waitingThreads.clear();
 		isWaitingForConnection = false;
-		}
+	}
 	
 	
-	//Initializes a new popup window with subjects
 	/**
 	 * @throws Exception 
-	 * Creates a blocking PopUp window that prompts the user for choice 
+	 * Creates a blocking PopUp window that prompts the user for choice of subject (Not used)
 	 */
 	public void initializePopUpSubject() throws Exception{               
         try {
@@ -133,7 +143,9 @@ public class ChatTabController {
       
 	}	
 	
-	//closes popup subjects
+	/**
+	 * Closes the popup window that prompts for subjectselection
+	 */
 	public void closePopUp(){
 		this.stage.close();
 	}
@@ -157,18 +169,35 @@ public class ChatTabController {
 //			tag = "Student" + subject;
 //	}
 	
+	/**
+	 * @return
+	 * Returns the current subject selected
+	 */
 	public String getSubject(){
 		return subject;
 	}
 	
+	/**
+	 * @return
+	 * Returns the current mode seleceted
+	 */
 	public String getMode(){
 		return mode;
 	}
 	
+	/**
+	 * @return
+	 * Returns a boolean variable indicating if both subject and mode is set
+	 */
 	public boolean modeAndSubjectIsSet(){
 		return subject != null && mode != null;
 	}
 	
+	
+	/**
+	 * @return
+	 * Combine mode and subject to a tag, if both are set. Otherwise, returns
+	 */
 	public boolean combineTags(){
 		if(!modeAndSubjectIsSet())
 			return false;
@@ -178,23 +207,42 @@ public class ChatTabController {
 		}
 	}
 	
+	/**
+	 * @param subject
+	 * Sets the subject
+	 */
 	public void setSubject(String subject){
 		this.subject = subject;
 	}
 	
+	/**
+	 * @param mode
+	 * Sets the mode
+	 */
 	public void setMode(String mode){
 		this.mode = mode;
 	}
 	
 	//method for returning tag in purpose of retreiving it in Connector - method run()
+	/**
+	 * @return
+	 * Returns the current tag
+	 */
 	public String getTag(){
 		return tag;
 	}
 	
+	/**
+	 * @param tag
+	 * Sets the tag
+	 */
 	public void setTag(String tag){
 		this.tag = tag;
 	}
 	
+	/**
+	 * Decides wheather or not the tab with a '+' sign is shown and active
+	 */
 	public void setExtraConnectionTab(){
 		if(mode.equals("StudentAssistant") || mode.equals("StudentHelper")){
 			removeExtraConnectionTab();
@@ -203,11 +251,17 @@ public class ChatTabController {
 		}
 	}
 	
+	/**
+	 * Removes the tab for adding extra connections
+	 */
 	public void removeExtraConnectionTab(){
 		if(chatTab.getTabs().contains(extraConnectionTab))
 			chatTab.getTabs().remove(extraConnectionTab);
 	}
 	
+	/**
+	 * Creates a new Chat, queue the user depending on tag
+	 */
 	@FXML
 	public void newChatTab(){ // TODO should send message to server queuing its ip
 		if(connector.isHelperHost() == null && connector.isAssistantHost() == null || tag == null)
@@ -264,6 +318,7 @@ public class ChatTabController {
 				newTab.setOnSelectionChanged((event) -> {
 					if(newTab.isSelected()){
 						mainFrameController.loadNewInteractionArea(chatController.getInteractionArea());
+						chatController.clearNotifiedMessage();
 					}
 				});
 				
@@ -294,7 +349,7 @@ public class ChatTabController {
 	
 	/**
 	 * @param socket
-	 * Creates a new chat session and assigns a chatController to the Chat-tab
+	 * Creates a new chat session and assigns a chatController to the Chat-tab. Used by the connector when a match is made from the distributing server
 	 */
 	public void startChatSession(Socket socket){ //, ChatController chatController){
 		System.out.println("Starting a chat session after received a person to connect to...");
@@ -308,6 +363,10 @@ public class ChatTabController {
 		}
 	}
 	
+	
+	/**
+	 * Handles the event of being closed
+	 */
 	public void onCloseRequest(){
 		System.out.println("Closing welcomesocket in Connector");
 		this.connector.closeWelcomeSocket();
@@ -319,14 +378,26 @@ public class ChatTabController {
 		}
 	}
 	
+	/**
+	 * @return
+	 * Returns the connector
+	 */
 	public Connector getConnector(){
 		return this.connector;
 	}
 	
+	/**
+	 * @return
+	 * Returns this stage
+	 */
 	public Stage getStage(){
 		return this.stage;
 	}
 	
+	/**
+	 * @return
+	 * Returns the mainframeController, being the root controller of the application
+	 */
 	public MainFrameController getMainFrameController(){
 		return this.mainFrameController;
 	}

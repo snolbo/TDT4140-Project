@@ -2,8 +2,6 @@ package communication;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
-
 
 import T2.ServerRequest;
 
@@ -16,8 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
@@ -25,7 +21,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import mainWindow.InteractionTabManagerController;
-import mainWindow.MainFrameController;
 import voiceclient.ClientVoice;
 import voiceserver.ServerVoice;
 
@@ -53,6 +48,8 @@ public class ChatController {
 	public void initialize(){
 		System.out.println("running initialize in chatController");
 		microphoneBtn.getStyleClass().add("micButton");
+		chatWindow.setMouseTransparent(true);
+		chatWindow.setFocusTraversable(false);
 	}
 	
 	
@@ -137,9 +134,11 @@ public class ChatController {
 		interactionTabManagerController.deleteFirepad();
 	}
 	
-	// shows message in chatWIndow
+
 	public void viewMessage(String text, boolean madeByMe){  // TODO: want the label to be smaller, wrap text, and positioned at one side
+		
 		Label message = new Label(text);
+		message.setStyle("-fx-padding: 10px;");
 		message.prefWidthProperty().bind(chatWindow.widthProperty().subtract(25));
 		message.setWrapText(true);
 		if(madeByMe) {
@@ -155,9 +154,21 @@ public class ChatController {
 			chatWindow.scrollTo(message);
 			});
 		this.userText.clear();
+		if(!madeByMe)
+			notifyIncomingMessage();
 	}
-
-	// sets a serverConnection to this chattab
+	
+	private void notifyIncomingMessage(){
+		System.out.println("Running notifyIncomingMessage in chatController");
+		if(!chatTab.isSelected()){
+			chatTab.setStyle("-fx-background-color: #ff5400");
+		}
+	}
+	
+	public void clearNotifiedMessage(){
+		chatTab.setStyle("");
+	}
+	
 	public void setRecieveAndSendConnection(ReceiveAndSend connection){
 		this.receiveAndSend = connection;
 	}

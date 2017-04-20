@@ -2,8 +2,7 @@ package T2;
 
 import java.io.*;
 import java.net.*;
-import java.util.Dictionary;
-import java.util.Hashtable;
+
 
 public class ServerRequest {
 	
@@ -11,6 +10,10 @@ public class ServerRequest {
 	private String serverIP;
 	private String tag;
 	
+	/**
+	 * @param tag
+	 * Constructor. Sets the serverPort and serverIP for the server handling distribution
+	 */
 	public ServerRequest(String tag){
 		this.tag = tag;
 		this.serverPort = 9050; //NTNU server Port
@@ -18,9 +21,11 @@ public class ServerRequest {
 
 	}
 	
-	//method for sending a tag "student" to server, 
-	//such that the server can enqueue its connection socket to the student
-	//returning helperAddress with IP and port if it has found a match 
+	
+	/**
+	 * @return
+	 * Sends a request to server handling distribution and waits for returns the IP of the available assistant when a match is made
+	 */
 	public String studentRequest() { 
 		try{
 			System.out.println("sending studentrequest with " + tag);
@@ -41,10 +46,12 @@ public class ServerRequest {
 	}
 	
 	
+	/**
+	 * Sends a request to the server handling distribution of IP adresses, and queues the IP from the device the request is sent from in the correct queue depending on the tag set in ServerRequest
+	 */
 	public void helperRequest() { 
 		try{
 			System.out.println("sending helperrequest with " + tag);
-
 			Socket clientSocket = new Socket(serverIP, serverPort); // socket to server queuing requests
 			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream()); // output stream
 			outToServer.writeBytes(tag + '\n'); // write tag to server. server take IP from message. Port to connect is decided from T1
@@ -58,6 +65,9 @@ public class ServerRequest {
 	
 	
 		
+	/**
+	 * Removes the backmost instance of the IP address queued by this device in the queue corresponding to the tag set in ServerRequest
+	 */
 	public void removeAdressFromQueue(){
 		try{
 			Socket clientSocket = new Socket(serverIP, serverPort); // socket to server queuing requests

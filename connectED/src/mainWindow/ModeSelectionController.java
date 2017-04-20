@@ -36,25 +36,39 @@ public class ModeSelectionController {
 	void initialize(){
 		errorText.setVisible(false);
 		connectBtn.setOpacity(0.5);
+		
 
 	}
 	
+	/**
+	 * @param chatTabController
+	 * Takes the ChatTabController object that is associated with this ModeSelectionContent
+	 */
 	public void passChatTabController(ChatTabController chatTabController){
 		this.chatTabController = chatTabController;
 	}
 
+	/**
+	 * Resets the color of the subjext-buttons to its default color
+	 */
 	public void resetSubjectButtonColor(){
 		itgkPythonBtn.setStyle("");
 		javaBtn.setStyle("");
 //		itgkMatlabBtn.setStyle("");
 	}
 	
+	/**
+	 * Resets the color of the mode buttons to its default color
+	 */
 	private void resetModeButtonColor(){
 		assistantBtn.setStyle("");
 		helperBtn.setStyle("");
 		studentBtn.setStyle("");
 	}
 	
+	/**
+	 * Color the connect-button depending on a subject and mode is selected
+	 */
 	public void colorConnectButton(){
 		if(mainFrameController.chatTabController.modeAndSubjectIsSet()){
 			connectBtn.setOpacity(1);
@@ -66,6 +80,10 @@ public class ModeSelectionController {
 			
 	}
 	
+	/**
+	 * @param mainFrameController
+	 * Takes the MainFrameController being the root controller of the application, and sets the action taken by the buttons on the content
+	 */
 	public void initButtons(MainFrameController mainFrameController) {
 		this.mainFrameController = mainFrameController;
 		
