@@ -109,6 +109,7 @@ public class ChatController {
 	}
 	
 	public void handleDeniedVoiceRequest(){
+		viewMessage("-----The other person's device does not support voice communication-----", false);
 		ChatTabController.isVoiceCommunicating = false;
 	}
 	
