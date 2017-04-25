@@ -60,8 +60,8 @@ public class ChatTabControllerTest extends ApplicationTest{
 	public void testSetStudentHelperMode2() throws Exception{
 		chatTabController.getConnector().setClient();
 		chatTabController.setStudentHelperMode();
+		assertTrue(chatTabController.getConnector().isHelperHost());
 		assertFalse(chatTabController.getConnector().isAssistantHost());
-		assertFalse(chatTabController.getConnector().isHelperHost());
 	}
 	
 	@Test
@@ -75,9 +75,9 @@ public class ChatTabControllerTest extends ApplicationTest{
 	@Test
 	public void testSetStudentHelperMode4() throws Exception{
 		chatTabController.getConnector().setAssistantHost();
-		chatTabController.setStudentHelperMode();
-		assertFalse(chatTabController.getConnector().isHelperHost());
 		assertTrue(chatTabController.getConnector().isAssistantHost());
+		chatTabController.setStudentHelperMode();
+		assertTrue(chatTabController.getConnector().isHelperHost());
 	}
 	
 	@Test
@@ -90,8 +90,8 @@ public class ChatTabControllerTest extends ApplicationTest{
 	@Test
 	public void testSetStudentAssistantMode2() throws Exception{
 		chatTabController.getConnector().setClient();
-		chatTabController.setAssistantMode();
 		assertFalse(chatTabController.getConnector().isAssistantHost());
+		chatTabController.setAssistantMode();
 		assertFalse(chatTabController.getConnector().isHelperHost());
 	}
 	
@@ -106,9 +106,9 @@ public class ChatTabControllerTest extends ApplicationTest{
 	@Test
 	public void testSetStudentAssistantMode4() throws Exception{
 		chatTabController.getConnector().setHelperHost();
-		chatTabController.setAssistantMode();
 		assertTrue(chatTabController.getConnector().isHelperHost());
-		assertFalse(chatTabController.getConnector().isAssistantHost());
+		chatTabController.setAssistantMode();
+		assertTrue(chatTabController.getConnector().isAssistantHost());
 	}
 	
 	
@@ -122,8 +122,8 @@ public class ChatTabControllerTest extends ApplicationTest{
 	@Test
 	public void testSetStudentMode2() throws Exception{
 		chatTabController.getConnector().setAssistantHost();
-		chatTabController.setStudentMode();
 		assertTrue(chatTabController.getConnector().isAssistantHost());
+		chatTabController.setStudentMode();
 		assertFalse(chatTabController.getConnector().isHelperHost());
 	}
 	
@@ -138,24 +138,15 @@ public class ChatTabControllerTest extends ApplicationTest{
 	@Test
 	public void testSetStudentMode4()throws Exception{
 		chatTabController.getConnector().setHelperHost();
+		assertTrue(chatTabController.getConnector().isHelperHost());
 		chatTabController.setStudentMode();
 		assertFalse(chatTabController.getConnector().isAssistantHost());
-		assertTrue(chatTabController.getConnector().isHelperHost());
 	}
 	
-	
 	@Test
-	public void testMergeTags(){
-		chatTabController.mergeTags("Java");
-		chatTabController.getConnector().setAssistantHost();
-		chatTabController.mergeTags("Java");
-		assertEquals("StudentAssistantJava", chatTabController.getTag());
-		chatTabController.getConnector().setHelperHost();
-		chatTabController.mergeTags("Java");
-		assertEquals("StudentHelperJava", chatTabController.getTag());
-		chatTabController.getConnector().setClient();
-		chatTabController.mergeTags("Java");
-		assertEquals("StudentJava", chatTabController.getTag());
+	public void testSubject(){
+		chatTabController.setSubject("java");
+		assertEquals(chatTabController.getSubject(), "java");
 	}
 	
 	@Test
@@ -163,6 +154,30 @@ public class ChatTabControllerTest extends ApplicationTest{
 		chatTabController.setTag("StudentHelperITGK");
 		assertEquals("StudentHelperITGK", chatTabController.getTag());
 	}
+	@Test
+	public void testMode(){
+		chatTabController.setMode("assistant");
+		assertEquals(chatTabController.getMode(),"assistant");
+	}
+	
+	@Test
+	public void testModeAndSubject(){
+		chatTabController.setMode("assistant");
+		assertEquals(chatTabController.getMode(),"assistant");
+		assertFalse(chatTabController.combineTags());
+		chatTabController.setSubject("java");
+		assertEquals(chatTabController.getSubject(),"java");
+		assertTrue(chatTabController.modeAndSubjectIsSet());
+		assertTrue(chatTabController.combineTags());
+		assertEquals(chatTabController.getTag(), "assistantjava");
+	}
+	
+	@Test
+	public void testTabLogic(){
+		
+	}
+	
+	
 
 	@Override
 	public void start(Stage stage) throws Exception {

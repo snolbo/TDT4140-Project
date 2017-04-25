@@ -3,11 +3,12 @@ package unitTests;
 
 import java.io.IOException;
 
-import T2.ServerRequest;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import communication.ServerRequest;
 
 
 public class ServerRequestTest{

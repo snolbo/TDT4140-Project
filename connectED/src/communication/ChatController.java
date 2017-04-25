@@ -2,9 +2,6 @@ package communication;
 
 import java.io.IOException;
 
-
-import T2.ServerRequest;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -156,8 +153,8 @@ public class ChatController {
 	 */
 	public void cancelVoiceCommunication(){
 		if(ChatTabController.isVoiceCommunicating){
-			receiveAndSend.sendChatMessage("VOICE-cancel");
 			ChatTabController.isVoiceCommunicating = false;
+			receiveAndSend.sendChatMessage("VOICE-cancel");
 		}
 	}
 	

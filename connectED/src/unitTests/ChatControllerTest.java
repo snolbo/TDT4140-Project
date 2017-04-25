@@ -4,23 +4,35 @@ package unitTests;
 import java.net.Socket;
 
 import communication.ChatController;
+import communication.ChatTabController;
 import communication.ReceiveAndSend;
+import communication.ServerRequest;
 import javafx.scene.control.Tab;
+import javafx.stage.Stage;
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.testfx.framework.junit.ApplicationTest;
 
-import T2.ServerRequest;
-
-public class ChatControllerTest {
+public class ChatControllerTest{
 	
 	public ChatController chatController;
 	public ReceiveAndSend receiveAndSend;
 	
+	
 	@Before
 	public void setUp(){
-		this.chatController = new ChatController();
+		chatController = new ChatController();
+	}
+	
+	
+	@Test
+	public void testDeniedVoiceCommunucation(){
+		chatController.handleDeniedVoiceRequest();
+		assertFalse(ChatTabController.isVoiceCommunicating);
+
 	}
 	
 	@Test
@@ -65,6 +77,9 @@ public class ChatControllerTest {
 		chatController.setAssistantHost(true);
 		chatController.onClosed("StudentAssistantJava");
 	}
+
+
+
 
 	
 }

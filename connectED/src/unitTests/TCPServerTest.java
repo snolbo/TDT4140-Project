@@ -7,8 +7,8 @@ import java.net.Socket;
 
 import java.util.LinkedList;
 
-import T2.ServerRequest;
 import T2.TCPServer;
+import communication.ServerRequest;
 import unitTests.TCPServerTest;
 
 import static org.junit.Assert.*;

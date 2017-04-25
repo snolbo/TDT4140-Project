@@ -12,11 +12,8 @@ import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import mainWindow.MainFrameController;
 
@@ -121,33 +118,6 @@ public class ChatTabController {
 	}
 	
 	
-	/**
-	 * @throws Exception 
-	 * Creates a blocking PopUp window that prompts the user for choice of subject (Not used)
-	 */
-	public void initializePopUpSubject() throws Exception{               
-        try {
-        		FXMLLoader subjectLoader = new FXMLLoader(getClass().getResource("PopUpSubject.fxml"));
-                Parent root = (Parent) subjectLoader.load();
-                PopUpSubjectController contr = subjectLoader.getController();
-                contr.passChatTabController(this);
-                this.stage = new Stage();
-                this.stage.initModality(Modality.WINDOW_MODAL);
-                this.stage.initOwner(chatTab.getScene().getWindow());
-                this.stage.setScene(new Scene(root));  
-                this.stage.show();
-        } catch(Exception e) {
-           e.printStackTrace();
-        }
-      
-	}	
-	
-	/**
-	 * Closes the popup window that prompts for subjectselection
-	 */
-	public void closePopUp(){
-		this.stage.close();
-	}
 	
 	/**
 	 * @return
@@ -242,7 +212,7 @@ public class ChatTabController {
 	 * Creates a new Chat, queue the user depending on tag
 	 */
 	@FXML
-	public void newChatTab(String codeLanguage){ // TODO should send message to server queuing its ip
+	public void newChatTab(String codeLanguage){ 
 		if(connector.isHelperHost() == null && connector.isAssistantHost() == null || tag == null)
 			System.out.println("Must choose user type and subject before opening connection");
 		// host can serve 3, client can only queue once

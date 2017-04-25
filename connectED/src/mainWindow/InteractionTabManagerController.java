@@ -6,7 +6,6 @@ import org.w3c.dom.Document;
 
 
 import communication.ChatController;
-import communication.ChatTabController;
 import javafx.concurrent.Worker;
 
 import javafx.fxml.FXML;
@@ -17,9 +16,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import netscape.javascript.JSException;
 
 /**
  * @author snorr

@@ -3,8 +3,6 @@ package communication;
 import java.io.*;
 import java.net.*;
 
-import T2.ServerRequest;
-
 
 /**
  * @author snorr

@@ -1,4 +1,4 @@
-package T2;
+package communication;
 
 import java.io.*;
 import java.net.*;
