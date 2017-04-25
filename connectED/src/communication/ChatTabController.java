@@ -212,7 +212,7 @@ public class ChatTabController {
 	 * Creates a new Chat, queue the user depending on tag
 	 */
 	@FXML
-	public void newChatTab(String codeLanguage){ 
+	public void newChatTab(String codeLanguage){
 		if(connector.isHelperHost() == null && connector.isAssistantHost() == null || tag == null)
 			System.out.println("Must choose user type and subject before opening connection");
 		// host can serve 3, client can only queue once
@@ -243,12 +243,9 @@ public class ChatTabController {
 					chatController.setAssistantHost(false);
 				}
 				chatController.initializeInteractionTab(codeLanguage);
-
 				chatControllerQueue.addLast(chatController);
 				setExtraConnectionTab();
 	
-
-				
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
 					System.out.println("Closing current tab -  removing assisiated controller form queue if exists...");
 					chatControllerQueue.remove(chatController);
@@ -263,22 +260,14 @@ public class ChatTabController {
 					}
 					
 				});
-				
-
 				newTab.setOnSelectionChanged((event) -> {
 					if(newTab.isSelected()){
 						mainFrameController.loadNewInteractionArea(chatController.getInteractionArea(), chatController.getInteractionTabManagerController());
 						chatController.clearNotifiedMessage();
 					}
 				});
-				
-				
 				Event.fireEvent(newTab, new Event(Tab.SELECTION_CHANGED_EVENT));
-				
 				chatTab.getSelectionModel().select(ChatTabController.getPotentialConnections()-1);
-				
-
-				
 				if(this.waitingThreads.isEmpty() && !isWaitingForConnection){
 					isWaitingForConnection = true;
 					System.out.println("running connector");
@@ -294,8 +283,6 @@ public class ChatTabController {
 			System.out.println("Cannot take any more connections, reached max limit");
 		}
 	}
-	
-	
 	
 	/**
 	 * @param socket
