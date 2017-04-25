@@ -13,6 +13,10 @@ import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
+/**
+ * @author snorr
+ * Class setting up and starting recording and sending of voicebytes
+ */
 public class ClientVoice {
 
     public int serverPort = 8888;
@@ -25,10 +29,18 @@ public class ClientVoice {
          info = new DataLine.Info(TargetDataLine.class, format);
 	}
 
+    /**
+     * @return
+     * Returns a boolean value that indicates wheather or not the audioformat set in this object is supported by the device
+     */
     public boolean recordingIsSupported(){
     	return AudioSystem.isLineSupported(info);
     }
     
+    /**
+     * @return
+     * Returns an audioformat with information about how to record audio
+     */
     public static AudioFormat getAudioformat(){
         float sampleRate = 8000.0F;
         int sampleSizeInbits = 16;
@@ -38,6 +50,10 @@ public class ClientVoice {
         return new AudioFormat(sampleRate, sampleSizeInbits, channel, signed, bigEndian);
     }
     
+    /**
+     * @param serverIp
+     * Initializes audiocapture and start a thread that records and sends audio to a datagramsocket
+     */
     public void initializeAudio(InetAddress serverIp){
         try {
             

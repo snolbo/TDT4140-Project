@@ -6,6 +6,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
+/**
+ * @author snorr
+ * Controller for the FXMLelement where mode and subject is selected
+ */
 public class ModeSelectionController {
 	@FXML
 	private Button assistantBtn;
@@ -24,6 +28,7 @@ public class ModeSelectionController {
 	
 	@FXML Text errorText;
 
+	private String codeLanguage;
 	
 	
 	private ChatTabController chatTabController;
@@ -80,6 +85,7 @@ public class ModeSelectionController {
 			
 	}
 	
+	
 	/**
 	 * @param mainFrameController
 	 * Takes the MainFrameController being the root controller of the application, and sets the action taken by the buttons on the content
@@ -126,6 +132,8 @@ public class ModeSelectionController {
 			resetSubjectButtonColor();
 			javaBtn.setStyle("-fx-background-color: " + selectedButtonColor);
 			colorConnectButton();
+			codeLanguage = "java";
+
 		});
 		
 		itgkPythonBtn.setOnAction((event)-> {
@@ -133,6 +141,7 @@ public class ModeSelectionController {
 			resetSubjectButtonColor();
 			itgkPythonBtn.setStyle("-fx-background-color: " + selectedButtonColor);
 			colorConnectButton();
+			codeLanguage = "python";
 		});
 		
 //		itgkMatlabBtn.setOnAction((event)-> {
@@ -144,7 +153,7 @@ public class ModeSelectionController {
 		connectBtn.setOnAction((event)->{
 			if(mainFrameController.chatTabController.combineTags()){
 				errorText.setVisible(false);
-				mainFrameController.chatTabController.newChatTab();
+				mainFrameController.chatTabController.newChatTab(codeLanguage);
 			}
 			else{
 				errorText.setVisible(true);

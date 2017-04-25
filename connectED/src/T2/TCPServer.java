@@ -100,23 +100,23 @@ public class TCPServer {
 			return (!studentQueue.isEmpty() && (!studentAssistantQueue.isEmpty() || !studentHelperQueue.isEmpty()));
 		}
 		
-		public String formatIP(String returnIP){ // receives format: dhcp-10-22-11-63.wlan.ntnu.no. Change to: 10.22.11.63
-			if (returnIP.equals("localhost"))
-				return returnIP;
-			else if(0==1 && !returnIP.matches("^([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})$")){
-				String[] parts = returnIP.split("-");
-				//System.out.println(returnIP);
-				String part1 = parts[1];
-				String part2 = parts[2];
-				String part3 = parts[3];
-				String oldPart4 = parts[4];
-				int index = oldPart4.indexOf(".");
-				String newPart4 = oldPart4.substring(0, index);
-				return part1 + "." + part2 + "." + part3 + "." + newPart4;
-			}
-			else
-				return returnIP;
-		}
+//		public String formatIP(String returnIP){ // receives format: dhcp-10-22-11-63.wlan.ntnu.no. Change to: 10.22.11.63
+//			if (returnIP.equals("localhost"))
+//				return returnIP;
+//			else if(0==1 && !returnIP.matches("^([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})\\.([0-9]{1,4})$")){
+//				String[] parts = returnIP.split("-");
+//				//System.out.println(returnIP);
+//				String part1 = parts[1];
+//				String part2 = parts[2];
+//				String part3 = parts[3];
+//				String oldPart4 = parts[4];
+//				int index = oldPart4.indexOf(".");
+//				String newPart4 = oldPart4.substring(0, index);
+//				return part1 + "." + part2 + "." + part3 + "." + newPart4;
+//			}
+//			else
+//				return returnIP;
+//		}
 		
 		
 		public void start(){

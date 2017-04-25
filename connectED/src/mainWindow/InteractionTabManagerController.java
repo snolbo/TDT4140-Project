@@ -23,11 +23,12 @@ import netscape.javascript.JSException;
 
 /**
  * @author snorr
- *
+ * Controller for the interactionTab
  */
 public class InteractionTabManagerController {
 	@FXML private WebView sharedCodeBrowser;
 	@FXML private TabPane tabContainer;
+	
 	@FXML private Button assistantBtn;
 	@FXML private Button helperBtn;
 	@FXML private Button studentBtn;
@@ -36,18 +37,13 @@ public class InteractionTabManagerController {
 	@FXML private Button itgkMatlabBtn;
 
 
-	
-	
-	
-	
 	private Node selectionModeContent;
 	private Tab selectionModeTab;
-	private ChatTabController chatTabController;
+//	private ChatTabController chatTabController;
 	private MainFrameController mainFrameController;
+	private String codeLanguage= "java";
 	
-		
 
-	
 	@FXML
 	void initialize(){
 		this.sharedCodeBrowser.getEngine().setUserStyleSheetLocation("data:,body { font: 15px Helvetica; font-weight: bold; }");
@@ -55,14 +51,13 @@ public class InteractionTabManagerController {
 		sharedCodeBrowser.setOnKeyPressed((event) ->{
 			handleKeyEvent(event);
 		});
-		
 		tabContainer.getSelectionModel().select(0);
-		
-	
-		
-		
 	}
 
+	
+	public TabPane getTabPane(){
+		return tabContainer;
+	}
 	
 	
 	/**
@@ -103,6 +98,11 @@ public class InteractionTabManagerController {
 	public void setURL(String URL){
 		System.out.println("Loading the given URL: " + URL);
 		sharedCodeBrowser.getEngine().load(URL);
+		sharedCodeBrowser.getEngine().getLoadWorker().stateProperty().addListener((observed, oldValue, newValue) -> {
+			if(newValue.equals(Worker.State.SUCCEEDED)){
+				changeCodeLanguageAndInit(codeLanguage);
+			}
+		});
 	}
 	
 	
@@ -189,13 +189,21 @@ public class InteractionTabManagerController {
 	 * @param codeLanguage
 	 * Changes the color syntax of the text in the shared code editing browser to the language in input if it is supported
 	 */
-	public void changeCodeLanguage(String codeLanguage){
-		if(getURL().startsWith("https://connected-1e044.firebaseapp.com"))
-			sharedCodeBrowser.getEngine().executeScript("changeCodeLanguage(" + "'" + codeLanguage + "'" + ");");
+	public void changeCodeLanguageAndInit(String codeLanguage){
+		System.out.println("Trying to change codeLanguage in changeCodeLanguage in InteractionTabManagerController");
+		if(getURL().startsWith("https://connected-1e044.firebaseapp.com")){
+			sharedCodeBrowser.getEngine().executeScript("changeCodeLanguageAndInit('" + codeLanguage + "');");
+		}
 	}
-	
-	
-	
+
+	/**
+	 * @param codeLanguage
+	 * Set code language to be loaded when the shared code browser starts, if it is supported
+	 */
+	public void setSharedCodeLanguage(String codeLanguage) {
+		this.codeLanguage = codeLanguage;
+	}
+
 }
 
 

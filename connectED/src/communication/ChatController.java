@@ -26,7 +26,10 @@ import voiceserver.ServerVoice;
 
 
 
-// Controls the chat of one connection
+/**
+ * @author snorr
+ * Controls the chatWindow in a connection, and all the logic related to and coming from this element
+ */
 public class ChatController {
 
 	@FXML private TextArea userText;
@@ -41,7 +44,7 @@ public class ChatController {
 	private boolean isAssistantHost= false;
 	private boolean isHelperHost = false;
 	private Tab chatTab;
-	private Node InteractionArea;
+	private Node InteractionTab;
 	private InteractionTabManagerController interactionTabManagerController;
 	
 	@FXML
@@ -53,28 +56,50 @@ public class ChatController {
 		microphoneBtn.setDisable(true);
 	}
 	
+	
+	/**
+	 * @param value
+	 * Disables and enables the microphone button
+	 */
 	public void disableMicButton(boolean value){
 		microphoneBtn.setDisable(value);
 	}
-	
 
-	
+	/**
+	 * @return
+	 * Returns boolean value to indicate if this person is in helpful student mode
+	 */
 	public boolean isHelperHost() {
 		return isHelperHost;
 	}
 	
+	/**
+	 * @return
+	 * Returns boolean value telling if this person is in student assistant mode
+	 */
 	public boolean isAssistantHost() {
 		return isAssistantHost;
 	}
 
+	/**
+	 * @param isHelperHost
+	 * Sets helper mode to this boolean value
+	 */
 	public void setHelperHost(boolean isHelperHost) {
 		this.isHelperHost = isHelperHost;
 	}
 	
+	/**
+	 * @param isAssistantHost
+	 * Sets studetnassistant to this boolean value
+	 */
 	public void setAssistantHost(boolean isAssistantHost) {
 		this.isAssistantHost = isAssistantHost;
 	}
 	
+	/**
+	 * Checks if this person is eligable for voicecommunication, then sends a request to the other person to request voicecomm
+	 */
 	public void requestVoiceCommunication(){
 		if(!ChatTabController.isVoiceCommunicating){
 			sv = new ServerVoice();
@@ -90,6 +115,9 @@ public class ChatController {
 			viewMessage("-----Cannot initiate voice communication as you already have an active voiceConversation-----", false);
 	}
 	
+	/**
+	 * Tests if this person is eligable for voicecomm, and sends an accept message and sets up voicecom
+	 */
 	public void acceptVoiceCommunication(){
 		if(!ChatTabController.isVoiceCommunicating){
 			sv = new ServerVoice();
@@ -108,15 +136,24 @@ public class ChatController {
 			viewMessage("-----The other person request voice communication, but you are already in an active conversation-----", false);
 	}
 	
+	/**
+	 * Handles denied request for voicecom
+	 */
 	public void handleDeniedVoiceRequest(){
 		viewMessage("-----The other person's device does not support voice communication-----", false);
 		ChatTabController.isVoiceCommunicating = false;
 	}
 	
+	/**
+	 * Handles accepted request for voicecom
+	 */
 	public void handleAcceptedVoiceRequest(){
 		setupVoiceCommunication();
 	}
 	
+	/**
+	 * Cancels voicecomm
+	 */
 	public void cancelVoiceCommunication(){
 		if(ChatTabController.isVoiceCommunicating){
 			receiveAndSend.sendChatMessage("VOICE-cancel");
@@ -124,6 +161,9 @@ public class ChatController {
 		}
 	}
 	
+	/**
+	 * Sets up and initializes voicecomm
+	 */
 	public void setupVoiceCommunication(){
 		if(sv.playingIsSupported() && cv.recordingIsSupported()){
 			ChatTabController.isVoiceCommunicating = true;
@@ -132,7 +172,11 @@ public class ChatController {
 		}
 	}
 	
-	@FXML // listens to keyevents in userText, if keyevent is enter, send CHAT protovol and the text
+	/**
+	 * @param event
+	 * Listens for keyevents in the write area of the chat and sends a messsage if the key typed is enter
+	 */
+	@FXML 
 	public void handleChatEnterKey(KeyEvent event) {
 		if(event.getCode() == KeyCode.ENTER ){
 			String message = userText.getText();
@@ -144,8 +188,11 @@ public class ChatController {
 		}
 	}
 	
-	// used by tab creates in serverChatController on closeRequest of tab
 
+	/**
+	 * @param tag
+	 * Handles closerequest
+	 */
 	public void onClosed(String tag) {
 		cancelVoiceCommunication();
 		if(receiveAndSend != null){
@@ -170,8 +217,12 @@ public class ChatController {
 	}
 	
 
-	public void viewMessage(String text, boolean madeByMe){  // TODO: want the label to be smaller, wrap text, and positioned at one side
-		
+	/**
+	 * @param text
+	 * @param madeByMe
+	 * Shows a message in chat, color depending on wheather the message was created by this person or by the other
+	 */
+	public void viewMessage(String text, boolean madeByMe){  
 		Label message = new Label(text);
 		message.setStyle("-fx-padding: 10px;");
 		message.prefWidthProperty().bind(chatWindow.widthProperty().subtract(25));
@@ -193,6 +244,9 @@ public class ChatController {
 			notifyIncomingMessage();
 	}
 	
+	/**
+	 * Changed background color on a tab if there is an incoming message and the tab is currently not selected
+	 */
 	private void notifyIncomingMessage(){
 		System.out.println("Running notifyIncomingMessage in chatController");
 		if(!chatTab.isSelected()){
@@ -200,39 +254,66 @@ public class ChatController {
 		}
 	}
 	
+	/**
+	 * Sets back the default value of the tab backgroundcolor
+	 */
 	public void clearNotifiedMessage(){
 		chatTab.setStyle("");
 	}
 	
+	/**
+	 * @param connection
+	 * Method to pass the object handling the sending and receiving of messages
+	 */
 	public void setRecieveAndSendConnection(ReceiveAndSend connection){
 		this.receiveAndSend = connection;
 	}
 	
+	/**
+	 * @return
+	 * return object handeling sending and receiving
+	 */
 	public ReceiveAndSend getReceiveAndSendConnection(){
 		return this.receiveAndSend;
 	}
 
+	/**
+	 * @param tof
+	 * Sets wheather is is possible or not to type in text to be sent i nchat
+	 */
 	public void ableToType(boolean tof) {
 		this.userText.setEditable(tof);
 	}
 
-	
-	
+
+	/**
+	 * @param chatTab
+	 * Sets a chatTab object to be assiciated with this chatController
+	 */
 	public void setChatTab(Tab chatTab) {
 		this.chatTab = chatTab;
 	}
 	
 	
+	/**
+	 * @return
+	 * Returns the chattab object associated with this controller
+	 */
 	public Tab getChatTab(){
 		return this.chatTab;
 	}
 
-	public void initializeInteractionArea() {
+	/**
+	 * @param codeLanguage
+	 * Initializes the interactionTab to be assiciated with this chatcontroller object
+	 */
+	public void initializeInteractionTab(String codeLanguage) {
 		System.out.println("Initializing interactionArea assisiated with this chatController");
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("/mainWindow/InteractionTabManager.fxml"));
 		try{
-		this.InteractionArea  = loader.load();
-		this.interactionTabManagerController = loader.getController();
+		InteractionTab  = loader.load();
+		interactionTabManagerController = loader.getController();
+		interactionTabManagerController.setSharedCodeLanguage(codeLanguage);
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -243,45 +324,64 @@ public class ChatController {
 		
 		else{
 			setDefaultURL();
-
 		}
 	}
 	
+	/**
+	 * Sets the url to the webview of the shared code editing window to the default chosen value
+	 */
 	public void setDefaultURL(){
 		interactionTabManagerController.setDefaultURL();
 	}
-	
+
 	
 	public Node getInteractionArea(){
-		return this.InteractionArea;
+		return this.InteractionTab;
 	}
 	
+	public InteractionTabManagerController getInteractionTabManagerController(){
+		return interactionTabManagerController;
+	}
+	
+	/**
+	 * @param URL
+	 * sets and loads given url in the webengine of the shared code editor
+	 */
 	public void setCodeUrl(String URL){
 		this.interactionTabManagerController.setURL(URL);
 	}
 	
+	/**
+	 * @return
+	 * Returns the current url loaded by the engine of the shared code editing browser
+	 */
 	public String getCodeURL(){
 		return interactionTabManagerController.getURL();
 	}
-	
-//	public void reloadCodeEditor(){
-//		interactionTabManagerController.reloadCodeEditor();
-//	}
-	
 
+	/**
+	 * @return
+	 * Returns boolean value indicating if the shared code browser is finished loading the url it is currently loading
+	 */
 	public boolean codeEditorFinishedLoading() {
 		return interactionTabManagerController.isFinishedLoading();
 	}
 
+	/**
+	 * Sends the URL of the code editor when it is finished loading
+	 */
 	public void sendCodeURLWhenLoaded() {
 		System.out.println("Sending codeURL to helper when the page is finished loading...");
 		interactionTabManagerController.sendPageURLWhenLoaded(this);
 
 	}
 	
+	/**
+	 * sends the code url of the shared code browser
+	 */
 	public void sendCodeURL(){
 		System.out.println("Sending CodeURL to helper...");
-		receiveAndSend.sendCodeUrl("CODEURL-"+ interactionTabManagerController.getURL());
+		receiveAndSend.sendChatMessage("CODEURL-"+ interactionTabManagerController.getURL());
 	}
 	
 	

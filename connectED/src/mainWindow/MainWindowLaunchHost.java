@@ -32,7 +32,7 @@ public class MainWindowLaunchHost extends Application {
 			Rectangle2D bounds = screen.getVisualBounds();
 			primaryStage.setX(bounds.getMinX());
 			primaryStage.setY(bounds.getMinY());
-			primaryStage.setWidth(bounds.getWidth()*0.4);
+			primaryStage.setWidth(bounds.getWidth()*0.8);
 			primaryStage.setHeight(bounds.getHeight()*0.8);
 			primaryStage.setMinWidth(900);
 			primaryStage.setMinHeight(600);

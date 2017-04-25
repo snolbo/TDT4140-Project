@@ -12,6 +12,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
 
+/**
+ * @author snorr
+ * Controller for the root element of the application
+ */
 public class MainFrameController {
 	@FXML private Pane interactionPane;
 	@FXML private Pane chatPane;
@@ -22,10 +26,10 @@ public class MainFrameController {
 	public InteractionTabManagerController interactionTabManagerController;
 	public ChatTabController chatTabController;
 
-	Node startingInteractionTab;
-	Node currentInteractionArea;
-	private Node selectionModeContent;
-	private Tab selectionModeTab;
+	Node startingInteractionTabPane;
+	Node currentInteractionTabPane;
+	public InteractionTabManagerController currentInteractionTabManagerController;
+	public InteractionTabManagerController startingInteractionTabManagerController;
 
 
 	
@@ -57,8 +61,6 @@ public class MainFrameController {
 		return this.interactionTabManagerController;
 	}
 	
-	
-	
 	/**
 	 * Loads the ChatTab and saves a reference to its controller
 	 */
@@ -67,11 +69,8 @@ public class MainFrameController {
 		FXMLLoader chatLoader =  new FXMLLoader(getClass().getResource("/communication/ChatManager.fxml"));
 		try{
 		Node newChatPane  = chatLoader.load();
-		this.chatTabController = chatLoader.getController();
-
-		
+		chatTabController = chatLoader.getController();
 		chatTabController.passMainFrameController(this);
-
 		rootNode.getChildren().remove(chatPane);
 		rootNode.add(newChatPane, 1, 2);
 		}
@@ -85,7 +84,7 @@ public class MainFrameController {
 	 * Returns the startingInteractionTab
 	 */
 	public Node getStartingInteractionTab(){
-		return this.startingInteractionTab;
+		return this.startingInteractionTabPane;
 	}
 
 	
@@ -94,7 +93,7 @@ public class MainFrameController {
 	 * Returns the the TabPane of the interactionArea currently shown by the application
 	 */
 	public Node getCurrentInteractionArea(){
-		return this.currentInteractionArea;
+		return currentInteractionTabPane;
 	}
 
 	
@@ -106,13 +105,16 @@ public class MainFrameController {
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("InteractionTabManager.fxml"));
 		try{
 		Node newTabManager  = loader.load();
-		this.interactionTabManagerController = loader.getController();
+		interactionTabManagerController = loader.getController();
+		interactionTabManagerController.getTabPane().getTabs().remove(0);
 		System.out.println(this == null);
 		interactionTabManagerController.initSelectionModeContent(this);
 		rootNode.getChildren().remove(interactionPane);
 		rootNode.add(newTabManager, 0, 0, 1, 3);
-		currentInteractionArea = newTabManager;
-		startingInteractionTab = newTabManager;
+		currentInteractionTabPane = newTabManager;
+		startingInteractionTabPane = newTabManager;
+		startingInteractionTabManagerController = interactionTabManagerController;
+		currentInteractionTabManagerController = interactionTabManagerController;
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -126,11 +128,12 @@ public class MainFrameController {
 	 * @param interactionArea
 	 * Loads a new TabPane in the interactionArea shown by the application
 	 */
-	public void loadNewInteractionArea(Node interactionArea){
+	public void loadNewInteractionArea(Node interactionArea, InteractionTabManagerController interactionTabManagerController){
 		System.out.println("Loading new interactionTab in interactionArea");
-		rootNode.getChildren().remove(currentInteractionArea);
+		rootNode.getChildren().remove(currentInteractionTabPane);
 		rootNode.add(interactionArea, 0, 0, 1, 3);
-		currentInteractionArea = interactionArea;
+		currentInteractionTabPane = interactionArea;
+		currentInteractionTabManagerController = interactionTabManagerController;
 	}
 	
 	/**
@@ -139,6 +142,10 @@ public class MainFrameController {
 	public void onCloseRequest(){
 		System.out.println("Closerequest in MainFrameController calling onCloseRequest in chatTabController...");
 		chatTabController.onCloseRequest();
+	}
+
+	public InteractionTabManagerController getStartingInteractionTabManagerController() {
+		return startingInteractionTabManagerController;
 	}
 
 }

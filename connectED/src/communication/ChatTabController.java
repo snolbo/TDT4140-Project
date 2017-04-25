@@ -20,14 +20,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import mainWindow.MainFrameController;
 
+/**
+ * @author snorr
+ * Handles the logic related to organizing the different tabs and creating them
+ */
 public class ChatTabController {
 	@FXML private TabPane chatTab;
-	
-//	@FXML private Button studentHelperBtn;
-//	@FXML private Button studentAssistantBtn;
-//	@FXML private Button studentBtn;
-	
-	
+
 	private String tag;
 	private String subject;
 	private String mode;
@@ -45,6 +44,7 @@ public class ChatTabController {
 	
 	private Tab extraConnectionTab;
 
+	private String codeLanguage;
 	
 	public ChatTabController(){
 		connector = new Connector(this);
@@ -53,7 +53,7 @@ public class ChatTabController {
 		extraConnectionTab = new Tab("+");
 		extraConnectionTab.setOnSelectionChanged((event) ->{
 			if(extraConnectionTab.isSelected())
-				newChatTab();
+				newChatTab(codeLanguage);
 		});
 		
 	}
@@ -136,7 +136,6 @@ public class ChatTabController {
                 this.stage.initOwner(chatTab.getScene().getWindow());
                 this.stage.setScene(new Scene(root));  
                 this.stage.show();
-                
         } catch(Exception e) {
            e.printStackTrace();
         }
@@ -243,12 +242,13 @@ public class ChatTabController {
 	 * Creates a new Chat, queue the user depending on tag
 	 */
 	@FXML
-	public void newChatTab(){ // TODO should send message to server queuing its ip
+	public void newChatTab(String codeLanguage){ // TODO should send message to server queuing its ip
 		if(connector.isHelperHost() == null && connector.isAssistantHost() == null || tag == null)
 			System.out.println("Must choose user type and subject before opening connection");
 		// host can serve 3, client can only queue once
 		else if(ChatTabController.getPotentialConnections() < 3 && (connector.isHelperHost() || connector.isAssistantHost()) || ChatTabController.getPotentialConnections() < 1 && (!connector.isHelperHost() && !connector.isAssistantHost())){
 		try {
+				this.codeLanguage = codeLanguage;
 				System.out.println("Starting to create a new ChatTab...");
 				ChatTabController.PotentialConnections++;
 				// setting up the Chat GUI element
@@ -272,7 +272,7 @@ public class ChatTabController {
 					chatController.setHelperHost(false);
 					chatController.setAssistantHost(false);
 				}
-				chatController.initializeInteractionArea();
+				chatController.initializeInteractionTab(codeLanguage);
 
 				chatControllerQueue.addLast(chatController);
 				setExtraConnectionTab();
@@ -289,7 +289,7 @@ public class ChatTabController {
 					
 					if(ChatTabController.getPotentialConnections() == 0){
 						mainFrameController.getInteractionTabManagerController().setDefaultURL();
-						mainFrameController.loadNewInteractionArea(mainFrameController.getStartingInteractionTab());
+						mainFrameController.loadNewInteractionArea(mainFrameController.getStartingInteractionTab(), mainFrameController.getStartingInteractionTabManagerController());
 					}
 					
 				});
@@ -297,7 +297,7 @@ public class ChatTabController {
 
 				newTab.setOnSelectionChanged((event) -> {
 					if(newTab.isSelected()){
-						mainFrameController.loadNewInteractionArea(chatController.getInteractionArea());
+						mainFrameController.loadNewInteractionArea(chatController.getInteractionArea(), chatController.getInteractionTabManagerController());
 						chatController.clearNotifiedMessage();
 					}
 				});

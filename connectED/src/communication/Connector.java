@@ -6,7 +6,10 @@ import java.net.*;
 import T2.ServerRequest;
 
 
-// Either connect to or sets up connection depending on mode
+/**
+ * @author snorr
+ * Handles the connection setup betweenhelpers and students
+ */
 public class Connector implements Runnable {
 	private ServerSocket welcomeSocket = null; // sockets at server
 	private Socket socket = null;
@@ -20,12 +23,7 @@ public class Connector implements Runnable {
 
 	public Connector(ChatTabController chatTabController) {
 		this.chatTabController = chatTabController;
-		this.hostPort = 9005; // port to connect to if client, port to open at if host
-//		try {
-//			welcomeSocket = new ServerSocket(hostPort, 20);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		this.hostPort = 9005;
 	}
 
 	public Boolean isAssistantHost(){
@@ -36,12 +34,18 @@ public class Connector implements Runnable {
 		return this.isHelperHost;
 	}
 	
+	/**
+	 * Handles closerequest
+	 */
 	public void close(){
 		closeWelcomeSocket();
 	}
 	
 	
 	
+	/**
+	 * Sets mode as helperhost and creates a new welcomesocket
+	 */
 	public void setHelperHost() {
 		this.isHelperHost = true;
 		this.isAssistantHost = false;	
@@ -52,6 +56,9 @@ public class Connector implements Runnable {
 		}
 	}
 	
+	/**
+	 * sets mode as assistant and creates a new welcomesocket
+	 */
 	public void setAssistantHost() {
 		this.isAssistantHost = true;
 		this.isHelperHost = false;
@@ -62,6 +69,9 @@ public class Connector implements Runnable {
 		}
 	}
 
+	/**
+	 * Seets mode as client and closes open welcomesockets if there are any
+	 */
 	public void setClient() {
 		this.isHelperHost = false;
 		this.isAssistantHost = false;
@@ -75,11 +85,18 @@ public class Connector implements Runnable {
 		}
 	}
 	
+	/**
+	 * @param tag
+	 * Sends a serverrequest telling distributing IP server that this person is a halper
+	 */
 	public void sendHelperRequest(String tag){
 		ServerRequest request = new ServerRequest(tag);
 		request.helperRequest();
 	}
 	
+	/**
+	 * helpers  wait for someone to connect to their open socket. Students wait for response from server distributing ip, and then connect to helpers
+	 */
 	public void connect(){
 		System.out.println("Connect in connector: helperhost:" + isHelperHost + ", assistantHost:" + isAssistantHost);
 		if (isHelperHost || isAssistantHost) {
@@ -103,6 +120,7 @@ public class Connector implements Runnable {
 			}
 		}
 	}
+	
 	
 	@Override
 	public void run() {
@@ -129,11 +147,11 @@ public class Connector implements Runnable {
 	
 	
 	public Socket getSocket(){
-		return this.socket;
+		return socket;
 	}
 	
 	public String getHelperIP(){
-		return this.helperIP;
+		return helperIP;
 	}
 
 }

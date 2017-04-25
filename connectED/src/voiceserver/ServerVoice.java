@@ -7,6 +7,10 @@ import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+/**
+ * @author snorr
+ * Class setting up and handling receiving and playback of voice bytes
+ */
 public class ServerVoice {
 
     public int serverPort = 8888;
@@ -20,10 +24,18 @@ public class ServerVoice {
          info_out = new DataLine.Info(SourceDataLine.class, format);
 	}
     
+    /**
+     * @return
+     * Returns a boolean value to see if the audioforamt set in this object is supported by the device
+     */
     public boolean playingIsSupported(){
     	return AudioSystem.isLineSupported(info_out);
     }
     
+    /**
+     * @return
+     * Sets an audioformat with information on how to play handle playback of audio
+     */
     public static AudioFormat getAudioformat(){
         float sampleRate = 8000.0F;
         int sampleSizeInbits = 16;
@@ -35,6 +47,9 @@ public class ServerVoice {
     
     
 
+    /**
+     * Initializes required object for audiocapture and start a thread that reads bytes form a datagram and plays them
+     */
     public void initializeAudio(){
         try {
             if(!AudioSystem.isLineSupported(info_out)){
