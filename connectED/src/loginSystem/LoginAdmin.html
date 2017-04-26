@@ -41,8 +41,8 @@
                         firebase.initializeApp(config);
                             </script>
                         <script type="text/javascript">
-                            
-                            
+
+                        
                             /**
                              * Handles the sign in button press.
                              */
@@ -84,48 +84,60 @@
                             document.getElementById('quickstart-sign-in').disabled = true;
                         }
                         
-                        
-                        /**
-                         * Handles the sign up button press.
-                         */
-                        function handleSignUp() {
-                            var email = document.getElementById('email').value;
-                            var password = document.getElementById('password').value;
-                            if (email.length < 4) {
-                                alert('Please enter an email address.');
-                                return;
-                            }
-                            if (password.length < 4) {
-                                alert('Please enter a password.');
-                                return;
-                            }
-                            if (!(email.includes('@ntnu.no') || email.includes('@stud.ntnu.no'))) {
-                                alert('Please enter a valid NTNU email.');
-                                return;
-                            }
-                            // Sign in with email and pass.
-                            // [START createwithemail]
-                            firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-                                                                                                  // Handle Errors here.
-                                                                                                  var errorCode = error.code;
-                                                                                                  var errorMessage = error.message;
-                                                                                                  // [START_EXCLUDE]
-                                                                                                  if (errorCode == 'auth/weak-password') {
-                                                                                                  alert('The password is too weak.');
-                                                                                                  } else {
-                                                                                                  alert(errorMessage);
-                                                                                                  }
-                                                                                                  console.log(error);
-                                                                                                  // [END_EXCLUDE]
-                                                                                                  });
-                                                                                                  // [END createwithemail]
+                        function makeJavaAssistant() {
+                            /**if (!(firebase.auth().currentUser.displayName.includes('java'))) {
+                                if (firebase.auth().currentUser.displayName.equals(null)) {
+                                    firebase.auth().currentUser.updateProfile({displayName: "java"});
+                                }*/
+                                firebase.auth().currentUser.updateProfile({displayName: (firebase.auth().currentUser.displayName+";java")}).then(function() {
+                                                                                                                                             //Success
+                                                                                                                                             }, function(error) {
+                                                                                                                                             alert('Error, no java registration happened');
+                                                                                                                                             });
+                            /**} else {
+                                alert('User is already registered as a student assistant in Java')
+                            }*/
+                            
                         }
+                        
+                        function makeItgkAssistant() {
+                            /**if (!(firebase.auth().currentUser.displayName.includes('itgk'))) {
+                                if (firebase.auth().currentUser.displayName.equals(null)) {
+                                    firebase.auth().currentUser.updateProfile({displayName: "itgk"});
+                                }*/
+                                firebase.auth().currentUser.updateProfile({displayName: (firebase.auth().currentUser.displayName+";itgk")}).then(function() {
+                                                                                                                                                 //Success
+                                                                                                                                                 }, function(error) {
+                                                                                                                                                 alert('Error, no itgk registration happened');
+                                                                                                                                                 });
+                            /**} else {
+                                alert('User is already registered as a student assistant in ITGK');
+                                return;
+                            }*/
+                        }
+                        
+                        function removeJavaAssistant() {
+                            firebase.auth().currentUser.updateProfile({displayName: firebase.auth().currentUser.displayName.replace(";java", "")});
+                        }
+                        
+                        function removeItgkAssistant() {
+                            firebase.auth().currentUser.updateProfile({displayName: firebase.auth().currentUser.displayName.replace(";itgk", "")});
+                        }
+                        
+                        function removeNull() {
+                            firebase.auth().currentUser.updateProfile({displayName: firebase.auth().currentUser.displayName.replace("null", "")});
+                        }
+                        
+                        function reloadPage() {
+                            setTimeout(function(){location.reload()}, 500);
+                        }
+                        
                         /**
                          * Sends an email verification to the user.
                          */
                         function sendEmailVerification() {
-                            // [START sendemailverification]
-                            firebase.auth().currentUser.sendEmailVerification().then(function() {
+                                // [START sendemailverification]
+                                firebase.auth().currentUser.sendEmailVerification().then(function() {
                                                                                      // Email Verification sent!
                                                                                      // [START_EXCLUDE]
                                                                                      alert('Email Verification Sent!');
@@ -133,8 +145,8 @@
                                                                                      });
                                                                                      // [END sendemailverification]
                         }
-                        
-                        
+
+
                         function sendPasswordReset() {
                             var email = document.getElementById('email').value;
                             // [START sendpasswordemail]
@@ -156,7 +168,7 @@
                                                                                         console.log(error);
                                                                                         // [END_EXCLUDE]
                                                                                         });
-                                                                                        // [END sendpasswordemail];
+                            // [END sendpasswordemail];
                         }
                         
                         /**
@@ -169,7 +181,6 @@
                             // [START authstatelistener]
                             firebase.auth().onAuthStateChanged(function(user) {
                                                                // [START_EXCLUDE silent]
-                                                               document.getElementById('quickstart-verify-email').disabled = true;
                                                                // [END_EXCLUDE]
                                                                if (user) {
                                                                // User is signed in.
@@ -181,19 +192,31 @@
                                                                var uid = user.uid;
                                                                var providerData = user.providerData;
                                                                // [START_EXCLUDE]
-                                                               //document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
+                                                               document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
                                                                document.getElementById('quickstart-sign-in').textContent = 'Sign out';
-                                                               //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
-                                                               if (!emailVerified) {
-                                                               document.getElementById('quickstart-verify-email').disabled = false;
+                                                               document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
+                                                               
+                                                               if (displayName.includes('java')) { //Java already registered, disable enable button
+                                                               document.getElementById('quickstart-enable-java').disabled = true;
+                                                               document.getElementById('quickstart-disable-java').disabled = false;
+                                                               } else { //Java not registered, disable button disabled
+                                                               document.getElementById('quickstart-enable-java').disabled = false;
+                                                               document.getElementById('quickstart-disable-java').disabled = true;
+                                                               }
+                                                               if (displayName.includes('itgk')) {
+                                                               document.getElementById('quickstart-enable-itgk').disabled = true;
+                                                               document.getElementById('quickstart-disable-itgk').disabled = false;
+                                                               } else {
+                                                               document.getElementById('quickstart-enable-itgk').disabled = false;
+                                                               document.getElementById('quickstart-disable-itgk').disabled = true;
                                                                }
                                                                // [END_EXCLUDE]
                                                                } else {
                                                                // User is signed out.
                                                                // [START_EXCLUDE]
-                                                               //document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
+                                                               document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
                                                                document.getElementById('quickstart-sign-in').textContent = 'Sign in';
-                                                               //document.getElementById('quickstart-account-details').textContent = 'null';
+                                                               document.getElementById('quickstart-account-details').textContent = 'null';
                                                                // [END_EXCLUDE]
                                                                }
                                                                // [START_EXCLUDE silent]
@@ -203,54 +226,40 @@
                                                                // [END authstatelistener]
                                                                
                                                                document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
-                                                               document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
                                                                
-                                                               document.getElementById('quickstart-verify-email').addEventListener('click', sendEmailVerification, false);
-                                                               document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
+                                                               document.getElementById('quickstart-enable-java').addEventListener('click', makeJavaAssistant, false);
+                                                               document.getElementById('quickstart-enable-java').addEventListener('click', reloadPage, false);
+                                                               document.getElementById('quickstart-enable-itgk').addEventListener('click', makeItgkAssistant, false);
+                                                               document.getElementById('quickstart-enable-itgk').addEventListener('click', reloadPage, false);
+                                                               document.getElementById('quickstart-disable-java').addEventListener('click', removeJavaAssistant, false);
+                                                               document.getElementById('quickstart-disable-java').addEventListener('click', reloadPage, false);
+                                                               document.getElementById('quickstart-disable-itgk').addEventListener('click', removeItgkAssistant, false);
+                                                               document.getElementById('quickstart-disable-itgk').addEventListener('click', reloadPage, false);
+                                                               document.getElementById('quickstart-remove-null').addEventListener('click', removeNull, false);
+                                                               document.getElementById('quickstart-remove-null').addEventListener('click', reloadPage, false);
+                                                                          
                                                                
                                                                
+                                                               
                         }
                         
-                        function getRole() {
-                            return String(firebase.auth().currentUser.displayName);
-                        }
-                        
-                        function getLoginStatus() {
-                            if (firebase.auth().currentUser) {
-                                return (true);
-                            } else {
-                                return (false)
-                            }
-                        }
-                        
-                        function getEmailVerifiedStatus() {
-                            if (firebase.auth().currentUser.emailVerified) {
-                                return (true);
-                            } else {
-                                return (false);
-                            }
-                        }
-                        
-                        function loadPage() {
-                            initApp();
-                        }
                         
                         window.onload = function() {
                             initApp();
                         };
                         </script>
-                        </head>
+    </head>
     <body>
         <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
             
             <!-- Header section containing title
-             <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
-             <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-             <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
-             <a href="/"><h3>Firebase Authentication</h3></a>
-             </div>
-             </div>
-             </header> -->
+            <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+                    <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
+                        <a href="/"><h3>Firebase Authentication</h3></a>
+                    </div>
+                </div>
+            </header> -->
             
             <main class="mdl-layout__content mdl-color--grey-100">
                 <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
@@ -268,19 +277,26 @@
                             <input class="mdl-textfield__input" style="display:inline;width:auto;" type="password" id="password" name="password" placeholder="Password"/>
                             <br/><br/>
                             <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in" name="signin">Sign In</button>
-                            &nbsp;&nbsp;&nbsp;
-                            <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-up" name="signup">Sign Up</button>
-                            &nbsp;&nbsp;&nbsp;
-                            <button class="mdl-button mdl-js-button mdl-button--raised" disabled id="quickstart-verify-email" name="verify-email">Send Email Verification</button>
-                            &nbsp;&nbsp;&nbsp;
-                            <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-password-reset" name="reset-password">Send Password Reset Email</button>
                             
-                            <!-- Container where we'll display the user details
+                            <br/><br/>
+                            <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-enable-java" name="enable-java">Enable Java</button>
+                            &nbsp;&nbsp;&nbsp;
+                            <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-enable-itgk" name="enable-itgk">Enable ITGK</button>
+                            <br/><br/>
+                            <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-disable-java" name="disable-java">Disable Java</button>
+                            &nbsp;&nbsp;&nbsp;
+                            <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-disable-itgk" name="disable-itgk">Disable ITGK</button>
+                            &nbsp;&nbsp;&nbsp;
+                            <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-remove-null" name="remove-null">Button that removes "null"-string from displayName</button>
+                            
+
+
+                            <!-- Container where we'll display the user details -->
                             <div class="quickstart-user-details-container">
                                 Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
                                 <div>Firebase auth <code>currentUser</code> object value:</div>
                                 <pre><code id="quickstart-account-details">null</code></pre>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                     
