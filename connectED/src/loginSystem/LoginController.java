@@ -8,7 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 import javafx.scene.control.TextField;
-
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import mainWindow.MainWindowLaunchHost;
 import javafx.scene.control.PasswordField;
 
 public class LoginController {
@@ -18,6 +20,8 @@ public class LoginController {
 	private Button signInBtn;
 	@FXML
 	private PasswordField passwordField;
+	@FXML
+	private Text errorText;
 
 	
 	private boolean isEmailVerified = false;
@@ -26,19 +30,32 @@ public class LoginController {
 	
 	@FXML
 	void initialize(){
-		
+		errorText.setVisible(false);
+		signInBtn.setOnAction((event)->{
+			onSignInButtonPressed();
+		});
 	}
 	
 	
+	
+	/**
+	 * This method is set to be called whenever signInBtn is pressed, it is set in @FXML void initialize()
+	 */
 	public void onSignInButtonPressed(){
-		// retrieve info from firebase server
+		// 1. retrieve info of user from firebase with password
 		
-		// populate isEmailVerified
+		// 2. update emailIsVerified and set info to assistantSubjects
 		
 		
 		// check if email is verified
 		if(isEmailVerified){
-			
+			Stage appStage = new Stage();
+			MainWindowLaunchHost appLaunch = new MainWindowLaunchHost();
+			appLaunch.getMainFrameController().passUserInfo(assistantSubjects);
+			appLaunch.start(appStage);
+		}
+		else{
+			errorText.setVisible(true);
 		}
 		
 		

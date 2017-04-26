@@ -50,12 +50,12 @@ import netscape.javascript.JSObject;
 				if(newValue.equals(Worker.State.SUCCEEDED)) { 
 					webEngine.executeScript("loadPage();");
 					browser.setOnMouseClicked((event)->{
-						try {
-							Thread.sleep(3000); //Delay to give browser time to sign in before getting updated loginstatus
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+//						try {
+//							Thread.sleep(3000); //Delay to give browser time to sign in before getting updated loginstatus
+//						} catch (Exception e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
 						loginStatus = (Boolean) webEngine.executeScript("getLoginStatus();"); //Gets variables from javascript
 						System.out.println(loginStatus);
 						if (loginStatus) {

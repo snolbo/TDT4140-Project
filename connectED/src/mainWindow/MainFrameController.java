@@ -1,6 +1,7 @@
 package mainWindow;
 
 import java.io.IOException;
+import java.util.List;
 
 import communication.ChatTabController;
 import javafx.fxml.FXML;
@@ -29,6 +30,8 @@ public class MainFrameController {
 	Node currentInteractionTabPane;
 	public InteractionTabManagerController currentInteractionTabManagerController;
 	public InteractionTabManagerController startingInteractionTabManagerController;
+	
+	private List<String> assistantSubjects;
 
 
 	
@@ -153,6 +156,11 @@ public class MainFrameController {
 
 	public InteractionTabManagerController getStartingInteractionTabManagerController() {
 		return startingInteractionTabManagerController;
+	}
+
+
+	public void passUserInfo(List<String> assistantSubjects) {
+		this.assistantSubjects = assistantSubjects;
 	}
 
 }

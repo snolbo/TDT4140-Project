@@ -12,7 +12,7 @@
       <TextField fx:id="usernameField" layoutX="87.0" layoutY="119.0" promptText="username" />
       <Button fx:id="signInBtn" layoutX="345.0" layoutY="170.0" mnemonicParsing="false" text="Sign in" />
       <PasswordField fx:id="passwordField" layoutX="249.0" layoutY="119.0" promptText="password" />
-      <Text fill="RED" layoutX="111.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username or password does not exist" />
-      <Text layoutX="113.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log in using your username and password" />
+      <Text fx:id="errorText" fill="RED" focusTraversable="true" layoutX="111.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username or password does not exist" />
+      <Text focusTraversable="true" layoutX="113.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log in using your username and password" />
    </children>
 </Pane>
