@@ -35,6 +35,8 @@ public class LoginController {
 		
 		// populate isEmailVerified
 		
+		
+		// check if email is verified
 		if(isEmailVerified){
 			
 		}
