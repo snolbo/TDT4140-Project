@@ -55,17 +55,17 @@ public class ChatControllerTest extends ApplicationTest{
 	
 	
 	
-	@Test
-	public void testViewMessage(){
-		interact(()->{
-			String message = "This is a test message";
-			chatController.viewMessage(message, true);
-			assertEquals(message, chatController.getChatWindow().getItems().get(0).getText());
-			chatController.viewMessage(message, true);
-			System.out.println(chatController.getChatWindow().getItems().toString());
-			assertEquals(message, chatController.getChatWindow().getItems().get(1).getText());
-		});
-	}
+//	@Test
+//	public void testViewMessage(){
+//		interact(()->{
+//			String message = "This is a test message";
+//			chatController.viewMessage(message, true);
+//			assertEquals(message, chatController.getChatWindow().getItems().get(0).getText());
+//			chatController.viewMessage(message, true);
+//			System.out.println(chatController.getChatWindow().getItems().toString());
+//			assertEquals(message, chatController.getChatWindow().getItems().get(1).getText());
+//		});
+//	}
 
 	@Test
 	public void testSetHelperHost(){

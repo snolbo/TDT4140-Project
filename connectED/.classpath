@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFXTesting"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/TestFX"/>
-	<classpathentry kind="lib" path="C:/Users/snorr/Desktop/connectED.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snorr/Desktop/guava-14.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snorr/Desktop/guava-18.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snorr/Desktop/hamcrest-all-1.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snorr/Desktop/junit-4.12.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snorr/Desktop/testfx-core-4.0.0.20140804.112739-1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snorr/Desktop/testfx-core-4.0.4-alpha.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snorr/Desktop/testfx-junit-4.0.4-alpha.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src" />
+	<classpathentry kind="con"
+		path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8" />
+	<classpathentry kind="con"
+		path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER" />
+	<classpathentry kind="con"
+		path="org.eclipse.jdt.USER_LIBRARY/JavaFXTesting" />
+	<classpathentry kind="con"
+		path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4" />
+	<classpathentry kind="con"
+		path="org.eclipse.jdt.USER_LIBRARY/TestFX" />
+	<classpathentry kind="lib"
+		path="C:/Users/snorr/Desktop/guava-14.0.1.jar" />
+	<classpathentry kind="lib"
+		path="C:/Users/snorr/Desktop/guava-18.0.jar" />
+	<classpathentry kind="lib"
+		path="C:/Users/snorr/Desktop/hamcrest-all-1.3.jar" />
+	<classpathentry kind="lib"
+		path="C:/Users/snorr/Desktop/junit-4.12.jar" />
+	<classpathentry kind="lib"
+		path="C:/Users/snorr/Desktop/testfx-core-4.0.0.20140804.112739-1.jar" />
+	<classpathentry kind="lib"
+		path="C:/Users/snorr/Desktop/testfx-core-4.0.4-alpha.jar" />
+	<classpathentry kind="lib"
+		path="C:/Users/snorr/Desktop/testfx-junit-4.0.4-alpha.jar" />
+	<classpathentry kind="lib"
+		path="C:/Users/snorr/Downloads/com.stateofflow.eclipse.metrics_3.14.1.201104101335.jar" />
+	<classpathentry kind="output" path="bin" />
 </classpath>

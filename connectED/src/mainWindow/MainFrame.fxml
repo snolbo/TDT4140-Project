@@ -6,19 +6,29 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainWindow.MainFrameController">
-  <columnConstraints>
-    <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" percentWidth="60.0" prefWidth="100.0" />
-    <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints percentHeight="60.0" valignment="TOP" vgrow="ALWAYS" />
-      <RowConstraints maxHeight="10.0" percentHeight="0.0" prefHeight="10.0" valignment="TOP" vgrow="ALWAYS" />
-      <RowConstraints minHeight="10.0" percentHeight="40.0" prefHeight="30.0" valignment="TOP" vgrow="ALWAYS" />
-  </rowConstraints>
-   <children>
-      <Pane fx:id="interactionPane" style="-fx-background-color: RED;" GridPane.rowSpan="3" />
-      <Pane fx:id="chatPane" style="-fx-background-color: BLUE;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <WebView fx:id="searchBrowser" prefHeight="-1.0" prefWidth="-1.0" GridPane.columnIndex="1" GridPane.rowSpan="2" />
-   </children>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+	minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="mainWindow.MainFrameController">
+	<columnConstraints>
+		<ColumnConstraints halignment="LEFT" hgrow="ALWAYS"
+			minWidth="10.0" percentWidth="60.0" prefWidth="100.0" />
+		<ColumnConstraints halignment="LEFT" hgrow="ALWAYS"
+			minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="60.0" valignment="TOP"
+			vgrow="ALWAYS" />
+		<RowConstraints maxHeight="10.0" percentHeight="0.0"
+			prefHeight="10.0" valignment="TOP" vgrow="ALWAYS" />
+		<RowConstraints minHeight="10.0" percentHeight="40.0"
+			prefHeight="30.0" valignment="TOP" vgrow="ALWAYS" />
+	</rowConstraints>
+	<children>
+		<Pane fx:id="interactionPane" style="-fx-background-color: RED;"
+			GridPane.rowSpan="3" />
+		<Pane fx:id="chatPane" style="-fx-background-color: BLUE;"
+			GridPane.columnIndex="1" GridPane.rowIndex="2" />
+		<WebView fx:id="searchBrowser" prefHeight="-1.0" prefWidth="-1.0"
+			GridPane.columnIndex="1" GridPane.rowSpan="2" />
+	</children>
 </GridPane>
