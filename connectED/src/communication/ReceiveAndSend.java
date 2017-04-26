@@ -28,7 +28,7 @@ public class ReceiveAndSend implements Runnable{
 		chatController.setRecieveAndSendConnection(this);
 		this.protocolParser = new ProtocolParser(chatController);
 	}
-	
+
 	@Override
 	public void run() {
 		try{
@@ -55,11 +55,11 @@ public class ReceiveAndSend implements Runnable{
 	
 	
 
-
 	/**
 	 * @throws IOException
 	 * set up input and output streams from the socket
 	 */
+	
 	public void setupStreams() throws IOException{
 		input = socket.getInputStream();
 		buffread = new BufferedReader(new InputStreamReader(input));

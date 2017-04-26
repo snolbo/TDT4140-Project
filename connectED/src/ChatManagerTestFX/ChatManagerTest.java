@@ -27,9 +27,13 @@ public class ChatManagerTest extends GuiTest{
 	FXMLLoader loader;
 	
 	
+	
+	
+	
 	@Override
 	protected Parent getRootNode() {
 		try{
+			
 			loader  = new FXMLLoader(ChatTabController.class.getResource("ChatManager.fxml"));
 			return loader.load();
 		}catch (IOException e) {
@@ -45,6 +49,7 @@ public class ChatManagerTest extends GuiTest{
 		sButton = find("#studentBtn");
 		this.chatTabController = loader.getController();
     }
+	
 	@Test
 	public void testStudentAssistantButton(){
 		clickOn(sAButton);

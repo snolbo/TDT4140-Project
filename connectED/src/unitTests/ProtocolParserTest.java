@@ -25,4 +25,6 @@ public class ProtocolParserTest {
 		assertEquals("CHAT", protocolParser.getProtocol());
 		assertEquals("Hei", protocolParser.getMessage());
 	}
+	
+
 }

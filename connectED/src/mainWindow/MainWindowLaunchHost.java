@@ -13,6 +13,8 @@ public class MainWindowLaunchHost extends Application {
 	
 	MainFrameController controller;
 	
+	
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {

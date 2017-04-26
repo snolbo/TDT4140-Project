@@ -18,7 +18,7 @@ import org.testfx.framework.junit.ApplicationTest;
 
 import mainWindow.MainFrameController;
 
-public class ChatTabControllerTest extends ApplicationTest{
+public class ChatTabControllerTest{
 	
 	public ChatTabController chatTabController;
 	
@@ -26,14 +26,7 @@ public class ChatTabControllerTest extends ApplicationTest{
 	public void setUp(){
 		this.chatTabController = new ChatTabController();
 	}
-	
-	@Test
-	public void testDecrementPotentialConnections(){
-		ChatTabController.getPotentialConnections();
-		ChatTabController.decrementPotentialConnections();
-		assertEquals(-1, ChatTabController.getPotentialConnections());
-	}
-	
+
 	@Test
 	public void testGetPotentialConnections(){
 		int pc = ChatTabController.getPotentialConnections();
@@ -51,9 +44,7 @@ public class ChatTabControllerTest extends ApplicationTest{
 	public void testSetStudentHelperMode1() throws Exception{
 		chatTabController.setStudentHelperMode();
 		assertTrue(chatTabController.getConnector().isHelperHost());
-		assertFalse(chatTabController.getConnector().isAssistantHost());
-		//assertTrue(chatTabController.getStage().isShowing());
-		
+		assertFalse(chatTabController.getConnector().isAssistantHost());		
 	}
 	
 	@Test
@@ -149,6 +140,7 @@ public class ChatTabControllerTest extends ApplicationTest{
 		assertEquals(chatTabController.getSubject(), "java");
 	}
 	
+	
 	@Test
 	public void testSetTag(){
 		chatTabController.setTag("StudentHelperITGK");
@@ -172,18 +164,16 @@ public class ChatTabControllerTest extends ApplicationTest{
 		assertEquals(chatTabController.getTag(), "assistantjava");
 	}
 	
-	@Test
-	public void testTabLogic(){
-		
-	}
 	
+//	@Test
+//	public void testNewChatTab(){
+//			chatTabController.setMode("assistant");
+//			chatTabController.setSubject("java");
+//			chatTabController.combineTags();
+//			chatTabController.setAssistantMode();
+//			chatTabController.newChatTab("java");
+//	}
 	
-
-	@Override
-	public void start(Stage stage) throws Exception {
-		
-		
-	}
 
 	
 	

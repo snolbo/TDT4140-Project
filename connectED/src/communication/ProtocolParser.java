@@ -20,8 +20,7 @@ public class ProtocolParser{
 	public void handleMessageProtocol(String protocolMessage) {
 		if (protocolMessage != null){
 			splitUpString(protocolMessage);
-			
-			switch (this.protocol) {
+			switch (protocol) {
 			case "CHAT":
 				this.chatController.viewMessage(this.message, false);
 				break;

@@ -36,6 +36,7 @@ public class ChatController {
 	private ClientVoice cv;
 	
 	
+	
 	private ReceiveAndSend receiveAndSend = null;
 
 	private boolean isAssistantHost= false;
@@ -48,10 +49,10 @@ public class ChatController {
 	public void initialize(){
 		System.out.println("running initialize in chatController");
 		microphoneBtn.getStyleClass().add("micButton");
-		chatWindow.setMouseTransparent(true);
 		chatWindow.setFocusTraversable(false);
 		microphoneBtn.setDisable(true);
 	}
+	
 	
 	
 	/**
@@ -106,7 +107,6 @@ public class ChatController {
 			}
 			else
 				viewMessage("-----Voice communication is not supported on your device-----", false);
-
 		}
 		else
 			viewMessage("-----Cannot initiate voice communication as you already have an active voiceConversation-----", false);
@@ -132,7 +132,7 @@ public class ChatController {
 		else
 			viewMessage("-----The other person request voice communication, but you are already in an active conversation-----", false);
 	}
-	
+
 	/**
 	 * Handles denied request for voicecom
 	 */
@@ -157,7 +157,7 @@ public class ChatController {
 			receiveAndSend.sendChatMessage("VOICE-cancel");
 		}
 	}
-	
+
 	/**
 	 * Sets up and initializes voicecomm
 	 */
@@ -185,7 +185,6 @@ public class ChatController {
 		}
 	}
 	
-
 	/**
 	 * @param tag
 	 * Handles closerequest
@@ -193,26 +192,24 @@ public class ChatController {
 	public void onClosed(String tag) {
 		cancelVoiceCommunication();
 		if(receiveAndSend != null){
-			System.out.println("Closing chatController - sends END message and closes connection...");
+//			System.out.println("Closing chatController - sends END message and closes connection...");
 			receiveAndSend.sendChatMessage("END-null");
 			receiveAndSend.closeConnection();
 		}
 
 		if( (isHelperHost || isAssistantHost) && receiveAndSend == null){
-			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
+//			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
 			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
 		else if(receiveAndSend == null){
-
-			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
+//			System.out.println("Closing chatController - sends " + tag + "Delete" + " to TCPserver since in queue...");
 			ServerRequest request = new ServerRequest(tag + "Delete");
 			request.removeAdressFromQueue();
 		}
 
 		interactionTabManagerController.deleteFirepad();
 	}
-	
 
 	/**
 	 * @param text
@@ -245,7 +242,7 @@ public class ChatController {
 	 * Changed background color on a tab if there is an incoming message and the tab is currently not selected
 	 */
 	private void notifyIncomingMessage(){
-		System.out.println("Running notifyIncomingMessage in chatController");
+//		System.out.println("Running notifyIncomingMessage in chatController");
 		if(!chatTab.isSelected()){
 			chatTab.setStyle("-fx-background-color: #ff5400");
 		}
@@ -263,7 +260,7 @@ public class ChatController {
 	 * Method to pass the object handling the sending and receiving of messages
 	 */
 	public void setRecieveAndSendConnection(ReceiveAndSend connection){
-		this.receiveAndSend = connection;
+		receiveAndSend = connection;
 	}
 	
 	/**
@@ -271,7 +268,7 @@ public class ChatController {
 	 * return object handeling sending and receiving
 	 */
 	public ReceiveAndSend getReceiveAndSendConnection(){
-		return this.receiveAndSend;
+		return receiveAndSend;
 	}
 
 	/**
@@ -297,7 +294,11 @@ public class ChatController {
 	 * Returns the chattab object associated with this controller
 	 */
 	public Tab getChatTab(){
-		return this.chatTab;
+		return chatTab;
+	}
+	
+	public ListView<Label> getChatWindow(){
+		return chatWindow;
 	}
 
 	/**
@@ -308,22 +309,21 @@ public class ChatController {
 		System.out.println("Initializing interactionArea assisiated with this chatController");
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("/mainWindow/InteractionTabManager.fxml"));
 		try{
-		InteractionTab  = loader.load();
-		interactionTabManagerController = loader.getController();
-		interactionTabManagerController.setSharedCodeLanguage(codeLanguage);
+			InteractionTab  = loader.load();
+			interactionTabManagerController = loader.getController();
+			interactionTabManagerController.setSharedCodeLanguage(codeLanguage);
+			if(!isAssistantHost() && !isHelperHost()){
+				interactionTabManagerController.setURL("http://connected-1e044.firebaseapp.com");
+			}
+			else{
+				interactionTabManagerController.setDefaultURL();
+			}
 		}
 		catch(IOException e){
 			e.printStackTrace();
 		}
-		if(!isAssistantHost() && !isHelperHost()){
-			interactionTabManagerController.setURL("http://connected-1e044.firebaseapp.com");
-		}
-		
-		else{
-			setDefaultURL();
-		}
 	}
-	
+
 	/**
 	 * Sets the url to the webview of the shared code editing window to the default chosen value
 	 */
@@ -332,7 +332,7 @@ public class ChatController {
 	}
 
 	
-	public Node getInteractionArea(){
+	public Node getInteractionTab(){
 		return this.InteractionTab;
 	}
 	
@@ -368,16 +368,15 @@ public class ChatController {
 	 * Sends the URL of the code editor when it is finished loading
 	 */
 	public void sendCodeURLWhenLoaded() {
-		System.out.println("Sending codeURL to helper when the page is finished loading...");
+//		System.out.println("Sending codeURL to helper when the page is finished loading...");
 		interactionTabManagerController.sendPageURLWhenLoaded(this);
-
 	}
 	
 	/**
 	 * sends the code url of the shared code browser
 	 */
 	public void sendCodeURL(){
-		System.out.println("Sending CodeURL to helper...");
+//		System.out.println("Sending CodeURL to helper...");
 		receiveAndSend.sendChatMessage("CODEURL-"+ interactionTabManagerController.getURL());
 	}
 	

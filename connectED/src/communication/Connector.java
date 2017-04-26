@@ -21,7 +21,7 @@ public class Connector implements Runnable {
 
 	public Connector(ChatTabController chatTabController) {
 		this.chatTabController = chatTabController;
-		this.hostPort = 9005;
+		this.hostPort = 8931;
 	}
 
 	public Boolean isAssistantHost(){
@@ -66,7 +66,6 @@ public class Connector implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
 	/**
 	 * Seets mode as client and closes open welcomesockets if there are any
 	 */
@@ -91,7 +90,7 @@ public class Connector implements Runnable {
 		ServerRequest request = new ServerRequest(tag);
 		request.helperRequest();
 	}
-	
+
 	/**
 	 * helpers  wait for someone to connect to their open socket. Students wait for response from server distributing ip, and then connect to helpers
 	 */
@@ -127,16 +126,17 @@ public class Connector implements Runnable {
 			this.chatTabController.startChatSession(socket);
 	}
 	
+	
 	public void closeWelcomeSocket(){
-		try {
-			if(welcomeSocket != null){
-				welcomeSocket.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally{
-			welcomeSocket = null;
-		}
+//		try {
+//			if(welcomeSocket != null){
+//				welcomeSocket.close();
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally{
+//			welcomeSocket = null;
+//		}
 	}
 	
 	public ServerSocket getWelcomeSocket(){

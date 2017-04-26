@@ -50,12 +50,12 @@ public class ConnectorTest{
 		
 	}
 	
-	@Test
-	public void testCloseWelcomeSocket() {
-		connector.setHelperHost();
-		connector.closeWelcomeSocket();
-		assertTrue(connector.getWelcomeSocket().isClosed());
-	}
+//	@Test
+//	public void testCloseWelcomeSocket() {
+//		connector.setHelperHost();
+//		connector.closeWelcomeSocket();
+//		assertTrue(connector.getWelcomeSocket().isClosed());
+//	}
 	
 //	@Test
 //	public void testConnect1() throws IOException{
@@ -65,7 +65,7 @@ public class ConnectorTest{
 //		connector.getWelcomeSocket().close();
 //		//må kjøre TestClient
 //	}
-	
+//	
 //	@Test
 //	public void testConnect2() throws IOException{
 //		connector.setAssistantHost();
@@ -73,7 +73,7 @@ public class ConnectorTest{
 //		assertTrue(connector.getSocket().isConnected());
 //		connector.getWelcomeSocket().close();
 //	}
-	
+//	
 //	@Test
 //	public void testConnect3() throws IOException{
 //		//må kjøre TCPServer (ikke lokalt)!!
@@ -82,9 +82,9 @@ public class ConnectorTest{
 //		connector.setClient();
 //		chatTabController.setTag("StudentJava");
 //		connector.connect();
-//		assertEquals("129.241.158.222", connector.getHelperIP());
-//		//assertTrue(connector.getSocket().isConnected());
-//		//connector.getWelcomeSocket().close();
+//		assertEquals("localhost", connector.getHelperIP());
+//		assertTrue(connector.getSocket().isConnected());
+//		connector.getWelcomeSocket().close();
 //	}
 	
 	

@@ -94,54 +94,16 @@ public class ModeSelectionController {
 		this.mainFrameController = mainFrameController;
 		System.out.println("mainframecontroller: " + mainFrameController);
 		System.out.println("chatTabController: " + chatTabController);
-		assistantBtn.setOnAction( (event) ->{
-			try {
-				mainFrameController.chatTabController.setAssistantMode();
-				resetModeButtonColor();
-				assistantBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-				colorConnectButton();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		assistantBtn.setOnAction( (event) ->{modeSelection("StudentAssistant");});
+		helperBtn.setOnAction( (event) ->{modeSelection("StudentHelper");});
+		studentBtn.setOnAction( (event) ->{modeSelection("Student");});
 		
-		helperBtn.setOnAction( (event) ->{
-			try {
-				mainFrameController.chatTabController.setStudentHelperMode();
-				resetModeButtonColor();
-				helperBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-				colorConnectButton();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		
-		studentBtn.setOnAction( (event) ->{
-			try {
-				mainFrameController.chatTabController.setStudentMode();
-				resetModeButtonColor();
-				studentBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-				colorConnectButton();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
 		
 		javaBtn.setOnAction((event)-> {
-			mainFrameController.chatTabController.setSubject("Java");
-			resetSubjectButtonColor();
-			javaBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-			colorConnectButton();
-			codeLanguage = "java";
-
+			subjectSelection("Java");
 		});
-		
-		itgkPythonBtn.setOnAction((event)-> {
-			mainFrameController.chatTabController.setSubject("ITGK");
-			resetSubjectButtonColor();
-			itgkPythonBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-			colorConnectButton();
-			codeLanguage = "python";
+		itgkPythonBtn.setOnAction((event) -> {
+			subjectSelection("ITGK");
 		});
 		
 //		itgkMatlabBtn.setOnAction((event)-> {
@@ -151,16 +113,63 @@ public class ModeSelectionController {
 //		});
 		
 		connectBtn.setOnAction((event)->{
-			if(mainFrameController.chatTabController.combineTags()){
-				errorText.setVisible(false);
-				mainFrameController.chatTabController.newChatTab(codeLanguage);
-			}
-			else{
-				errorText.setVisible(true);
-			}
+			useConnectButton();
 		});
-
 	}
+	
+	
+	public void modeSelection(String mode){
+		mainFrameController.chatTabController.setStudentHelperMode();
+		resetModeButtonColor();
+		colorConnectButton();
+		switch (mode) {
+		case "StudentAssistant":
+			mainFrameController.chatTabController.setAssistantMode();
+			assistantBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+			break;
+		case "StudentHelper":
+			mainFrameController.chatTabController.setStudentHelperMode();
+			helperBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+			break;
+		case "Student":
+			mainFrameController.chatTabController.setStudentMode();
+			studentBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+			break;
+		default:
+			break;
+		}
+	}
+	
+
+	public void subjectSelection(String subject){
+		mainFrameController.chatTabController.setSubject(subject);
+		resetSubjectButtonColor();
+		colorConnectButton();
+		switch (subject) {
+		case "ITGK":
+			itgkPythonBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+			codeLanguage = "python";
+			break;
+		case "Java":
+			javaBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+			codeLanguage = "java";
+
+		default:
+			break;
+		}
+	}
+	
+	public void useConnectButton(){
+		if(mainFrameController.chatTabController.modeAndSubjectIsSet()){
+			mainFrameController.chatTabController.combineTags();
+			errorText.setVisible(false);
+			mainFrameController.chatTabController.newChatTab(codeLanguage);
+		}
+		else{
+			errorText.setVisible(true);
+		}
+	}
+	
 	
 
 }

@@ -5,8 +5,9 @@ import java.io.IOException;
 
 import java.net.Socket;
 import java.util.ArrayDeque;
+import java.util.function.Consumer;
 
-
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -54,6 +55,7 @@ public class ChatTabController {
 		});
 		
 	}
+	
 	
 	/**
 	 * @return
@@ -108,6 +110,10 @@ public class ChatTabController {
 	}
 	
 	
+	
+	public ObservableList<Tab> getTabs(){
+		return chatTab.getTabs();
+	}
 
 	 /**
 	 * Resets the selected mode (student/helper/assistant) and the subject.
@@ -156,6 +162,7 @@ public class ChatTabController {
 			return true;
 		}
 	}
+
 	
 	/**
 	 * @param subject
@@ -207,6 +214,7 @@ public class ChatTabController {
 		if(chatTab.getTabs().contains(extraConnectionTab))
 			chatTab.getTabs().remove(extraConnectionTab);
 	}
+	
 	
 	/**
 	 * Creates a new Chat, queue the user depending on tag
@@ -262,7 +270,7 @@ public class ChatTabController {
 				});
 				newTab.setOnSelectionChanged((event) -> {
 					if(newTab.isSelected()){
-						mainFrameController.loadNewInteractionArea(chatController.getInteractionArea(), chatController.getInteractionTabManagerController());
+						mainFrameController.loadNewInteractionArea(chatController.getInteractionTab(), chatController.getInteractionTabManagerController());
 						chatController.clearNotifiedMessage();
 					}
 				});
@@ -283,7 +291,7 @@ public class ChatTabController {
 			System.out.println("Cannot take any more connections, reached max limit");
 		}
 	}
-	
+
 	/**
 	 * @param socket
 	 * Creates a new chat session and assigns a chatController to the Chat-tab. Used by the connector when a match is made from the distributing server
@@ -300,7 +308,11 @@ public class ChatTabController {
 		}
 	}
 	
-	
+	public int getTabCount(){
+		return PotentialConnections;
+	}
+
+
 	/**
 	 * Handles the event of being closed
 	 */
@@ -309,9 +321,8 @@ public class ChatTabController {
 		this.connector.closeWelcomeSocket();
 		final EventType<Event> closeRequestEventType = Tab.TAB_CLOSE_REQUEST_EVENT;
 		final Event closeRequestEvent = new Event(closeRequestEventType);
-		for(Tab tab : chatTab.getTabs()){
-			System.out.println("Firing closerequest on remaining open tab");
-			Event.fireEvent(tab, closeRequestEvent);
+		for (int i = 0; i < chatTab.getTabs().size(); i++) {
+			Event.fireEvent(chatTab.getTabs().get(0),closeRequestEvent);
 		}
 	}
 	

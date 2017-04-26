@@ -48,8 +48,15 @@ public class MainFrameController {
 						searchBrowser.setZoom(currentVal + 0.1);
 				}
 			});
-			
-
+	}
+	
+	
+	public void handleControlDownInSearchBrowser(){
+		
+	}
+	
+	public WebView getSeachBrowser(){
+		return searchBrowser;
 	}
 	
 	/**
@@ -59,6 +66,7 @@ public class MainFrameController {
 	public InteractionTabManagerController getInteractionTabManagerController(){
 		return this.interactionTabManagerController;
 	}
+	
 	
 	/**
 	 * Loads the ChatTab and saves a reference to its controller

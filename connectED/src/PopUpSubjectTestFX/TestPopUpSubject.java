@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 
 public class TestPopUpSubject extends GuiTest{
 	
+
 	Button javaButton;
 	Button itgkButton;
 	FXMLLoader loader;

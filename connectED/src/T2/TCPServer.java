@@ -43,6 +43,10 @@ public class TCPServer {
 			//TODO: make additional separate queues for each relevant subject
 		}
 		
+		public String formatIP(String ip){
+			return ip;
+		}
+		
 		public LinkedList<String> getstudentIPJava(){
 			return studentIPJava;
 		}
@@ -118,47 +122,50 @@ public class TCPServer {
 //				return returnIP;
 //		}
 		
+		public boolean isRunning;
 		
 		public void start(){
 				try { // to receive connections and sort them into right queue by sent tag
-					welcomeSocket = new ServerSocket(9050, 1000);
-					while(true) { // receives one connection, and sorts it into the right queue
-						try{ // putting this try inside while will retry while-loop if something fucks up, and not crash entire server like if you sorround everything
+					welcomeSocket = new ServerSocket(9099, 1000);
+					isRunning = true;
+					while(isRunning) { // receives one connection, and sorts it into the right queue
+						try{ 
 							connectionSocket = welcomeSocket.accept(); // receive connection
 							IP = connectionSocket.getInetAddress().getHostName();
-							System.out.println("Received IP: " + IP);
-							//IP = formatIP(IP);
 							BufferedReader recvBuff = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 							tag = recvBuff.readLine(); // reads one line from connection. Sent messages are end with \n
-							System.out.println("Received: " + tag);
 							delegateTag(tag, IP, connectionSocket);
-						} catch (IOException e) {
-							e.printStackTrace(); // dont need to to enything if connection is lost, or not receiving readline as then the socket is not saved as delegateTag is not run
-
-						}
+							printStatus();
+						} catch (IOException e) {e.printStackTrace();}
 						if (hasMatch(studentQueueJava, studentAssistantQueueJava, studentHelperQueueJava))
 							match(studentQueueJava, studentIPJava, studentAssistantQueueJava, studentHelperQueueJava);
-						
 						if (hasMatch(studentQueueITGK, studentAssistantQueueITGK, studentHelperQueueITGK))
 							match(studentQueueITGK, studentIPITGK, studentAssistantQueueITGK, studentHelperQueueITGK);
-						
-						System.out.println("studentQueueJava: " + studentQueueJava.toString());
-						System.out.println("studentHelperQueueJava: " + studentHelperQueueJava.toString());
-						System.out.println("studentAssistantQueueJava: " + studentAssistantQueueJava.toString());
-
-
-						System.out.println("studentQueueITGK: " + studentQueueITGK.toString());
-						System.out.println("studentHelperQueueITGK: " + studentHelperQueueITGK.toString());
-						System.out.println("studentAssistantQueueITGK: " + studentAssistantQueueITGK.toString());
-						
-						System.out.println();
 					}
 				}
 
-				catch(IOException e){
-					e.printStackTrace();
-				}
+				catch(IOException e){e.printStackTrace();}
 		}
+		
+		public void closeServer(){
+			isRunning = false;
+		}
+		
+		
+		public boolean printStatus(){
+			System.out.println("Received IP: " + IP);
+			System.out.println("Received: " + tag);
+			System.out.println("studentQueueJava: " + studentQueueJava.toString());
+			System.out.println("studentHelperQueueJava: " + studentHelperQueueJava.toString());
+			System.out.println("studentAssistantQueueJava: " + studentAssistantQueueJava.toString());
+			System.out.println("studentQueueITGK: " + studentQueueITGK.toString());
+			System.out.println("studentHelperQueueITGK: " + studentHelperQueueITGK.toString());
+			System.out.println("studentAssistantQueueITGK: " + studentAssistantQueueITGK.toString());
+			System.out.println();
+			return true;
+			
+		}
+		
 		
 		public void delegateTag(String tag, String IP, Socket connectionSocket){
 			try{
@@ -264,6 +271,7 @@ public class TCPServer {
 				}
 			}
 		}
+		
 		
 		
 		// removes the most backmost instance in the studentAssistantQueue
