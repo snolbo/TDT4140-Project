@@ -59,7 +59,12 @@ import netscape.javascript.JSObject;
 						loginStatus = (Boolean) webEngine.executeScript("getLoginStatus();"); //Gets variables from javascript
 						System.out.println(loginStatus);
 						if (loginStatus) {
-							role = (String) webEngine.executeScript("getRole()");
+							if (!role.contains("null")) {
+								role = (String) webEngine.executeScript("getRole()");
+							} 
+							else {
+								role = null;
+							}
 							emailVerified = (Boolean) webEngine.executeScript("getEmailVerifiedStatus();");
 							System.out.println(role+" "+emailVerified);
 						}
