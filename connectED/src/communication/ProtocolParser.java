@@ -17,6 +17,10 @@ public class ProtocolParser{
 		this.chatController = chatController;
 	}
 
+	/**
+	 * @param protocolMessage
+	 * Receives a message sent from other party and handles the message based on the protocolword and payload
+	 */
 	public void handleMessageProtocol(String protocolMessage) {
 		if (protocolMessage != null){
 			splitUpString(protocolMessage);
@@ -63,11 +67,11 @@ public class ProtocolParser{
 	}
 	
 	public String getProtocol(){
-		return this.protocol;
+		return protocol;
 	}
 	
 	public String getMessage(){
-		return this.message;
+		return message;
 	}
 	
 }

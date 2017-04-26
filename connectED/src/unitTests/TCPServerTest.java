@@ -7,7 +7,6 @@ import java.net.Socket;
 
 import java.util.LinkedList;
 
-import T2.TCPServer;
 import communication.ServerRequest;
 import unitTests.TCPServerTest;
 
@@ -15,6 +14,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import Server.TCPServer;
 
 public class TCPServerTest{
 	

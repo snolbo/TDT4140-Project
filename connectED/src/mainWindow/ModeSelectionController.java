@@ -118,6 +118,10 @@ public class ModeSelectionController {
 	}
 	
 	
+	/**
+	 * @param mode
+	 * Performs correct action based on String representation of mode passed to the function based what is set in initButtons
+	 */
 	public void modeSelection(String mode){
 		mainFrameController.chatTabController.setStudentHelperMode();
 		resetModeButtonColor();
@@ -141,6 +145,10 @@ public class ModeSelectionController {
 	}
 	
 
+	/**
+	 * @param subject
+	 * Performs correct action for subjectselection based on a String representation of the subject set in initButtons
+	 */
 	public void subjectSelection(String subject){
 		mainFrameController.chatTabController.setSubject(subject);
 		resetSubjectButtonColor();

@@ -1,4 +1,4 @@
-package T2;
+package Server;
 
 import java.io.*;
 import java.net.*;

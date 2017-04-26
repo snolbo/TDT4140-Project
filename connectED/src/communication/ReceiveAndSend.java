@@ -10,7 +10,7 @@ import javafx.application.Platform;
 
 /**
  * @author snorr
- * Receive from and send data to the socket set in constructor
+ * Receive from and send messages to the socket in constructor, which is a socket to the other party in the conversation
  */
 public class ReceiveAndSend implements Runnable{
 	
@@ -145,7 +145,7 @@ public class ReceiveAndSend implements Runnable{
 	
 	/**
 	 * @return
-	 * Returns the inteadress accociaterd with the socket, meaning the ip adress of the other party
+	 * Returns the inetAddress accosiated with the socket, meaning the ip adress of the other party
 	 */
 	public InetAddress getInetAddress(){
 		if(socket != null)
