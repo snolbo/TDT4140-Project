@@ -34,9 +34,12 @@ public class ModeSelectionController {
 
 	private String codeLanguage;
 	
+	private String mode;
+	private String subject;
+	
 	
 	private ChatTabController chatTabController;
-	private MainFrameController mainFrameController = new MainFrameController();
+	private MainFrameController mainFrameController;// = new MainFrameController();
 	
 	//private List<String> assistantSubjects = mainFrameController.getUserInfo(); 
 	private List<String> assistantSubjects;
@@ -47,7 +50,7 @@ public class ModeSelectionController {
 	@FXML
 	void initialize(){
 		errorText.setVisible(false);
-		connectBtn.setOpacity(0.5);
+		connectBtn.setDisable(true);
 
 	}
 	
@@ -66,6 +69,8 @@ public class ModeSelectionController {
 		itgkPythonBtn.setStyle("");
 		javaBtn.setStyle("");
 //		itgkMatlabBtn.setStyle("");
+		
+		
 	}
 	
 	/**
@@ -75,6 +80,9 @@ public class ModeSelectionController {
 		assistantBtn.setStyle("");
 		helperBtn.setStyle("");
 		studentBtn.setStyle("");
+		
+		itgkPythonBtn.setDisable(false);
+		javaBtn.setDisable(false);
 	}
 	
 	/**
@@ -82,12 +90,12 @@ public class ModeSelectionController {
 	 */
 	public void colorConnectButton(){
 		if(mainFrameController.chatTabController.modeAndSubjectIsSet()){
-			connectBtn.setOpacity(1);
+			connectBtn.setDisable(false);
 			errorText.setVisible(false);
 
 		}
 		else
-			connectBtn.setOpacity(0.5);
+			connectBtn.setDisable(true);
 			
 	}
 	
@@ -144,6 +152,9 @@ public class ModeSelectionController {
 		connectBtn.setOnAction((event)->{
 			useConnectButton();
 		});
+		
+
+		
 	}
 	
 	
@@ -151,23 +162,25 @@ public class ModeSelectionController {
 	 * @param mode
 	 * Performs correct action based on String representation of mode passed to the function based what is set in initButtons
 	 */
-	public void modeSelection(String mode){
-		mainFrameController.chatTabController.setStudentHelperMode();
+	public void modeSelection(String selectedMode){
+//		mainFrameController.chatTabController.setStudentHelperMode();
 		resetModeButtonColor();
+		mode = selectedMode;
+		mainFrameController.chatTabController.setMode(mode);
 		colorConnectButton();
 		switch (mode) {
 		case "StudentAssistant":
 			/*if (!assistantSubjects.isEmpty()) {*/
-				mainFrameController.chatTabController.setAssistantMode();
+//				mainFrameController.chatTabController.setAssistantMode();
 				assistantBtn.setStyle("-fx-background-color: " + selectedButtonColor);
 				break;
 			//}
 		case "StudentHelper": 
-			mainFrameController.chatTabController.setStudentHelperMode();
+//			mainFrameController.chatTabController.setStudentHelperMode();
 			helperBtn.setStyle("-fx-background-color: " + selectedButtonColor);
 			break;
 		case "Student":
-			mainFrameController.chatTabController.setStudentMode();
+//			mainFrameController.chatTabController.setStudentMode();
 			studentBtn.setStyle("-fx-background-color: " + selectedButtonColor);
 			break;
 		default:
@@ -209,6 +222,22 @@ public class ModeSelectionController {
 	}
 	
 	public void useConnectButton(){
+		
+		switch (mode) {
+		case "StudentAssistant":
+				mainFrameController.chatTabController.setAssistantMode();
+				break;
+		case "StudentHelper": 
+				mainFrameController.chatTabController.setStudentHelperMode();
+				break;
+		case "Student":
+				mainFrameController.chatTabController.setStudentMode();
+				break;
+		default:
+			break;
+		}
+		
+		
 		if(mainFrameController.chatTabController.modeAndSubjectIsSet()){
 			mainFrameController.chatTabController.combineTags();
 			errorText.setVisible(false);
@@ -223,10 +252,32 @@ public class ModeSelectionController {
 	public List<String> getAssistantSubjects() {
 		return this.assistantSubjects;
 	}
-	
+
 	public void setAssistantSubjects(List<String> assistantSubjects) {
-		this.assistantSubjects = assistantSubjects;
-		System.out.println("ASubj modeselector: "+this.assistantSubjects);
+		if(!assistantSubjects.contains("java") && !assistantSubjects.contains("itgk"))
+			assistantBtn.setDisable(true);
+		
+		assistantBtn.setOnAction((event) -> {
+			resetSubjectButtonColor();
+			connectBtn.setDisable(true);
+			mainFrameController.chatTabController.setSubject(null);
+			modeSelection("StudentAssistant");
+			if(!assistantSubjects.contains("java"))
+				javaBtn.setDisable(true);
+			if(!assistantSubjects.contains("itgk"))
+				itgkPythonBtn.setDisable(true);
+
+			
+		});
+		
 	}
+	
+//	public void setAssistantSubjects(List<String> assistantSubjects) {
+//		this.assistantSubjects = assistantSubjects;
+//		System.out.println("ASubj modeselector: "+this.assistantSubjects);
+//		if(!assistantSubjects.contains("java") || !assistantSubjects.contains("itgk"))
+//			assistantBtn.setVisible(false);
+//		
+//	}
 
 }

@@ -58,7 +58,9 @@ public class Browser extends Region {
 							Stage appStage = new Stage();
 							MainWindowLaunchHost appLauncher = new MainWindowLaunchHost();
 							appLauncher.start(appStage);
-							appLauncher.getMainFrameController().passUserInfo(assistantSubjects);
+//							appLauncher.getMainFrameController().passUserInfo(assistantSubjects);
+							appLauncher.getMainFrameController().interactionTabManagerController.modeSelectionController.setAssistantSubjects(assistantSubjects);
+							appLauncher.showStage();
 
 						}
 					}

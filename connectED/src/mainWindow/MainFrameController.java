@@ -162,8 +162,8 @@ public class MainFrameController {
 	public void passUserInfo(List<String> assistantSubjects) {
 		this.assistantSubjects = assistantSubjects;
 		System.out.println("assistantSubjects: "+this.assistantSubjects);
-		ModeSelectionController MSC = new ModeSelectionController();
-		MSC.setAssistantSubjects(this.assistantSubjects);
+//		ModeSelectionController MSC = new ModeSelectionController();
+//		MSC.setAssistantSubjects(this.assistantSubjects);
 		
 		
 	}
