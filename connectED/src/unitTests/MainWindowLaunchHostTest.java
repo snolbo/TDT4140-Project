@@ -115,16 +115,16 @@ public class MainWindowLaunchHostTest extends ApplicationTest{
 			String mode = "StudentAssistant", subject = "Java";
 			mainFrameController1.interactionTabManagerController.modeSelectionController.modeSelection(mode);
 			mainFrameController1.interactionTabManagerController.modeSelectionController.subjectSelection(subject);
-			mainFrameController1.chatTabController.combineTags();
+			mainFrameController1.interactionTabManagerController.modeSelectionController.useConnectButton(); // creates a chattab
+
+			assertEquals(1, mainFrameController1.chatTabController.getTabCount());
 			mainFrameController1.chatTabController.newChatTab("java");
-			assertEquals(mainFrameController1.chatTabController.getTabCount(),1);
 			mainFrameController1.chatTabController.newChatTab("java");
+			assertEquals(3, mainFrameController1.chatTabController.getTabCount());
 			mainFrameController1.chatTabController.newChatTab("java");
-			assertEquals(mainFrameController1.chatTabController.getTabCount(),3);
-			mainFrameController1.chatTabController.newChatTab("java");
-			assertEquals(mainFrameController1.chatTabController.getTabCount(),3);
+			assertEquals(3, mainFrameController1.chatTabController.getTabCount());
 			mainFrameController1.chatTabController.onCloseRequest();
-			assertEquals(mainFrameController1.chatTabController.getTabCount(),0);
+			assertEquals(0, mainFrameController1.chatTabController.getTabCount());
 		});
 		
 	}

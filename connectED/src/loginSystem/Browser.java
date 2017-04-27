@@ -27,7 +27,7 @@ public class Browser extends Region {
     private Boolean enterStatus;
     private List<String> assistantSubjects = new ArrayList<String>();
     
-    public Browser() {
+    public Browser(Stage stage) {
         //apply the styles
         getStyleClass().add("browser");
         // load the web page
@@ -61,6 +61,10 @@ public class Browser extends Region {
 //							appLauncher.getMainFrameController().passUserInfo(assistantSubjects);
 							appLauncher.getMainFrameController().interactionTabManagerController.modeSelectionController.setAssistantSubjects(assistantSubjects);
 							appLauncher.showStage();
+							
+							webEngine.executeScript("firebase.auth().signOut();");
+							
+							stage.close();
 
 						}
 					}

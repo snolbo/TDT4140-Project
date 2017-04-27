@@ -23,7 +23,7 @@ import netscape.javascript.JSObject;
 	    @Override public void start(Stage stage) {
 	        // create the scene
 	        stage.setTitle("Login window");
-	        scene = new Scene(new Browser(),880,280, Color.web("#666970"));
+	        scene = new Scene(new Browser(stage),880,280, Color.web("#666970"));
 	        stage.setScene(scene);        
 	        stage.show();
 	    }
