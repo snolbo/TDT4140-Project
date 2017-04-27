@@ -7,9 +7,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import T2.ServerRequest;
 import communication.ChatTabController;
 import communication.Connector;
+import communication.ServerRequest;
 
 
 public class ConnectorTest{
@@ -50,42 +50,42 @@ public class ConnectorTest{
 		
 	}
 	
-	@Test
-	public void testCloseWelcomeSocket() {
-		connector.setHelperHost();
-		connector.closeWelcomeSocket();
-		assertTrue(connector.getWelcomeSocket().isClosed());
-	}
+//	@Test
+//	public void testCloseWelcomeSocket() {
+//		connector.setHelperHost();
+//		connector.closeWelcomeSocket();
+//		assertTrue(connector.getWelcomeSocket().isClosed());
+//	}
 	
-	@Test
-	public void testConnect1() throws IOException{
-		connector.setHelperHost();
-		connector.connect();
-		assertTrue(connector.getSocket().isConnected());
-		connector.getWelcomeSocket().close();
-		//må kjøre TestClient
-	}
-	
-	@Test
-	public void testConnect2() throws IOException{
-		connector.setAssistantHost();
-		connector.connect();
-		assertTrue(connector.getSocket().isConnected());
-		connector.getWelcomeSocket().close();
-	}
-	
-	@Test
-	public void testConnect3() throws IOException{
-		//må kjøre TCPServer (ikke lokalt)!!
-		ServerRequest serverRequest = new ServerRequest("StudentAssistantJava");
-		serverRequest.helperRequest();
-		connector.setClient();
-		chatTabController.setTag("StudentJava");
-		connector.connect();
-		assertEquals("129.241.158.222", connector.getHelperIP());
-		//assertTrue(connector.getSocket().isConnected());
-		//connector.getWelcomeSocket().close();
-	}
+//	@Test
+//	public void testConnect1() throws IOException{
+//		connector.setHelperHost();
+//		connector.connect();
+//		assertTrue(connector.getSocket().isConnected());
+//		connector.getWelcomeSocket().close();
+//		//må kjøre TestClient
+//	}
+//	
+//	@Test
+//	public void testConnect2() throws IOException{
+//		connector.setAssistantHost();
+//		connector.connect();
+//		assertTrue(connector.getSocket().isConnected());
+//		connector.getWelcomeSocket().close();
+//	}
+//	
+//	@Test
+//	public void testConnect3() throws IOException{
+//		//må kjøre TCPServer (ikke lokalt)!!
+//		ServerRequest serverRequest = new ServerRequest("StudentAssistantJava");
+//		serverRequest.helperRequest();
+//		connector.setClient();
+//		chatTabController.setTag("StudentJava");
+//		connector.connect();
+//		assertEquals("localhost", connector.getHelperIP());
+//		assertTrue(connector.getSocket().isConnected());
+//		connector.getWelcomeSocket().close();
+//	}
 	
 	
 	

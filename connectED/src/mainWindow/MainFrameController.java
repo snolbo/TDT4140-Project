@@ -1,12 +1,12 @@
 package mainWindow;
 
 import java.io.IOException;
+import java.util.List;
 
 import communication.ChatTabController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -30,6 +30,8 @@ public class MainFrameController {
 	Node currentInteractionTabPane;
 	public InteractionTabManagerController currentInteractionTabManagerController;
 	public InteractionTabManagerController startingInteractionTabManagerController;
+	
+	public List<String> assistantSubjects;
 
 
 	
@@ -49,8 +51,15 @@ public class MainFrameController {
 						searchBrowser.setZoom(currentVal + 0.1);
 				}
 			});
-			
-
+	}
+	
+	
+	public void handleControlDownInSearchBrowser(){
+		
+	}
+	
+	public WebView getSeachBrowser(){
+		return searchBrowser;
 	}
 	
 	/**
@@ -60,6 +69,7 @@ public class MainFrameController {
 	public InteractionTabManagerController getInteractionTabManagerController(){
 		return this.interactionTabManagerController;
 	}
+	
 	
 	/**
 	 * Loads the ChatTab and saves a reference to its controller
@@ -146,6 +156,20 @@ public class MainFrameController {
 
 	public InteractionTabManagerController getStartingInteractionTabManagerController() {
 		return startingInteractionTabManagerController;
+	}
+
+
+	public void passUserInfo(List<String> assistantSubjects) {
+		this.assistantSubjects = assistantSubjects;
+		System.out.println("assistantSubjects: "+this.assistantSubjects);
+		ModeSelectionController MSC = new ModeSelectionController();
+		MSC.setAssistantSubjects(this.assistantSubjects);
+		
+		
+	}
+	
+	public List<String> getUserInfo() {
+		return this.assistantSubjects;
 	}
 
 }

@@ -6,7 +6,6 @@ import org.w3c.dom.Document;
 
 
 import communication.ChatController;
-import communication.ChatTabController;
 import javafx.concurrent.Worker;
 
 import javafx.fxml.FXML;
@@ -19,7 +18,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import netscape.javascript.JSException;
 
 /**
  * @author snorr
@@ -37,12 +35,13 @@ public class InteractionTabManagerController {
 	@FXML private Button itgkMatlabBtn;
 
 
+	public ModeSelectionController modeSelectionController;
 	private Node selectionModeContent;
 	private Tab selectionModeTab;
 //	private ChatTabController chatTabController;
 	private MainFrameController mainFrameController;
 	private String codeLanguage= "java";
-	
+	private String URL;
 
 	@FXML
 	void initialize(){
@@ -54,6 +53,10 @@ public class InteractionTabManagerController {
 		tabContainer.getSelectionModel().select(0);
 	}
 
+	
+	public WebEngine getSharedCodeWebEngine(){
+		return sharedCodeBrowser.getEngine();
+	}
 	
 	public TabPane getTabPane(){
 		return tabContainer;
@@ -79,7 +82,7 @@ public class InteractionTabManagerController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ModeSelection.fxml"));
 		try {
 			selectionModeContent = loader.load();
-			ModeSelectionController modeSelectionController = loader.getController();
+			modeSelectionController = loader.getController();
 			modeSelectionController.initButtons(mainFrameController);
 			selectionModeTab = new Tab("Queue Selection", selectionModeContent);
 			tabContainer.getTabs().add(0,selectionModeTab);
@@ -98,6 +101,7 @@ public class InteractionTabManagerController {
 	public void setURL(String URL){
 		System.out.println("Loading the given URL: " + URL);
 		sharedCodeBrowser.getEngine().load(URL);
+		this.URL = URL;
 		sharedCodeBrowser.getEngine().getLoadWorker().stateProperty().addListener((observed, oldValue, newValue) -> {
 			if(newValue.equals(Worker.State.SUCCEEDED)){
 				changeCodeLanguageAndInit(codeLanguage);
@@ -114,24 +118,17 @@ public class InteractionTabManagerController {
 		Document doc = sharedCodeBrowser.getEngine().getDocument();
 		if(doc != null)
 			return doc.getBaseURI();
-		else return null;
-	}
-	
-	/**
-	 * Reloads the content of the browser, eqvivalent to reloading the content of a webpage
-	 */
-	public void reloadCodeEditor(){
-		sharedCodeBrowser.getEngine().reload();
-	}
-	
+		else return URL;
 
+	}
+	
 	
 	/**
 	 * Sets the url of the browser to the default value and loads the content. Default value is hardcoded
 	 */
 	public void setDefaultURL(){
-		System.out.println("Setting default URL");
 		sharedCodeBrowser.getEngine().load("defaultHTML.html");
+		URL = "defaultHTML.html";
 	}
 	
 	/**
@@ -159,6 +156,7 @@ public class InteractionTabManagerController {
 				sharedCodeBrowser.setFontScale(currentVal + 0.1);
 		}
 	}
+	
 	
 	
 	

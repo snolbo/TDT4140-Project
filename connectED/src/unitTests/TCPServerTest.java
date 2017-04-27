@@ -7,14 +7,15 @@ import java.net.Socket;
 
 import java.util.LinkedList;
 
-import T2.ServerRequest;
-import T2.TCPServer;
+import communication.ServerRequest;
 import unitTests.TCPServerTest;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import Server.TCPServer;
 
 public class TCPServerTest{
 	
@@ -26,17 +27,14 @@ public class TCPServerTest{
 	}
 		
 	
+	
+	
 	@Test
 	public void testTrueHasMatch(){
-		try{
 		testAddItemsToQueueJava();
 		assertTrue(tcpserver.hasMatch(tcpserver.getstudentQueueJava(), tcpserver.getstudentAssistantQueueJava(), tcpserver.getstudentHelperQueueJava()));
 		testAddItemsToQueueITGK();
 		assertTrue(tcpserver.hasMatch(tcpserver.getstudentQueueITGK(), tcpserver.getstudentAssistantQueueITGK(), tcpserver.getstudentAssistantQueueITGK()));
-		}
-		catch(Exception e){
-			fail("One of the Queues are empty");
-		}
 	}
 	
 	public void testAddItemsToQueueJava(){
@@ -81,18 +79,6 @@ public class TCPServerTest{
 	}
 	
 	
-	@Test
-	public void testFormatIP(){
-		String testIP = "localhost";
-		String returnIP = tcpserver.formatIP(testIP);
-		assertEquals(returnIP,testIP);
-		String testIP2 = "dhcp-10-22-11-63.wlan.ntnu.no";
-		String returnIP2 = tcpserver.formatIP(testIP2);
-		assertEquals(returnIP2,"10.22.11.63");
-		String testIP3 = "10.23.54.65";
-		String returnIP3 = tcpserver.formatIP(testIP3);
-		assertEquals(testIP3,returnIP3);
-	}
 
 	
 	@Test
@@ -102,7 +88,7 @@ public class TCPServerTest{
 		Socket connectionSocket = new Socket();
 		String newIP = tcpserver.formatIP(IP);
 		tcpserver.delegateTag(tag, newIP, connectionSocket);
-		assertEquals("10.22.11.63", tcpserver.getstudentIPJava().getLast());
+		assertEquals("dhcp-10-22-11-63.wlan.ntnu.no", tcpserver.getstudentIPJava().getLast());
 		assertEquals(connectionSocket, tcpserver.getstudentQueueJava().getLast());
 		
 		tag = "StudentITGK";
@@ -110,7 +96,7 @@ public class TCPServerTest{
 		connectionSocket = new Socket();
 		newIP = tcpserver.formatIP(IP);
 		tcpserver.delegateTag(tag, newIP, connectionSocket);
-		assertEquals("10.22.11.63", tcpserver.getstudentIPITGK().getLast());
+		assertEquals("dhcp-10-22-11-63.wlan.ntnu.no", tcpserver.getstudentIPITGK().getLast());
 		assertEquals(connectionSocket, tcpserver.getstudentQueueITGK().getLast());
 		
 		tag = "StudentAssistantJava";
@@ -118,7 +104,7 @@ public class TCPServerTest{
 		connectionSocket = new Socket();
 		newIP = tcpserver.formatIP(IP);
 		tcpserver.delegateTag(tag, newIP, connectionSocket);
-		assertEquals("10.22.11.63", tcpserver.getstudentAssistantQueueJava().getLast());
+		assertEquals("dhcp-10-22-11-63.wlan.ntnu.no", tcpserver.getstudentAssistantQueueJava().getLast());
 		assertTrue(connectionSocket.isClosed());
 		
 		tag = "StudentAssistantITGK";
@@ -126,7 +112,7 @@ public class TCPServerTest{
 		connectionSocket = new Socket();
 		newIP = tcpserver.formatIP(IP);
 		tcpserver.delegateTag(tag, newIP, connectionSocket);
-		assertEquals("10.22.11.63", tcpserver.getstudentAssistantQueueITGK().getLast());
+		assertEquals("dhcp-10-22-11-63.wlan.ntnu.no", tcpserver.getstudentAssistantQueueITGK().getLast());
 		assertTrue(connectionSocket.isClosed());
 		
 		tag = "StudentHelperJava";
@@ -134,7 +120,7 @@ public class TCPServerTest{
 		connectionSocket = new Socket();
 		newIP = tcpserver.formatIP(IP);
 		tcpserver.delegateTag(tag, newIP, connectionSocket);
-		assertEquals("10.22.11.63", tcpserver.getstudentHelperQueueJava().getLast());
+		assertEquals("dhcp-10-22-11-63.wlan.ntnu.no", tcpserver.getstudentHelperQueueJava().getLast());
 		assertTrue(connectionSocket.isClosed());
 		
 		tag = "StudentHelperITGK";
@@ -142,7 +128,7 @@ public class TCPServerTest{
 		connectionSocket = new Socket();
 		newIP = tcpserver.formatIP(IP);
 		tcpserver.delegateTag(tag, newIP, connectionSocket);
-		assertEquals("10.22.11.63", tcpserver.getstudentHelperQueueITGK().getLast());
+		assertEquals("dhcp-10-22-11-63.wlan.ntnu.no", tcpserver.getstudentHelperQueueITGK().getLast());
 		assertTrue(connectionSocket.isClosed());
 		
 		
@@ -193,6 +179,7 @@ public class TCPServerTest{
 	
 	
 	
+	
 	@Test
 	public void testMatch(){
 		LinkedList<Socket> studentSocket = new LinkedList<Socket>();
@@ -210,8 +197,11 @@ public class TCPServerTest{
 		tcpserver.getstudentHelperQueueITGK().add("10.34.53.21");
 		tcpserver.match(studentSocket2, tcpserver.getstudentIPITGK(), tcpserver.getstudentAssistantQueueITGK(), tcpserver.getstudentHelperQueueITGK());
 		assertEquals("10.34.53.21",tcpserver.getHelperAddress());
-		
-		
+	}
+	
+	@Test
+	public void testPrint(){
+		assertTrue(tcpserver.printStatus());;
 	}
 
 	

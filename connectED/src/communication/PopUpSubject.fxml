@@ -5,13 +5,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox style="-fx-background-color: #7A7A7A;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="communication.PopUpSubjectController">
-   <children>
-      <HBox>
-         <children>
-            <Button fx:id="javaBtn" mnemonicParsing = "false" onAction="#initializeJavaButton" text="Java"/>
-            <Button fx:id="itgkBtn" mnemonicParsing = "false" onAction="#initializeITGKButton" text="ITGK"/>
-         </children>
-      </HBox>
-   </children>
+<VBox style="-fx-background-color: #7A7A7A;" xmlns="http://javafx.com/javafx/8.0.102"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="communication.PopUpSubjectController">
+	<children>
+		<HBox>
+			<children>
+				<Button fx:id="javaBtn" mnemonicParsing="false"
+					onAction="#initializeJavaButton" text="Java" />
+				<Button fx:id="itgkBtn" mnemonicParsing="false"
+					onAction="#initializeITGKButton" text="ITGK" />
+			</children>
+		</HBox>
+	</children>
 </VBox>

@@ -9,7 +9,6 @@ import java.net.InetAddress;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
@@ -19,6 +18,7 @@ import javax.sound.sampled.TargetDataLine;
  */
 public class ClientVoice {
 
+	
     public int serverPort = 8888;
     TargetDataLine audioIn;
 	private AudioFormat format;
@@ -29,6 +29,7 @@ public class ClientVoice {
          info = new DataLine.Info(TargetDataLine.class, format);
 	}
 
+    
     /**
      * @return
      * Returns a boolean value that indicates wheather or not the audioformat set in this object is supported by the device
@@ -56,7 +57,6 @@ public class ClientVoice {
      */
     public void initializeAudio(InetAddress serverIp){
         try {
-            
             if(!AudioSystem.isLineSupported(info)){
                 System.out.println("not suport");
                 return;

@@ -5,18 +5,16 @@ import java.io.IOException;
 
 import java.net.Socket;
 import java.util.ArrayDeque;
+import java.util.function.Consumer;
 
-
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import mainWindow.MainFrameController;
 
@@ -57,6 +55,7 @@ public class ChatTabController {
 		});
 		
 	}
+	
 	
 	/**
 	 * @return
@@ -111,6 +110,10 @@ public class ChatTabController {
 	}
 	
 	
+	
+	public ObservableList<Tab> getTabs(){
+		return chatTab.getTabs();
+	}
 
 	 /**
 	 * Resets the selected mode (student/helper/assistant) and the subject.
@@ -121,33 +124,6 @@ public class ChatTabController {
 	}
 	
 	
-	/**
-	 * @throws Exception 
-	 * Creates a blocking PopUp window that prompts the user for choice of subject (Not used)
-	 */
-	public void initializePopUpSubject() throws Exception{               
-        try {
-        		FXMLLoader subjectLoader = new FXMLLoader(getClass().getResource("PopUpSubject.fxml"));
-                Parent root = (Parent) subjectLoader.load();
-                PopUpSubjectController contr = subjectLoader.getController();
-                contr.passChatTabController(this);
-                this.stage = new Stage();
-                this.stage.initModality(Modality.WINDOW_MODAL);
-                this.stage.initOwner(chatTab.getScene().getWindow());
-                this.stage.setScene(new Scene(root));  
-                this.stage.show();
-        } catch(Exception e) {
-           e.printStackTrace();
-        }
-      
-	}	
-	
-	/**
-	 * Closes the popup window that prompts for subjectselection
-	 */
-	public void closePopUp(){
-		this.stage.close();
-	}
 	
 	/**
 	 * @return
@@ -186,6 +162,7 @@ public class ChatTabController {
 			return true;
 		}
 	}
+
 	
 	/**
 	 * @param subject
@@ -238,11 +215,12 @@ public class ChatTabController {
 			chatTab.getTabs().remove(extraConnectionTab);
 	}
 	
+	
 	/**
 	 * Creates a new Chat, queue the user depending on tag
 	 */
 	@FXML
-	public void newChatTab(String codeLanguage){ // TODO should send message to server queuing its ip
+	public void newChatTab(String codeLanguage){
 		if(connector.isHelperHost() == null && connector.isAssistantHost() == null || tag == null)
 			System.out.println("Must choose user type and subject before opening connection");
 		// host can serve 3, client can only queue once
@@ -273,12 +251,9 @@ public class ChatTabController {
 					chatController.setAssistantHost(false);
 				}
 				chatController.initializeInteractionTab(codeLanguage);
-
 				chatControllerQueue.addLast(chatController);
 				setExtraConnectionTab();
 	
-
-				
 				newTab.setOnCloseRequest((event) -> { 	// on closeRequest, end connection that is tied to this chattab
 					System.out.println("Closing current tab -  removing assisiated controller form queue if exists...");
 					chatControllerQueue.remove(chatController);
@@ -293,22 +268,14 @@ public class ChatTabController {
 					}
 					
 				});
-				
-
 				newTab.setOnSelectionChanged((event) -> {
 					if(newTab.isSelected()){
-						mainFrameController.loadNewInteractionArea(chatController.getInteractionArea(), chatController.getInteractionTabManagerController());
+						mainFrameController.loadNewInteractionArea(chatController.getInteractionTab(), chatController.getInteractionTabManagerController());
 						chatController.clearNotifiedMessage();
 					}
 				});
-				
-				
 				Event.fireEvent(newTab, new Event(Tab.SELECTION_CHANGED_EVENT));
-				
 				chatTab.getSelectionModel().select(ChatTabController.getPotentialConnections()-1);
-				
-
-				
 				if(this.waitingThreads.isEmpty() && !isWaitingForConnection){
 					isWaitingForConnection = true;
 					System.out.println("running connector");
@@ -324,9 +291,7 @@ public class ChatTabController {
 			System.out.println("Cannot take any more connections, reached max limit");
 		}
 	}
-	
-	
-	
+
 	/**
 	 * @param socket
 	 * Creates a new chat session and assigns a chatController to the Chat-tab. Used by the connector when a match is made from the distributing server
@@ -343,7 +308,11 @@ public class ChatTabController {
 		}
 	}
 	
-	
+	public int getTabCount(){
+		return PotentialConnections;
+	}
+
+
 	/**
 	 * Handles the event of being closed
 	 */
@@ -352,9 +321,8 @@ public class ChatTabController {
 		this.connector.closeWelcomeSocket();
 		final EventType<Event> closeRequestEventType = Tab.TAB_CLOSE_REQUEST_EVENT;
 		final Event closeRequestEvent = new Event(closeRequestEventType);
-		for(Tab tab : chatTab.getTabs()){
-			System.out.println("Firing closerequest on remaining open tab");
-			Event.fireEvent(tab, closeRequestEvent);
+		for (int i = 0; i < chatTab.getTabs().size(); i++) {
+			Event.fireEvent(chatTab.getTabs().get(0),closeRequestEvent);
 		}
 	}
 	

@@ -1,10 +1,14 @@
 package mainWindow;
 
+import java.util.List;
+
 import communication.ChatTabController;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
+import mainWindow.MainFrameController;
+import loginSystem.Browser;
 
 /**
  * @author snorr
@@ -32,7 +36,10 @@ public class ModeSelectionController {
 	
 	
 	private ChatTabController chatTabController;
-	private MainFrameController mainFrameController;
+	private MainFrameController mainFrameController = new MainFrameController();
+	
+	//private List<String> assistantSubjects = mainFrameController.getUserInfo(); 
+	private List<String> assistantSubjects;
 	
 	private String selectedButtonColor = "linear-gradient(#ff5400, #be1d00)";
 	
@@ -41,7 +48,6 @@ public class ModeSelectionController {
 	void initialize(){
 		errorText.setVisible(false);
 		connectBtn.setOpacity(0.5);
-		
 
 	}
 	
@@ -94,55 +100,40 @@ public class ModeSelectionController {
 		this.mainFrameController = mainFrameController;
 		System.out.println("mainframecontroller: " + mainFrameController);
 		System.out.println("chatTabController: " + chatTabController);
-		assistantBtn.setOnAction( (event) ->{
-			try {
-				mainFrameController.chatTabController.setAssistantMode();
-				resetModeButtonColor();
-				assistantBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-				colorConnectButton();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		/*if (assistantSubjects.isEmpty()) {
+			assistantBtn.setDisable(true);
+		} 
+		else {
+			assistantBtn.setDisable(false);
+		}*/
+		//if (!assistantSubjects.isEmpty()) {
+			assistantBtn.setOnAction( (event) ->{modeSelection("StudentAssistant");});
+		//}
+		helperBtn.setOnAction( (event) ->{modeSelection("StudentHelper");});
+		studentBtn.setOnAction( (event) ->{modeSelection("Student");});
 		
-		helperBtn.setOnAction( (event) ->{
-			try {
-				mainFrameController.chatTabController.setStudentHelperMode();
-				resetModeButtonColor();
-				helperBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-				colorConnectButton();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		/*if (!assistantSubjects.contains("TDT4100")) {
+			javaBtn.setDisable(true);
+		}
+		else {
+			javaBtn.setDisable(false);
+		}*/
 		
-		studentBtn.setOnAction( (event) ->{
-			try {
-				mainFrameController.chatTabController.setStudentMode();
-				resetModeButtonColor();
-				studentBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-				colorConnectButton();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		//if (assistantSubjects.contains("TDT4100")) {
+			javaBtn.setOnAction((event)-> {
+			subjectSelection("Java");
+		});//}
 		
-		javaBtn.setOnAction((event)-> {
-			mainFrameController.chatTabController.setSubject("Java");
-			resetSubjectButtonColor();
-			javaBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-			colorConnectButton();
-			codeLanguage = "java";
-
-		});
-		
-		itgkPythonBtn.setOnAction((event)-> {
-			mainFrameController.chatTabController.setSubject("ITGK");
-			resetSubjectButtonColor();
-			itgkPythonBtn.setStyle("-fx-background-color: " + selectedButtonColor);
-			colorConnectButton();
-			codeLanguage = "python";
-		});
+		/*if (!assistantSubjects.contains("TDT4110")) {
+			itgkPythonBtn.setDisable(true);
+		}
+		else {
+			itgkPythonBtn.setDisable(false);
+		}*/
+		//if (assistantSubjects.contains("TDT4110")) {
+			itgkPythonBtn.setOnAction((event) -> {
+			subjectSelection("ITGK");
+		});//}
 		
 //		itgkMatlabBtn.setOnAction((event)-> {
 //			mainFrameController.chatTabController.setSubject("ITKG");
@@ -151,16 +142,91 @@ public class ModeSelectionController {
 //		});
 		
 		connectBtn.setOnAction((event)->{
-			if(mainFrameController.chatTabController.combineTags()){
-				errorText.setVisible(false);
-				mainFrameController.chatTabController.newChatTab(codeLanguage);
-			}
-			else{
-				errorText.setVisible(true);
-			}
+			useConnectButton();
 		});
-
 	}
 	
+	
+	/**
+	 * @param mode
+	 * Performs correct action based on String representation of mode passed to the function based what is set in initButtons
+	 */
+	public void modeSelection(String mode){
+		mainFrameController.chatTabController.setStudentHelperMode();
+		resetModeButtonColor();
+		colorConnectButton();
+		switch (mode) {
+		case "StudentAssistant":
+			/*if (!assistantSubjects.isEmpty()) {*/
+				mainFrameController.chatTabController.setAssistantMode();
+				assistantBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+				break;
+			//}
+		case "StudentHelper": 
+			mainFrameController.chatTabController.setStudentHelperMode();
+			helperBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+			break;
+		case "Student":
+			mainFrameController.chatTabController.setStudentMode();
+			studentBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+			break;
+		default:
+			break;
+		}
+	}
+	
+
+	/**
+	 * @param subject
+	 * Performs correct action for subjectselection based on a String representation of the subject set in initButtons
+	 */
+	public void subjectSelection(String subject){
+		mainFrameController.chatTabController.setSubject(subject);
+		resetSubjectButtonColor();
+		colorConnectButton();
+		switch (subject) {
+		case "ITGK":
+			/*if (assistantSubjects.contains("TDT4110")) {*/
+				itgkPythonBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+				codeLanguage = "python";
+				break;
+			/*}
+			else {
+				break;
+			}*/
+		case "Java":
+			/*if (assistantSubjects.contains("TDT4100")) {*/
+				javaBtn.setStyle("-fx-background-color: " + selectedButtonColor);
+				codeLanguage = "java";
+				break;
+			/*}
+			else {
+				break;
+			}*/
+		default:
+			break;
+		}
+	}
+	
+	public void useConnectButton(){
+		if(mainFrameController.chatTabController.modeAndSubjectIsSet()){
+			mainFrameController.chatTabController.combineTags();
+			errorText.setVisible(false);
+			mainFrameController.chatTabController.newChatTab(codeLanguage);
+		}
+		else{
+			errorText.setVisible(true);
+			System.out.println(assistantSubjects);
+		}
+	}
+	
+	public List<String> getAssistantSubjects() {
+		return this.assistantSubjects;
+	}
+	
+	public void setAssistantSubjects(List<String> assistantSubjects) {
+		this.assistantSubjects = assistantSubjects;
+		System.out.println("ASubj modeselector: "+this.assistantSubjects);
+	}
 
 }
